@@ -7,12 +7,12 @@ import org.bukkit.inventory.ItemStack;
 
 import me.john000708.Items;
 import me.john000708.SlimeXpansion;
-import me.mrCookieSlime.CSCoreLibPlugin.CSCoreLib;
 import me.mrCookieSlime.CSCoreLibPlugin.Configuration.Config;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.ChestMenu;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.ClickAction;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.InvUtils;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.Item.CustomItem;
+import me.mrCookieSlime.Slimefun.SlimefunPlugin;
 import me.mrCookieSlime.Slimefun.Lists.RecipeType;
 import me.mrCookieSlime.Slimefun.Objects.Category;
 import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SlimefunItem;
@@ -22,6 +22,7 @@ import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenuPreset;
 import me.mrCookieSlime.Slimefun.api.item_transport.ItemTransportFlow;
+import me.mrCookieSlime.Slimefun.cscorelib2.protection.ProtectableAction;
 import me.mrCookieSlime.Slimefun.utils.MachineHelper;
 
 /**
@@ -49,8 +50,8 @@ public class ChunkLoader extends SlimefunItem {
                 else return new int[]{22};
             }
 
-            public boolean canOpen(Block block, Player p) {
-                return p.hasPermission("slimefun.inventory.bypass") || CSCoreLib.getLib().getProtectionManager().canAccessChest(p.getUniqueId(), block);
+            public boolean canOpen(Block b, Player p) {
+                return p.hasPermission("slimefun.inventory.bypass") || SlimefunPlugin.getProtectionManager().hasPermission(p, b.getLocation(), ProtectableAction.ACCESS_INVENTORIES);
             }
         };
     }
@@ -58,6 +59,7 @@ public class ChunkLoader extends SlimefunItem {
     @Override
     public void register(boolean slimefun) {
         addItemHandler(new BlockTicker() {
+        	
             @Override
             public boolean isSynchronized() {
                 return false;
@@ -78,15 +80,15 @@ public class ChunkLoader extends SlimefunItem {
 
     protected void tick(Block block) {
         if (!(time % 2 == 0)) return;
-        if (BlockStorage.getBlockInfo(block, "timeLeft") == null) BlockStorage.addBlockInfo(block, "timeLeft", "0");
+        if (BlockStorage.getLocationInfo(block.getLocation(), "timeLeft") == null) BlockStorage.addBlockInfo(block, "timeLeft", "0");
 
         BlockMenu menu = BlockStorage.getInventory(block);
-        processTime = Integer.valueOf(BlockStorage.getBlockInfo(block, "timeLeft"));
+        processTime = Integer.valueOf(BlockStorage.getLocationInfo(block.getLocation(), "timeLeft"));
 
         if (processTime > 0) {
             processTime--;
 
-            BlockStorage.addBlockInfo(block, "timeLeft", String.valueOf(Integer.valueOf(BlockStorage.getBlockInfo(block, "timeLeft")) - 1));
+            BlockStorage.addBlockInfo(block, "timeLeft", String.valueOf(Integer.valueOf(BlockStorage.getLocationInfo(block.getLocation(), "timeLeft")) - 1));
             menu.replaceExistingItem(4, new CustomItem(new ItemStack(Material.CLOCK), MachineHelper.getTimeLeft(processTime), MachineHelper.getProgress(processTime, SlimeXpansion.plugin.getChunkLoaderDuration())));
         } else {
             if (menu.getItemInSlot(13) == null || !SlimefunManager.isItemSimiliar(menu.getItemInSlot(13), Items.THORIUM, true)) {

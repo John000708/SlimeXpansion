@@ -8,11 +8,11 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.john000708.SlimeXpansion;
-import me.mrCookieSlime.CSCoreLibPlugin.CSCoreLib;
 import me.mrCookieSlime.CSCoreLibPlugin.Configuration.Config;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.ChestMenu;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.ClickAction;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.Item.CustomItem;
+import me.mrCookieSlime.Slimefun.SlimefunPlugin;
 import me.mrCookieSlime.Slimefun.Lists.RecipeType;
 import me.mrCookieSlime.Slimefun.Objects.Category;
 import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SlimefunItem;
@@ -21,6 +21,7 @@ import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenuPreset;
 import me.mrCookieSlime.Slimefun.api.item_transport.ItemTransportFlow;
+import me.mrCookieSlime.Slimefun.cscorelib2.protection.ProtectableAction;
 
 /**
  * Created by John on 13.11.2016.
@@ -41,14 +42,14 @@ public class RedstoneClock extends SlimefunItem {
 
             @Override
             public void newInstance(final BlockMenu blockMenu, final Block block) {
-                if (BlockStorage.getBlockInfo(block, "time") != null) {
+                if (BlockStorage.getLocationInfo(block.getLocation(), "time") != null) {
                     blockMenu.replaceExistingItem(11, new CustomItem(new ItemStack(Material.REDSTONE_BLOCK), "&e+15 Seconds"));
                     blockMenu.addMenuClickHandler(11, new MenuClickHandler() {
                         @Override
                         public boolean onClick(Player player, int i, ItemStack itemStack, ClickAction clickAction) {
                             if (checkTime(block, 15)) {
-                                BlockStorage.addBlockInfo(block, "time", String.valueOf(Integer.valueOf(BlockStorage.getBlockInfo(block, "time")) + 15));
-                                BlockStorage.addBlockInfo(block, "timeLeft", BlockStorage.getBlockInfo(block, "time"));
+                                BlockStorage.addBlockInfo(block, "time", String.valueOf(Integer.valueOf(BlockStorage.getLocationInfo(block.getLocation(), "time")) + 15));
+                                BlockStorage.addBlockInfo(block, "timeLeft", BlockStorage.getLocationInfo(block.getLocation(), "time"));
                             }
                             newInstance(blockMenu, block);
                             return false;
@@ -60,23 +61,23 @@ public class RedstoneClock extends SlimefunItem {
                         @Override
                         public boolean onClick(Player player, int i, ItemStack itemStack, ClickAction clickAction) {
                             if (checkTime(block, 1)) {
-                                BlockStorage.addBlockInfo(block, "time", String.valueOf(Integer.valueOf(BlockStorage.getBlockInfo(block, "time")) + 1));
-                                BlockStorage.addBlockInfo(block, "timeLeft", BlockStorage.getBlockInfo(block, "time"));
+                                BlockStorage.addBlockInfo(block, "time", String.valueOf(Integer.valueOf(BlockStorage.getLocationInfo(block.getLocation(), "time")) + 1));
+                                BlockStorage.addBlockInfo(block, "timeLeft", BlockStorage.getLocationInfo(block.getLocation(), "time"));
                             }
                             newInstance(blockMenu, block);
                             return false;
                         }
                     });
 
-                    blockMenu.replaceExistingItem(13, new CustomItem(Material.CLOCK, "&bTick Every &e" + BlockStorage.getBlockInfo(block, "time") + " &bSeconds"));
+                    blockMenu.replaceExistingItem(13, new CustomItem(Material.CLOCK, "&bTick Every &e" + BlockStorage.getLocationInfo(block.getLocation(), "time") + " &bSeconds"));
 
                     blockMenu.replaceExistingItem(14, new CustomItem(new ItemStack(Material.REDSTONE_BLOCK), "&e-1 Second"));
                     blockMenu.addMenuClickHandler(14, new MenuClickHandler() {
                         @Override
                         public boolean onClick(Player player, int i, ItemStack itemStack, ClickAction clickAction) {
                             if (checkTime(block, -1)) {
-                                BlockStorage.addBlockInfo(block, "time", String.valueOf(Integer.valueOf(BlockStorage.getBlockInfo(block, "time")) - 1));
-                                BlockStorage.addBlockInfo(block, "timeLeft", BlockStorage.getBlockInfo(block, "time"));
+                                BlockStorage.addBlockInfo(block, "time", String.valueOf(Integer.valueOf(BlockStorage.getLocationInfo(block.getLocation(), "time")) - 1));
+                                BlockStorage.addBlockInfo(block, "timeLeft", BlockStorage.getLocationInfo(block.getLocation(), "time"));
                             }
                             newInstance(blockMenu, block);
                             return false;
@@ -88,8 +89,8 @@ public class RedstoneClock extends SlimefunItem {
                         @Override
                         public boolean onClick(Player player, int i, ItemStack itemStack, ClickAction clickAction) {
                             if (checkTime(block, -15)) {
-                                BlockStorage.addBlockInfo(block, "time", String.valueOf(Integer.valueOf(BlockStorage.getBlockInfo(block, "time")) - 15));
-                                BlockStorage.addBlockInfo(block, "timeLeft", BlockStorage.getBlockInfo(block, "time"));
+                                BlockStorage.addBlockInfo(block, "time", String.valueOf(Integer.valueOf(BlockStorage.getLocationInfo(block.getLocation(), "time")) - 15));
+                                BlockStorage.addBlockInfo(block, "timeLeft", BlockStorage.getLocationInfo(block.getLocation(), "time"));
                             }
                             newInstance(blockMenu, block);
                             return false;
@@ -104,7 +105,7 @@ public class RedstoneClock extends SlimefunItem {
 
             @Override
             public boolean canOpen(Block block, Player player) {
-                return player.hasPermission("slimefun.inventory.bypass") || CSCoreLib.getLib().getProtectionManager().canAccessChest(player.getUniqueId(), block);
+                return player.hasPermission("slimefun.inventory.bypass") || SlimefunPlugin.getProtectionManager().hasPermission(player, block.getLocation(), ProtectableAction.ACCESS_INVENTORIES);
             }
 
             @Override
@@ -132,12 +133,12 @@ public class RedstoneClock extends SlimefunItem {
             @Override
             public void tick(final Block block, SlimefunItem slimefunItem, Config config) {
                 if ((tickTime % 2) != 0) return;
-                BlockStorage.getInventory(block).replaceExistingItem(13, new CustomItem(Material.CLOCK, "&bTick Every &e" + BlockStorage.getBlockInfo(block, "time") + " &bSeconds", "&7Time Left: " + BlockStorage.getBlockInfo(block, "timeLeft") + "s"));
+                BlockStorage.getInventory(block).replaceExistingItem(13, new CustomItem(Material.CLOCK, "&bTick Every &e" + BlockStorage.getLocationInfo(block.getLocation(), "time") + " &bSeconds", "&7Time Left: " + BlockStorage.getLocationInfo(block.getLocation(), "timeLeft") + "s"));
 
-                int timeLeft = Integer.valueOf(BlockStorage.getBlockInfo(block, "timeLeft"));
+                int timeLeft = Integer.valueOf(BlockStorage.getLocationInfo(block.getLocation(), "timeLeft"));
 
                 if (timeLeft == 0) {
-                    BlockStorage.addBlockInfo(block, "timeLeft", BlockStorage.getBlockInfo(block, "time"));
+                    BlockStorage.addBlockInfo(block, "timeLeft", BlockStorage.getLocationInfo(block.getLocation(), "time"));
                     new BukkitRunnable() {
                         @Override
                         public void run() {
@@ -183,7 +184,7 @@ public class RedstoneClock extends SlimefunItem {
     }
 
     private boolean checkTime(Block block, int time) {
-        int timeAfter = Integer.valueOf(BlockStorage.getBlockInfo(block, "time")) + time;
+        int timeAfter = Integer.valueOf(BlockStorage.getLocationInfo(block.getLocation(), "time")) + time;
 
         return timeAfter > 0 && timeAfter <= 3600;
     }

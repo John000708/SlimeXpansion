@@ -5,11 +5,11 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import me.mrCookieSlime.CSCoreLibPlugin.CSCoreLib;
 import me.mrCookieSlime.CSCoreLibPlugin.Configuration.Config;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.ChestMenu;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.ClickAction;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.Item.CustomItem;
+import me.mrCookieSlime.Slimefun.SlimefunPlugin;
 import me.mrCookieSlime.Slimefun.Lists.RecipeType;
 import me.mrCookieSlime.Slimefun.Objects.Category;
 import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SlimefunItem;
@@ -18,6 +18,7 @@ import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenuPreset;
 import me.mrCookieSlime.Slimefun.api.item_transport.ItemTransportFlow;
+import me.mrCookieSlime.Slimefun.cscorelib2.protection.ProtectableAction;
 
 /**
  * Created by John on 02.09.2016.
@@ -33,8 +34,8 @@ public class EnergyTransmitter extends SlimefunItem {
             }
 
             public void newInstance(final BlockMenu menu, final Block block) {
-                if (BlockStorage.getBlockInfo(block, "enabled") != null) {
-                    if (BlockStorage.getBlockInfo(block, "enabled").equalsIgnoreCase("true")) {
+                if (BlockStorage.getLocationInfo(block.getLocation(), "enabled") != null) {
+                    if (BlockStorage.getLocationInfo(block.getLocation(), "enabled").equalsIgnoreCase("true")) {
                         menu.replaceExistingItem(13, new CustomItem(Material.GREEN_STAINED_GLASS_PANE, "&aEnabled"));
                         menu.addMenuClickHandler(13, new MenuClickHandler() {
                             @Override
@@ -65,8 +66,8 @@ public class EnergyTransmitter extends SlimefunItem {
                 return new int[0];
             }
 
-            public boolean canOpen(Block block, Player p) {
-                return p.hasPermission("slimefun.inventory.bypass") || CSCoreLib.getLib().getProtectionManager().canAccessChest(p.getUniqueId(), block);
+            public boolean canOpen(Block b, Player p) {
+                return p.hasPermission("slimefun.inventory.bypass") || SlimefunPlugin.getProtectionManager().hasPermission(p, b.getLocation(), ProtectableAction.ACCESS_INVENTORIES);
             }
         };
     }
@@ -74,6 +75,7 @@ public class EnergyTransmitter extends SlimefunItem {
     @Override
     public void register(boolean slimefun) {
         addItemHandler(new BlockTicker() {
+        	
             @Override
             public boolean isSynchronized() {
                 return false;
@@ -82,6 +84,7 @@ public class EnergyTransmitter extends SlimefunItem {
             @Override
             public void tick(Block block, SlimefunItem slimefunItem, Config config) {
             }
+            
         });
         super.register(slimefun);
     }

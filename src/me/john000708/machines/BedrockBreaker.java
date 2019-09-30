@@ -17,11 +17,11 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import me.john000708.Items;
 import me.john000708.SlimeXpansion;
-import me.mrCookieSlime.CSCoreLibPlugin.CSCoreLib;
 import me.mrCookieSlime.CSCoreLibPlugin.Configuration.Config;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.ChestMenu;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.ClickAction;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.Item.CustomItem;
+import me.mrCookieSlime.Slimefun.SlimefunPlugin;
 import me.mrCookieSlime.Slimefun.Lists.RecipeType;
 import me.mrCookieSlime.Slimefun.Objects.Category;
 import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SlimefunItem;
@@ -32,6 +32,7 @@ import me.mrCookieSlime.Slimefun.api.energy.ChargableBlock;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenuPreset;
 import me.mrCookieSlime.Slimefun.api.item_transport.ItemTransportFlow;
+import me.mrCookieSlime.Slimefun.cscorelib2.protection.ProtectableAction;
 
 /**
  * Created by John on 18.04.2016.
@@ -58,10 +59,10 @@ public abstract class BedrockBreaker extends SlimefunItem {
 
             @Override
             public void newInstance(final BlockMenu menu, final Block block) {
-                if (BlockStorage.getBlockInfo(block, "enabled") != null) {
+                if (BlockStorage.getLocationInfo(block.getLocation(), "enabled") != null) {
                     menu.replaceExistingItem(14, new CustomItem(new ItemStack(Material.DIAMOND_BLOCK), "&3Breaker Idle"));
                     menu.replaceExistingItem(15, new CustomItem(new ItemStack(Material.DIAMOND_BLOCK), "&3Breaker Idle"));
-                    if (!BlockStorage.getBlockInfo(block, "enabled").equalsIgnoreCase("true")) {
+                    if (!BlockStorage.getLocationInfo(block.getLocation(), "enabled").equalsIgnoreCase("true")) {
                         for (int i : toggleSlots) {
                             menu.replaceExistingItem(i, new CustomItem(Material.RED_STAINED_GLASS_PANE, "&cDisabled"));
                             menu.addMenuClickHandler(i, new MenuClickHandler() {
@@ -98,8 +99,8 @@ public abstract class BedrockBreaker extends SlimefunItem {
                 else return new int[]{37};
             }
 
-            public boolean canOpen(Block block, Player p) {
-                return p.hasPermission("slimefun.inventory.bypass") || CSCoreLib.getLib().getProtectionManager().canAccessChest(p.getUniqueId(), block);
+            public boolean canOpen(Block b, Player p) {
+                return p.hasPermission("slimefun.inventory.bypass") || SlimefunPlugin.getProtectionManager().hasPermission(p, b.getLocation(), ProtectableAction.ACCESS_INVENTORIES);
             }
         };
     }
@@ -116,6 +117,7 @@ public abstract class BedrockBreaker extends SlimefunItem {
     @Override
     public void register(boolean slimefun) {
         addItemHandler(new BlockTicker() {
+        	
             @Override
             public boolean isSynchronized() {
                 return false;
@@ -136,7 +138,7 @@ public abstract class BedrockBreaker extends SlimefunItem {
 
     protected void tick(final Block block) {
         if (!(time % 2 == 0)) return;
-        if (BlockStorage.getBlockInfo(block, "enabled") == null || BlockStorage.getBlockInfo(block, "enabled").equals("false"))
+        if (BlockStorage.getLocationInfo(block.getLocation(), "enabled") == null || BlockStorage.getLocationInfo(block.getLocation(), "enabled").equals("false"))
             return;
         if (getEnergyConsumption() > ChargableBlock.getCharge(block)) return;
         if (block.getRelative(BlockFace.DOWN).getType() != Material.BEDROCK) {
@@ -162,13 +164,13 @@ public abstract class BedrockBreaker extends SlimefunItem {
             BlockStorage.getInventory(block).replaceExistingItem(10, new ItemStack(Material.AIR));
         }
 
-        if (BlockStorage.getBlockInfo(block, "durability") == null)
+        if (BlockStorage.getLocationInfo(block.getLocation(), "durability") == null)
             BlockStorage.addBlockInfo(block, "durability", "10");
 
         ChargableBlock.addCharge(block, -getEnergyConsumption());
 
         if (timeLeft == 0) {
-            if (Double.valueOf(BlockStorage.getBlockInfo(block, "durability")) == 0) {
+            if (Double.valueOf(BlockStorage.getLocationInfo(block.getLocation(), "durability")) == 0) {
                 new BukkitRunnable() {
                     @Override
                     public void run() {
@@ -181,13 +183,13 @@ public abstract class BedrockBreaker extends SlimefunItem {
                     BlockStorage.addBlockInfo(block, "durability", "10");
                 }
             } else {
-                BlockStorage.addBlockInfo(block, "durability", String.valueOf(Double.valueOf(BlockStorage.getBlockInfo(block, "durability")) - .5));
+                BlockStorage.addBlockInfo(block, "durability", String.valueOf(Double.valueOf(BlockStorage.getLocationInfo(block.getLocation(), "durability")) - .5));
             }
             timeLeft = 15;
         } else {
 
             block.getWorld().spawnParticle(Particle.BLOCK_CRACK, block.getLocation().add(.5, .5, .5), 50, Material.BEDROCK.createBlockData());
-            updateStatus(block, new CustomItem(new ItemStack(Material.EMERALD_BLOCK), "&aBreaker Operational", "", "&7Bedrock Durability: " + BlockStorage.getBlockInfo(block, "durability")));
+            updateStatus(block, new CustomItem(new ItemStack(Material.EMERALD_BLOCK), "&aBreaker Operational", "", "&7Bedrock Durability: " + BlockStorage.getLocationInfo(block.getLocation(), "durability")));
             timeLeft--;
         }
     }

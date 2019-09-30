@@ -26,11 +26,12 @@ public class EnergyReceiver extends SlimefunItem {
     @Override
     public void register(boolean slimefun) {
         addItemHandler(new EnergyTicker() {
+        	
             @Override
             public double generateEnergy(Location l, SlimefunItem slimefunItem, Config config) {
-                if (BlockStorage.getBlockInfo(l, "transmitterLoc") == null) return 0;
-                Location location = deserializeLoc(BlockStorage.getBlockInfo(l, "transmitterLoc"));
-                if (BlockStorage.check(location, "ENERGY_TRANSMITTER") && Boolean.valueOf(BlockStorage.getBlockInfo(location, "enabled"))) {
+                if (BlockStorage.getLocationInfo(l, "transmitterLoc") == null) return 0;
+                Location location = deserializeLoc(BlockStorage.getLocationInfo(l, "transmitterLoc"));
+                if (BlockStorage.check(location, "ENERGY_TRANSMITTER") && Boolean.valueOf(BlockStorage.getLocationInfo(location, "enabled"))) {
                     if (ChargableBlock.getCharge(location) >= 200 && (ChargableBlock.getMaxCharge(l) - ChargableBlock.getCharge(l) >= 200)) {
                         ChargableBlock.addCharge(location, -200);
                         ChargableBlock.addCharge(l, 150);
@@ -44,6 +45,7 @@ public class EnergyReceiver extends SlimefunItem {
             public boolean explode(Location location) {
                 return false;
             }
+            
         });
         super.register(slimefun);
     }
