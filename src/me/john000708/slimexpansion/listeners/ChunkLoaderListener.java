@@ -1,4 +1,4 @@
-package me.john000708.listeners;
+package me.john000708.slimexpansion.listeners;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

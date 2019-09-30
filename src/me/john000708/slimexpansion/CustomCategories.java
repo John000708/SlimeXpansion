@@ -1,4 +1,4 @@
-package me.john000708;
+package me.john000708.slimexpansion;
 
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.Item.CustomItem;
 import me.mrCookieSlime.Slimefun.Objects.Category;
@@ -9,6 +9,7 @@ import org.bukkit.inventory.ItemStack;
  * Created by John on 10.07.2016.
  */
 public class CustomCategories {
+	
     public static final Category SLIMEFUN_XPANSION;
     public static final Category TERRAFORMER_MODULES;
 

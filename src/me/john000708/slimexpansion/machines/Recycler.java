@@ -1,10 +1,10 @@
-package me.john000708.machines;
+package me.john000708.slimexpansion.machines;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
 
-import me.john000708.Items;
+import me.john000708.slimexpansion.Items;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.InvUtils;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.Item.CustomItem;
 import me.mrCookieSlime.Slimefun.Lists.RecipeType;

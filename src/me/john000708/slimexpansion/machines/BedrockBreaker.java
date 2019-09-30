@@ -1,4 +1,4 @@
-package me.john000708.machines;
+package me.john000708.slimexpansion.machines;
 
 import java.util.List;
 
@@ -15,8 +15,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import me.john000708.Items;
-import me.john000708.SlimeXpansion;
+import me.john000708.slimexpansion.Items;
+import me.john000708.slimexpansion.SlimeXpansion;
 import me.mrCookieSlime.CSCoreLibPlugin.Configuration.Config;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.ChestMenu;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.ClickAction;

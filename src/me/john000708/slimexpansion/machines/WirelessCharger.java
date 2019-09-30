@@ -1,4 +1,4 @@
-package me.john000708.machines;
+package me.john000708.slimexpansion.machines;
 
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;

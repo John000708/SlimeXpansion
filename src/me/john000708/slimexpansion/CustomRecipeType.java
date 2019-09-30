@@ -1,4 +1,4 @@
-package me.john000708;
+package me.john000708.slimexpansion;
 
 import org.bukkit.Material;
 

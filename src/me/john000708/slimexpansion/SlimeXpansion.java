@@ -1,45 +1,37 @@
-package me.john000708;
+package me.john000708.slimexpansion;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
-import org.bukkit.block.Block;
-import org.bukkit.block.data.AnaloguePowerable;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import io.github.thebusybiscuit.cscorelib2.updater.BukkitUpdater;
 import io.github.thebusybiscuit.cscorelib2.updater.GitHubBuildsUpdater;
 import io.github.thebusybiscuit.cscorelib2.updater.Updater;
-import me.john000708.listeners.ListenerSetup;
-import me.john000708.machines.BedrockBreaker;
-import me.john000708.machines.ChunkLoader;
-import me.john000708.machines.DeepDepthMiner;
-import me.john000708.machines.EnergyReceiver;
-import me.john000708.machines.EnergyTransmitter;
-import me.john000708.machines.RainMaker;
-import me.john000708.machines.Recycler;
-import me.john000708.machines.RedstoneClock;
-import me.john000708.machines.UUFabricator;
-import me.john000708.machines.UUTransmutator;
-import me.john000708.machines.WirelessCharger;
-import me.mrCookieSlime.CSCoreLibPlugin.CSCoreLib;
-import me.mrCookieSlime.CSCoreLibPlugin.PluginUtils;
-import me.mrCookieSlime.CSCoreLibPlugin.Configuration.Config;
+import me.john000708.slimexpansion.items.Linker;
+import me.john000708.slimexpansion.items.ScrapBox;
+import me.john000708.slimexpansion.listeners.ListenerSetup;
+import me.john000708.slimexpansion.machines.BedrockBreaker;
+import me.john000708.slimexpansion.machines.ChunkLoader;
+import me.john000708.slimexpansion.machines.DeepDepthMiner;
+import me.john000708.slimexpansion.machines.EnergyReceiver;
+import me.john000708.slimexpansion.machines.EnergyTransmitter;
+import me.john000708.slimexpansion.machines.RainMaker;
+import me.john000708.slimexpansion.machines.Recycler;
+import me.john000708.slimexpansion.machines.RedstoneClock;
+import me.john000708.slimexpansion.machines.RedstoneReceiver;
+import me.john000708.slimexpansion.machines.RedstoneTransmitter;
+import me.john000708.slimexpansion.machines.UUFabricator;
+import me.john000708.slimexpansion.machines.UUTransmutator;
+import me.john000708.slimexpansion.machines.WirelessCharger;
 import me.mrCookieSlime.CSCoreLibPlugin.events.ItemUseEvent;
-import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.InvUtils;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.Item.CustomItem;
 import me.mrCookieSlime.Slimefun.GEO.OreGenResource;
 import me.mrCookieSlime.Slimefun.GEO.OreGenSystem;
@@ -51,12 +43,12 @@ import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.Alloy;
 import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.ChargableItem;
 import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.DamagableChargableItem;
 import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SlimefunItem;
-import me.mrCookieSlime.Slimefun.Objects.handlers.BlockTicker;
 import me.mrCookieSlime.Slimefun.Objects.handlers.ItemInteractionHandler;
 import me.mrCookieSlime.Slimefun.Setup.SlimefunManager;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import me.mrCookieSlime.Slimefun.api.Slimefun;
 import me.mrCookieSlime.Slimefun.bstats.bukkit.Metrics;
+import me.mrCookieSlime.Slimefun.cscorelib2.config.Config;
 
 /**
  * Created by John on 14.04.2016.
@@ -66,16 +58,12 @@ public class SlimeXpansion extends JavaPlugin {
     public static SlimeXpansion plugin;
     private final Random random = new Random();
     
-    private Config config;
-    private boolean openScrapbox;
+    public Config config;
     private int chunkLoaderDuration;
-    private ArrayList<ItemStack> scrapBoxLoot = new ArrayList<>();
 
     public void onEnable() {
         plugin = this;
-        PluginUtils utils = new PluginUtils(this);
-        utils.setupConfig();
-        config = utils.getConfig();
+        config = new Config(this);
         
         // Setting up bStats
         new Metrics(this);
@@ -95,11 +83,9 @@ public class SlimeXpansion extends JavaPlugin {
 		if (config.getBoolean("options.auto-update")) updater.start();
         
         new ListenerSetup(this);
-
-        openScrapbox = config.getBoolean("options.lootable-scrapbox");
+        
         chunkLoaderDuration = config.getInt("options.chunkloader-duration");
-
-        parseScrapboxDrops();
+        
         registerItems();
         setupResearches();
         getLogger().info("SlimeXpansion has been enabled!");
@@ -113,6 +99,7 @@ public class SlimeXpansion extends JavaPlugin {
                 }
             }
         }
+        
         plugin = null;
     }
 
@@ -121,20 +108,7 @@ public class SlimeXpansion extends JavaPlugin {
     }
 
     private void registerItems() {
-        new SlimefunItem(Categories.MISC, Items.SCRAP_BOX, "SCRAP_BOX", CustomRecipeType.RECYCLER, new ItemStack[]{null}).register(new ItemInteractionHandler() {
-            @Override
-            public boolean onRightClick(ItemUseEvent itemUseEvent, Player player, ItemStack itemStack) {
-                if (!player.isSneaking() && SlimefunManager.isItemSimiliar(itemStack, Items.SCRAP_BOX, true)) {
-                    if (openScrapbox && random.nextInt(100) <= 25) {
-                        player.playSound(player.getLocation(), Sound.ENTITY_HORSE_SADDLE, 0.5F, 1F);
-                        player.getInventory().setItemInMainHand(InvUtils.decreaseItem(player.getInventory().getItemInMainHand(), 1));
-                        player.getWorld().dropItem(player.getLocation().add(0, 1, 0), scrapBoxLoot.get(CSCoreLib.randomizer().nextInt(scrapBoxLoot.size())));
-                        itemUseEvent.setCancelled(true);
-                    }
-                }
-                return false;
-            }
-        });
+        new ScrapBox(Categories.MISC, Items.SCRAP_BOX, "SCRAP_BOX", CustomRecipeType.RECYCLER).register();
 
         new SlimefunItem(Categories.MISC, Items.UU_MATTER, "UU_MATTER", CustomRecipeType.UU_FABRICATOR, new ItemStack[]{null, null, null, null, null, null, null, null, null}).register();
         new SlimefunItem(Categories.MISC, Items.EMPTY_CAPSULE, "EMPTY_CHARGE", RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{null, SlimefunItems.TIN_INGOT, null, SlimefunItems.TIN_INGOT, SlimefunItems.CAN, SlimefunItems.TIN_INGOT, null, SlimefunItems.TIN_INGOT, null}).register();
@@ -229,97 +203,26 @@ public class SlimeXpansion extends JavaPlugin {
 
         new ChunkLoader(CustomCategories.SLIMEFUN_XPANSION, Items.CHUNK_LOADER, "CHUNK_LOADER", RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{SlimefunItems.GOLD_24K, SlimefunItems.BLISTERING_INGOT_3, SlimefunItems.GOLD_24K, Items.MAG_THOR, Items.THORIUM, Items.MAG_THOR, SlimefunItems.REINFORCED_PLATE, SlimefunItems.POWER_CRYSTAL, SlimefunItems.REINFORCED_PLATE}).register();
 
-        new SlimefunItem(CustomCategories.SLIMEFUN_XPANSION, Items.REDSTONE_TRANSMITTER, "REDSTONE_TRANSMITTER", RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{SlimefunItems.DAMASCUS_STEEL_INGOT, SlimefunItems.ADVANCED_CIRCUIT_BOARD, SlimefunItems.DAMASCUS_STEEL_INGOT, SlimefunItems.DAMASCUS_STEEL_INGOT, new ItemStack(Material.REDSTONE_BLOCK), SlimefunItems.DAMASCUS_STEEL_INGOT, SlimefunItems.CORINTHIAN_BRONZE_INGOT, new ItemStack(Material.GLASS), SlimefunItems.CORINTHIAN_BRONZE_INGOT}).register(new BlockTicker() {
-            @Override
-            public boolean isSynchronized() {
-                return false;
-            }
+        new RedstoneTransmitter(CustomCategories.SLIMEFUN_XPANSION, Items.REDSTONE_TRANSMITTER, "REDSTONE_TRANSMITTER", RecipeType.ENHANCED_CRAFTING_TABLE, 
+        new ItemStack[] {SlimefunItems.DAMASCUS_STEEL_INGOT, SlimefunItems.ADVANCED_CIRCUIT_BOARD, SlimefunItems.DAMASCUS_STEEL_INGOT, SlimefunItems.DAMASCUS_STEEL_INGOT, new ItemStack(Material.REDSTONE_BLOCK), SlimefunItems.DAMASCUS_STEEL_INGOT, SlimefunItems.CORINTHIAN_BRONZE_INGOT, new ItemStack(Material.GLASS), SlimefunItems.CORINTHIAN_BRONZE_INGOT}).register();
 
-            @Override
-            public void uniqueTick() {
+        new RedstoneReceiver(CustomCategories.SLIMEFUN_XPANSION, Items.REDSTONE_RECEIVER, "REDSTONE_RECEIVER", RecipeType.ENHANCED_CRAFTING_TABLE, 
+        new ItemStack[] {SlimefunItems.DAMASCUS_STEEL_INGOT, new ItemStack(Material.GLASS), SlimefunItems.DAMASCUS_STEEL_INGOT, SlimefunItems.DAMASCUS_STEEL_INGOT, new ItemStack(Material.REDSTONE_BLOCK), SlimefunItems.DAMASCUS_STEEL_INGOT, SlimefunItems.CORINTHIAN_BRONZE_INGOT, SlimefunItems.ADVANCED_CIRCUIT_BOARD, SlimefunItems.CORINTHIAN_BRONZE_INGOT}).register();
 
-            }
+        new RedstoneClock(CustomCategories.SLIMEFUN_XPANSION, Items.REDSTONE_CLOCK, "REDSTONE_CLOCK", RecipeType.ENHANCED_CRAFTING_TABLE, 
+        new ItemStack[] {SlimefunItems.LEAD_INGOT, new ItemStack(Material.REDSTONE_BLOCK), SlimefunItems.LEAD_INGOT, new ItemStack(Material.REDSTONE_BLOCK), new ItemStack(Material.CLOCK), new ItemStack(Material.REDSTONE_BLOCK), SlimefunItems.LEAD_INGOT, new ItemStack(Material.REDSTONE_BLOCK), SlimefunItems.LEAD_INGOT}).register();
 
-            @Override
-            public void tick(Block block, SlimefunItem slimefunItem, Config config) {
-                BlockStorage.addBlockInfo(block, "strength", String.valueOf(block.getBlockPower()));
-            }
-        });
+        new Linker(Categories.TECH, Items.LINKER, "LINKER", RecipeType.ENHANCED_CRAFTING_TABLE, 
+        new ItemStack[] {null, SlimefunItems.GOLD_24K, null, SlimefunItems.GOLD_24K, SlimefunItems.ENERGY_REGULATOR, SlimefunItems.GOLD_24K, null, SlimefunItems.GOLD_24K, null}).register();
 
-        new SlimefunItem(CustomCategories.SLIMEFUN_XPANSION, Items.REDSTONE_RECEIVER, "REDSTONE_RECEIVER", RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{SlimefunItems.DAMASCUS_STEEL_INGOT, new ItemStack(Material.GLASS), SlimefunItems.DAMASCUS_STEEL_INGOT, SlimefunItems.DAMASCUS_STEEL_INGOT, new ItemStack(Material.REDSTONE_BLOCK), SlimefunItems.DAMASCUS_STEEL_INGOT, SlimefunItems.CORINTHIAN_BRONZE_INGOT, SlimefunItems.ADVANCED_CIRCUIT_BOARD, SlimefunItems.CORINTHIAN_BRONZE_INGOT}).register(new BlockTicker() {
-            @Override
-            public boolean isSynchronized() {
-                return false;
-            }
+        new SlimefunItem(Categories.MISC, Items.BEDROCK_DRILL, "BEDROCK_DRILL", RecipeType.ENHANCED_CRAFTING_TABLE, 
+        new ItemStack[] {null, SlimefunItems.REINFORCED_PLATE, null, SlimefunItems.REINFORCED_PLATE, Items.UU_MATTER, SlimefunItems.REINFORCED_PLATE, null, SlimefunItems.REINFORCED_PLATE, null}).register();
 
-            @Override
-            public void uniqueTick() {
+        new SlimefunItem(Categories.MISC, Items.LASER_CHARGE, "LASER_CHARGE", RecipeType.ENHANCED_CRAFTING_TABLE, 
+        new ItemStack[] {null, SlimefunItems.REINFORCED_ALLOY_INGOT, null, SlimefunItems.REINFORCED_ALLOY_INGOT, new ItemStack(Material.REDSTONE), SlimefunItems.REINFORCED_ALLOY_INGOT, null, SlimefunItems.REINFORCED_ALLOY_INGOT, null}).register();
 
-            }
-
-            @Override
-            public void tick(Block block, SlimefunItem slimefunItem, Config config) {
-                if (BlockStorage.getBlockInfo(block, "transmitterLoc") != null) {
-                    String[] serializedLoc = BlockStorage.getBlockInfo(block, "transmitterLoc").split(";");
-                    World world = Bukkit.getWorld(serializedLoc[0]);
-                    int x = Integer.valueOf(serializedLoc[1]);
-                    int y = Integer.valueOf(serializedLoc[2]);
-                    int z = Integer.valueOf(serializedLoc[3]);
-
-                    Block transmitterBlock = world.getBlockAt(x, y, z);
-
-                    if (transmitterBlock.getType() == Material.AIR) {
-                        BlockStorage.addBlockInfo(block, "transmitterLoc", null);
-                        AnaloguePowerable powerable = (AnaloguePowerable) block.getBlockData();
-                        powerable.setPower(0);
-                        block.setBlockData(powerable);
-                        return;
-                    }
-
-                    int power = transmitterBlock.getBlockPower();
-                    new BukkitRunnable() {
-                        @Override
-                        public void run() {
-                            AnaloguePowerable powerable = (AnaloguePowerable) block.getBlockData();
-                            powerable.setPower(power);
-                            block.setBlockData(powerable); //TODO: make power dynamic
-                        }
-                    }.runTaskLater(SlimeXpansion.plugin, 1);
-                }
-            }
-        });
-
-        new RedstoneClock(CustomCategories.SLIMEFUN_XPANSION, Items.REDSTONE_CLOCK, "REDSTONE_CLOCK", RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{SlimefunItems.LEAD_INGOT, new ItemStack(Material.REDSTONE_BLOCK), SlimefunItems.LEAD_INGOT, new ItemStack(Material.REDSTONE_BLOCK), new ItemStack(Material.CLOCK), new ItemStack(Material.REDSTONE_BLOCK), SlimefunItems.LEAD_INGOT, new ItemStack(Material.REDSTONE_BLOCK), SlimefunItems.LEAD_INGOT}).register();
-
-        new SlimefunItem(Categories.TECH, Items.LINKER, "LINKER", RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{null, SlimefunItems.GOLD_24K, null, SlimefunItems.GOLD_24K, SlimefunItems.ENERGY_REGULATOR, SlimefunItems.GOLD_24K, null, SlimefunItems.GOLD_24K, null}).register(new ItemInteractionHandler() {
-            @Override
-            public boolean onRightClick(ItemUseEvent itemUseEvent, Player player, ItemStack itemStack) {
-                Block clickedBlock = itemUseEvent.getClickedBlock();
-                if (SlimefunManager.isItemSimiliar(itemStack, Items.LINKER, false) && clickedBlock != null && BlockStorage.check(clickedBlock) != null) {
-                    if (BlockStorage.check(clickedBlock, "REDSTONE_TRANSMITTER") || BlockStorage.check(clickedBlock, "ENERGY_TRANSMITTER")) {
-                        ItemMeta itemMeta = itemStack.getItemMeta();
-                        String lore[] = {"", itemMeta.getLore().get(1), itemMeta.getLore().get(2), "", clickedBlock.getWorld().getName() + ";" + clickedBlock.getX() + ";" + clickedBlock.getY() + ";" + clickedBlock.getZ()};
-                        itemMeta.setLore(Arrays.asList(lore));
-                        itemStack.setItemMeta(itemMeta);
-                        player.sendMessage(ChatColor.GREEN + "Transmitter Location bound!");
-                    } else if (BlockStorage.check(clickedBlock, "REDSTONE_RECEIVER") || BlockStorage.check(clickedBlock, "ENERGY_RECEIVER")) {
-                        if (itemStack.getItemMeta().getLore().size() != 4 || !itemStack.getItemMeta().getLore().get(3).equals("")) {
-                            BlockStorage.addBlockInfo(clickedBlock, "transmitterLoc", itemStack.getItemMeta().getLore().get(4));
-                            player.sendMessage(ChatColor.GREEN + "Transmitter Location set!");
-                        } else {
-                            player.sendMessage(ChatColor.RED + "No Bound Transmitter found!");
-                        }
-                    }
-                }
-                return false;
-            }
-        });
-
-        new SlimefunItem(Categories.MISC, Items.BEDROCK_DRILL, "BEDROCK_DRILL", RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{null, SlimefunItems.REINFORCED_PLATE, null, SlimefunItems.REINFORCED_PLATE, Items.UU_MATTER, SlimefunItems.REINFORCED_PLATE, null, SlimefunItems.REINFORCED_PLATE, null}).register();
-
-        new SlimefunItem(Categories.MISC, Items.LASER_CHARGE, "LASER_CHARGE", RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{null, SlimefunItems.REINFORCED_ALLOY_INGOT, null, SlimefunItems.REINFORCED_ALLOY_INGOT, new ItemStack(Material.REDSTONE), SlimefunItems.REINFORCED_ALLOY_INGOT, null, SlimefunItems.REINFORCED_ALLOY_INGOT, null}).register();
-
-        new SlimefunItem(Categories.RESOURCES, Items.THORIUM, "THORIUM", CustomRecipeType.DEEP_MINER, new ItemStack[]{null, null, null, null, new CustomItem(Material.PAPER, "&fHint!", "&a&oMake sure to first GEO-Scan the chunk in which you are", "&a&omining to discover Thorium!"), null, null, null, null}).register();
+        new SlimefunItem(Categories.RESOURCES, Items.THORIUM, "THORIUM", CustomRecipeType.DEEP_MINER, 
+        new ItemStack[] {null, null, null, null, new CustomItem(Material.PAPER, "&fHint!", "&a&oMake sure to first GEO-Scan the chunk in which you are", "&a&omining to discover Thorium!"), null, null, null, null}).register();
 
         new Alloy(Categories.RESOURCES, Items.MAG_THOR, "MAG_THOR", new ItemStack[]{SlimefunItems.REINFORCED_ALLOY_INGOT, Items.THORIUM, SlimefunItems.MAGNESIUM_INGOT, SlimefunItems.ZINC_INGOT, null, null, null, null, null}).register();
 
@@ -347,6 +250,7 @@ public class SlimeXpansion extends JavaPlugin {
         new EnergyReceiver(CustomCategories.SLIMEFUN_XPANSION, Items.ENERGY_RECEIVER, "ENERGY_RECEIVER", RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{null, SlimefunItems.BLISTERING_INGOT_3, null, SlimefunItems.BLISTERING_INGOT_3, Items.ENERGY_TRANSMITTER, SlimefunItems.BLISTERING_INGOT_3, null, SlimefunItems.BLISTERING_INGOT_3, null}).registerChargeableBlock(false, 12000);
 
         OreGenSystem.registerResource(new OreGenResource() {
+        	
             @Override
             public int getDefaultSupply(Biome biome) {
                 switch (biome) {
@@ -403,30 +307,5 @@ public class SlimeXpansion extends JavaPlugin {
         Slimefun.registerResearch(new Research(507, "Superalloys", 35), Items.MAG_THOR);
         Slimefun.registerResearch(new Research(508, "Chunk Loading", 85), Items.CHUNK_LOADER, Items.CHUNK_LOADER);
         Slimefun.registerResearch(new Research(509, "Astronaut Food?", 45), Items.FOOD_SYNTHESIZER);
-    }
-
-    private void parseScrapboxDrops() {
-        if (!openScrapbox) return;
-
-        for (String lootName : config.getStringList("scrapbox-items")) {
-            boolean success;
-            if (Material.getMaterial(lootName) != null) {
-                scrapBoxLoot.add(new ItemStack(Material.getMaterial(lootName)));
-                success = true;
-            } else {
-                success = false;
-            }
-
-            if (success) continue;
-
-            if (SlimefunItem.getItem(lootName) != null) {
-                scrapBoxLoot.add(SlimefunItem.getItem(lootName));
-                success = true;
-            } else {
-                success = false;
-            }
-
-            if (!success) getLogger().info("There is no such item with name " + lootName);
-        }
     }
 }

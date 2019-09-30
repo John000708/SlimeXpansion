@@ -1,4 +1,4 @@
-package me.john000708.listeners;
+package me.john000708.slimexpansion.listeners;
 
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;

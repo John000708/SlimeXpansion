@@ -1,4 +1,4 @@
-package me.john000708.machines;
+package me.john000708.slimexpansion.machines;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import me.john000708.SlimeXpansion;
+import me.john000708.slimexpansion.SlimeXpansion;
 import me.mrCookieSlime.CSCoreLibPlugin.Configuration.Config;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.ChestMenu;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.ClickAction;
@@ -45,6 +45,7 @@ public class RedstoneClock extends SlimefunItem {
                 if (BlockStorage.getLocationInfo(block.getLocation(), "time") != null) {
                     blockMenu.replaceExistingItem(11, new CustomItem(new ItemStack(Material.REDSTONE_BLOCK), "&e+15 Seconds"));
                     blockMenu.addMenuClickHandler(11, new MenuClickHandler() {
+                    	
                         @Override
                         public boolean onClick(Player player, int i, ItemStack itemStack, ClickAction clickAction) {
                             if (checkTime(block, 15)) {
@@ -58,6 +59,7 @@ public class RedstoneClock extends SlimefunItem {
 
                     blockMenu.replaceExistingItem(12, new CustomItem(new ItemStack(Material.REDSTONE_BLOCK), "&e+1 Second"));
                     blockMenu.addMenuClickHandler(12, new MenuClickHandler() {
+                    	
                         @Override
                         public boolean onClick(Player player, int i, ItemStack itemStack, ClickAction clickAction) {
                             if (checkTime(block, 1)) {
@@ -73,6 +75,7 @@ public class RedstoneClock extends SlimefunItem {
 
                     blockMenu.replaceExistingItem(14, new CustomItem(new ItemStack(Material.REDSTONE_BLOCK), "&e-1 Second"));
                     blockMenu.addMenuClickHandler(14, new MenuClickHandler() {
+                    	
                         @Override
                         public boolean onClick(Player player, int i, ItemStack itemStack, ClickAction clickAction) {
                             if (checkTime(block, -1)) {
@@ -86,6 +89,7 @@ public class RedstoneClock extends SlimefunItem {
 
                     blockMenu.replaceExistingItem(15, new CustomItem(new ItemStack(Material.REDSTONE_BLOCK), "&e-15 Seconds"));
                     blockMenu.addMenuClickHandler(15, new MenuClickHandler() {
+                    	
                         @Override
                         public boolean onClick(Player player, int i, ItemStack itemStack, ClickAction clickAction) {
                             if (checkTime(block, -15)) {
