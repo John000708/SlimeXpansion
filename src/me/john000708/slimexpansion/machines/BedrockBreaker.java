@@ -24,6 +24,7 @@ import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.Item.CustomItem;
 import me.mrCookieSlime.Slimefun.SlimefunPlugin;
 import me.mrCookieSlime.Slimefun.Lists.RecipeType;
 import me.mrCookieSlime.Slimefun.Objects.Category;
+import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SimpleSlimefunItem;
 import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SlimefunItem;
 import me.mrCookieSlime.Slimefun.Objects.handlers.BlockTicker;
 import me.mrCookieSlime.Slimefun.Setup.SlimefunManager;
@@ -37,7 +38,7 @@ import me.mrCookieSlime.Slimefun.cscorelib2.protection.ProtectableAction;
 /**
  * Created by John on 18.04.2016.
  */
-public abstract class BedrockBreaker extends SlimefunItem {
+public abstract class BedrockBreaker extends SimpleSlimefunItem<BlockTicker> {
 
     private static final int headBorder[] = {0, 1, 2, 9, 11, 18, 19, 20};
     private static final int progressBorder[] = {3, 4, 5, 6, 7, 8, 12, 13, 16, 17, 21, 22, 23, 24, 25, 26};
@@ -51,12 +52,13 @@ public abstract class BedrockBreaker extends SlimefunItem {
     public BedrockBreaker(Category category, ItemStack item, String name, RecipeType recipeType, final ItemStack[] recipe) {
         super(category, item, name, recipeType, recipe);
 
-        new BlockMenuPreset(name, getInventoryTitle()) {
+        new BlockMenuPreset(name, "&4Bedrock Breaker") {
+        	
+        	@Override
             public void init() {
                 constructMenu(this);
             }
-
-
+        	
             @Override
             public void newInstance(final BlockMenu menu, final Block block) {
                 if (BlockStorage.getLocationInfo(block.getLocation(), "enabled") != null) {
@@ -109,14 +111,9 @@ public abstract class BedrockBreaker extends SlimefunItem {
         return 2048;
     }
 
-
-    public String getInventoryTitle() {
-        return "&4Bedrock Breaker";
-    }
-
     @Override
-    public void register(boolean slimefun) {
-        addItemHandler(new BlockTicker() {
+    public BlockTicker getItemHandler() {
+    	return new BlockTicker() {
         	
             @Override
             public boolean isSynchronized() {
@@ -132,23 +129,27 @@ public abstract class BedrockBreaker extends SlimefunItem {
             public void tick(Block block, SlimefunItem slimefunItem, Config config) {
                 BedrockBreaker.this.tick(block);
             }
-        });
-        super.register(slimefun);
+    	};
     }
 
     protected void tick(final Block block) {
         if (!(time % 2 == 0)) return;
+        
         if (BlockStorage.getLocationInfo(block.getLocation(), "enabled") == null || BlockStorage.getLocationInfo(block.getLocation(), "enabled").equals("false"))
             return;
+        
         if (getEnergyConsumption() > ChargableBlock.getCharge(block)) return;
+        
         if (block.getRelative(BlockFace.DOWN).getType() != Material.BEDROCK) {
             updateStatus(block, new CustomItem(new ItemStack(Material.REDSTONE_BLOCK), "&4No Bedrock Found"));
             return;
         }
+        
         if (!(BlockStorage.getInventory(block).getItemInSlot(10) != null && SlimefunManager.isItemSimiliar(BlockStorage.getInventory(block).getItemInSlot(10), Items.BEDROCK_DRILL, false))) {
             updateStatus(block, new CustomItem(new ItemStack(Material.REDSTONE_BLOCK), "&4No Drill Found"));
             return;
         }
+        
         final Block bedrockBlock = block.getRelative(BlockFace.DOWN);
         ItemStack drillItem = BlockStorage.getInventory(block).getItemInSlot(10);
         ItemMeta meta = drillItem.getItemMeta();

@@ -26,6 +26,7 @@ import me.mrCookieSlime.Slimefun.SlimefunPlugin;
 import me.mrCookieSlime.Slimefun.GEO.OreGenSystem;
 import me.mrCookieSlime.Slimefun.Lists.RecipeType;
 import me.mrCookieSlime.Slimefun.Objects.Category;
+import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SimpleSlimefunItem;
 import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SlimefunItem;
 import me.mrCookieSlime.Slimefun.Objects.handlers.BlockTicker;
 import me.mrCookieSlime.Slimefun.Setup.SlimefunManager;
@@ -39,7 +40,7 @@ import me.mrCookieSlime.Slimefun.cscorelib2.protection.ProtectableAction;
 /**
  * Created by John on 16.05.2016.
  */
-public abstract class DeepDepthMiner extends SlimefunItem {
+public abstract class DeepDepthMiner extends SimpleSlimefunItem<BlockTicker> {
 	
     private static final int[] headBorder = {0, 1, 10, 18, 19};
     private static final int[] resultBorder = {7, 8, 16, 25, 26};
@@ -57,7 +58,7 @@ public abstract class DeepDepthMiner extends SlimefunItem {
     public DeepDepthMiner(Category category, ItemStack item, String name, RecipeType recipeType, final ItemStack[] recipe) {
         super(category, item, name, recipeType, recipe);
 
-        new BlockMenuPreset(name, getInventoryTitle()) {
+        new BlockMenuPreset(name, "&6Deep Depth Miner") {
         	
             public void init() {
                 constructMenu(this);
@@ -109,18 +110,14 @@ public abstract class DeepDepthMiner extends SlimefunItem {
             }
         };
     }
-
-    public String getInventoryTitle() {
-        return "&6Deep Depth Miner";
-    }
-
+    
     public int getEnergyConsumption() {
         return 512;
     }
-
+    
     @Override
-    public void register(boolean slimefun) {
-        addItemHandler(new BlockTicker() {
+    public BlockTicker getItemHandler() {
+    	return new BlockTicker() {
         	
             @Override
             public boolean isSynchronized() {
@@ -136,10 +133,8 @@ public abstract class DeepDepthMiner extends SlimefunItem {
             public void tick(Block block, SlimefunItem slimefunItem, Config config) {
                 DeepDepthMiner.this.tick(block);
             }
-        });
-        super.register(slimefun);
+        };
     }
-
 
     protected void tick(final Block block) {
         if (BlockStorage.getLocationInfo(block.getLocation(), "enabled") == null || BlockStorage.getLocationInfo(block.getLocation(), "enabled").equals("false"))
@@ -247,8 +242,7 @@ public abstract class DeepDepthMiner extends SlimefunItem {
         }
 
     }
-
-
+    
     private void constructMenu(BlockMenuPreset preset) {
         for (int i : headBorder) {
             preset.addItem(i, new CustomItem(Material.CYAN_STAINED_GLASS_PANE, " "), new ChestMenu.MenuClickHandler() {
