@@ -14,6 +14,7 @@
 options:
   auto-update: true
   lootable-scrapbox: true
+  thorium-via-geo-miner: false
   chunkloader-duration: 14440
 scrapbox-items:
 - DIAMOND

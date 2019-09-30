@@ -387,7 +387,7 @@ public class SlimeXpansion extends JavaPlugin {
 
             @Override
             public boolean isLiquid() {
-                return false;
+                return config.getBoolean("options.thorium-via-geo-miner");
             }
         });
     }
