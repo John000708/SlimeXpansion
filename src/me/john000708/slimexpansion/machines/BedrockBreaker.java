@@ -38,7 +38,7 @@ import me.mrCookieSlime.Slimefun.cscorelib2.protection.ProtectableAction;
 /**
  * Created by John on 18.04.2016.
  */
-public abstract class BedrockBreaker extends SimpleSlimefunItem<BlockTicker> {
+public class BedrockBreaker extends SimpleSlimefunItem<BlockTicker> {
 
     private static final int headBorder[] = {0, 1, 2, 9, 11, 18, 19, 20};
     private static final int progressBorder[] = {3, 4, 5, 6, 7, 8, 12, 13, 16, 17, 21, 22, 23, 24, 25, 26};
@@ -106,9 +106,9 @@ public abstract class BedrockBreaker extends SimpleSlimefunItem<BlockTicker> {
             }
         };
     }
-
+    
     public int getEnergyConsumption() {
-        return 2048;
+        return 4098;
     }
 
     @Override

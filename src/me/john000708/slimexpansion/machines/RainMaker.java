@@ -25,7 +25,7 @@ import me.mrCookieSlime.Slimefun.utils.MachineHelper;
 /**
  * Created by John on 17.04.2016.
  */
-public abstract class RainMaker extends AContainer {
+public class RainMaker extends AContainer {
 	
     public RainMaker(Category category, ItemStack item, String name, RecipeType recipeType, final ItemStack[] recipe) {
         super(category, item, name, recipeType, recipe);
@@ -38,7 +38,22 @@ public abstract class RainMaker extends AContainer {
 
     @Override
     public String getMachineIdentifier() {
-        return "&3Rain Maker";
+        return "RAIN_MAKER";
+    }
+    
+    @Override
+    public ItemStack getProgressBar() {
+        return new ItemStack(Material.GOLDEN_HOE);
+    }
+
+    @Override
+    public int getEnergyConsumption() {
+        return 256;
+    }
+
+    @Override
+    public int getSpeed() {
+        return 1;
     }
 
     public void registerDefaultRecipes() {
@@ -47,8 +62,10 @@ public abstract class RainMaker extends AContainer {
     }
 
     @Override
-    public void register(boolean slimefun) {
-        addItemHandler(new BlockTicker() {
+    public void preRegister() {
+    	super.preRegister();
+    	
+    	addItemHandler(new BlockTicker() {
         	
             @Override
             public boolean isSynchronized() {
@@ -60,10 +77,7 @@ public abstract class RainMaker extends AContainer {
                 RainMaker.this.tick(block);
             }
         });
-
-        super.register(slimefun);
     }
-
 
     protected void tick(Block b) {
         if (isProcessing(b)) {

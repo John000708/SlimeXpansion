@@ -40,7 +40,7 @@ import me.mrCookieSlime.Slimefun.cscorelib2.protection.ProtectableAction;
 /**
  * Created by John on 16.05.2016.
  */
-public abstract class DeepDepthMiner extends SimpleSlimefunItem<BlockTicker> {
+public class DeepDepthMiner extends SimpleSlimefunItem<BlockTicker> {
 	
     private static final int[] headBorder = {0, 1, 10, 18, 19};
     private static final int[] resultBorder = {7, 8, 16, 25, 26};

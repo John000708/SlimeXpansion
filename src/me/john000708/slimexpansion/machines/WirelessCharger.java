@@ -15,7 +15,7 @@ import me.mrCookieSlime.Slimefun.api.energy.ItemEnergy;
 /**
  * Created by John on 16.04.2016.
  */
-public abstract class WirelessCharger extends SlimefunItem {
+public class WirelessCharger extends SlimefunItem {
 	
     public WirelessCharger(Category category, ItemStack item, String name, RecipeType recipeType, final ItemStack[] recipe) {
         super(category, item, name, recipeType, recipe);
@@ -26,7 +26,7 @@ public abstract class WirelessCharger extends SlimefunItem {
     }
     
     @Override
-    public void register(boolean slimefun) {
+    public void preRegister() {
         addItemHandler(new BlockTicker() {
         	
             @Override
@@ -40,7 +40,7 @@ public abstract class WirelessCharger extends SlimefunItem {
             }
         });
 
-        super.register(slimefun);
+        super.preRegister();
     }
 
     protected void tick(Block b) {

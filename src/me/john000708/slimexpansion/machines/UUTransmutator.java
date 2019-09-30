@@ -30,7 +30,7 @@ import me.mrCookieSlime.Slimefun.cscorelib2.protection.ProtectableAction;
 /**
  * Created by John on 16.04.2016.
  */
-public abstract class UUTransmutator extends SlimefunItem {
+public class UUTransmutator extends SlimefunItem {
 
     private static final int[] uuBorder = {0, 1, 2, 9, 11, 18, 19, 20};
     private static final int[] itemBorder = {3, 8, 12, 17, 21, 22, 23, 24, 25, 26};
@@ -40,7 +40,7 @@ public abstract class UUTransmutator extends SlimefunItem {
     public UUTransmutator(Category category, ItemStack item, String name, RecipeType recipeType, final ItemStack[] recipe) {
         super(category, item, name, recipeType, recipe);
 
-        new BlockMenuPreset(name, getInventoryTitle()) {
+        new BlockMenuPreset(name, "&5UU Transmutator") {
         	
             public void init() {
                 constructMenu(this);
@@ -113,9 +113,13 @@ public abstract class UUTransmutator extends SlimefunItem {
             return true;
         });
     }
+    
+    public int getEnergyConsumption() {
+        return 512;
+    }
 
     @Override
-    public void register(boolean slimefun) {
+    public void preRegister() {
         addItemHandler(new BlockTicker() {
         	
             @Override
@@ -144,7 +148,8 @@ public abstract class UUTransmutator extends SlimefunItem {
                 }
             }
         });
-        super.register(slimefun);
+        
+        super.preRegister();
     }
     
     private void constructMenu(BlockMenuPreset preset) {
@@ -185,10 +190,6 @@ public abstract class UUTransmutator extends SlimefunItem {
         preset.addItem(16, new ItemStack(Material.EMERALD));
     }
 
-    public String getInventoryTitle() {
-        return "&5UU Transmutator";
-    }
-
     public int[] getInputSlots() {
         return new int[] {10};
     }
@@ -196,8 +197,6 @@ public abstract class UUTransmutator extends SlimefunItem {
     public int[] getOutputSlots() {
         return new int[] {37, 38, 39, 40, 41, 42, 43};
     }
-
-    public abstract int getEnergyConsumption();
 
     private Inventory inject(Block b) {
         int size = BlockStorage.getInventory(b).toInventory().getSize();
