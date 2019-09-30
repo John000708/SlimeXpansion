@@ -33,6 +33,7 @@ public class RedstoneClock extends SlimefunItem {
         super(category, item, name, recipeType, recipe);
 
         new BlockMenuPreset(name, "&4Redstone Clock") {
+        	
             @Override
             public void init() {
                 constructMenu(this);
@@ -117,6 +118,7 @@ public class RedstoneClock extends SlimefunItem {
     @Override
     public void register(boolean slimefun) {
         addItemHandler(new BlockTicker() {
+        	
             @Override
             public boolean isSynchronized() {
                 return false;

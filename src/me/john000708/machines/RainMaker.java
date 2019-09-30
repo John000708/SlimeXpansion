@@ -32,7 +32,7 @@ public abstract class RainMaker extends AContainer {
 
     @Override
     public String getInventoryTitle() {
-        return "§3Rain Maker";
+        return "&3Rain Maker";
     }
 
     @Override
@@ -41,21 +41,17 @@ public abstract class RainMaker extends AContainer {
     }
 
     public void registerDefaultRecipes() {
-        registerRecipe(30, new ItemStack[]{Items.IODINE_CHARGE}, new ItemStack[]{Items.EMPTY_CAPSULE});
-        registerRecipe(30, new ItemStack[]{Items.DISSIPATION_CHARGE}, new ItemStack[]{Items.EMPTY_CAPSULE});
+        registerRecipe(30, new ItemStack[] {Items.IODINE_CHARGE}, new ItemStack[]{Items.EMPTY_CAPSULE});
+        registerRecipe(30, new ItemStack[] {Items.DISSIPATION_CHARGE}, new ItemStack[]{Items.EMPTY_CAPSULE});
     }
 
     @Override
     public void register(boolean slimefun) {
         addItemHandler(new BlockTicker() {
+        	
             @Override
             public boolean isSynchronized() {
                 return true;
-            }
-
-            @Override
-            public void uniqueTick() {
-
             }
 
             @Override
@@ -91,7 +87,7 @@ public abstract class RainMaker extends AContainer {
             }
         } else {
             MachineRecipe r = null;
-            Map<Integer, Integer> found = new HashMap<Integer, Integer>();
+            Map<Integer, Integer> found = new HashMap<>();
             outer:
             for (MachineRecipe recipe : recipes) {
                 for (ItemStack input : recipe.getInput()) {

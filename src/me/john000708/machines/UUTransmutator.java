@@ -42,6 +42,7 @@ public abstract class UUTransmutator extends SlimefunItem {
         super(category, item, name, recipeType, recipe);
 
         new BlockMenuPreset(name, getInventoryTitle()) {
+        	
             public void init() {
                 constructMenu(this);
             }
@@ -99,38 +100,28 @@ public abstract class UUTransmutator extends SlimefunItem {
             public boolean canOpen(Block b, Player p) {
                 return p.hasPermission("slimefun.inventory.bypass") || CSCoreLib.getLib().getProtectionManager().canAccessChest(p.getUniqueId(), b, true);
             }
+            
         };
-        registerBlockHandler(name, new SlimefunBlockHandler() {
-            @Override
-            public void onPlace(Player player, Block block, SlimefunItem slimefunItem) {
-
+        registerBlockHandler(name, (p, b, sfItem, reason) -> {
+        	for (int slot : getInputSlots()) {
+                if (BlockStorage.getInventory(b).getItemInSlot(slot) != null)
+                    b.getWorld().dropItemNaturally(b.getLocation(), BlockStorage.getInventory(b).getItemInSlot(slot));
             }
-
-            @Override
-            public boolean onBreak(Player player, Block block, SlimefunItem slimefunItem, UnregisterReason unregisterReason) {
-                for (int slot : getInputSlots()) {
-                    if (BlockStorage.getInventory(block).getItemInSlot(slot) != null)
-                        block.getWorld().dropItemNaturally(block.getLocation(), BlockStorage.getInventory(block).getItemInSlot(slot));
-                }
-                for (int slot : getOutputSlots()) {
-                    if (BlockStorage.getInventory(block).getItemInSlot(slot) != null)
-                        block.getWorld().dropItemNaturally(block.getLocation(), BlockStorage.getInventory(block).getItemInSlot(slot));
-                }
-                return true;
+            for (int slot : getOutputSlots()) {
+                if (BlockStorage.getInventory(b).getItemInSlot(slot) != null)
+                    b.getWorld().dropItemNaturally(b.getLocation(), BlockStorage.getInventory(b).getItemInSlot(slot));
             }
+            return true;
         });
     }
 
     @Override
     public void register(boolean slimefun) {
         addItemHandler(new BlockTicker() {
+        	
             @Override
             public boolean isSynchronized() {
                 return true;
-            }
-
-            @Override
-            public void uniqueTick() {
             }
 
             @Override
@@ -156,9 +147,7 @@ public abstract class UUTransmutator extends SlimefunItem {
         });
         super.register(slimefun);
     }
-
-
-
+    
     private void constructMenu(BlockMenuPreset preset) {
         for (int i : uuBorder) {
             preset.addItem(i, new CustomItem(Material.PINK_STAINED_GLASS_PANE, " "), new ChestMenu.MenuClickHandler() {
@@ -198,15 +187,15 @@ public abstract class UUTransmutator extends SlimefunItem {
     }
 
     public String getInventoryTitle() {
-        return "§5UU Transmutator";
+        return "&5UU Transmutator";
     }
 
     public int[] getInputSlots() {
-        return new int[]{10};
+        return new int[] {10};
     }
 
     public int[] getOutputSlots() {
-        return new int[]{37, 38, 39, 40, 41, 42, 43};
+        return new int[] {37, 38, 39, 40, 41, 42, 43};
     }
 
     public abstract int getEnergyConsumption();
@@ -215,7 +204,7 @@ public abstract class UUTransmutator extends SlimefunItem {
         int size = BlockStorage.getInventory(b).toInventory().getSize();
         Inventory inv = Bukkit.createInventory(null, size);
         for (int i = 0; i < size; i++) {
-            inv.setItem(i, new CustomItem(Material.COMMAND_BLOCK, " &4ALL YOUR PLACEHOLDERS ARE BELONG TO US"));
+            inv.setItem(i, new CustomItem(Material.COMMAND_BLOCK, "&4ALL YOUR PLACEHOLDERS ARE BELONG TO US"));
         }
         for (int slot : getOutputSlots()) {
             inv.setItem(slot, BlockStorage.getInventory(b).getItemInSlot(slot));

@@ -80,11 +80,6 @@ public class EnergyTransmitter extends SlimefunItem {
             }
 
             @Override
-            public void uniqueTick() {
-
-            }
-
-            @Override
             public void tick(Block block, SlimefunItem slimefunItem, Config config) {
             }
         });

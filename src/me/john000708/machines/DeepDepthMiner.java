@@ -39,12 +39,13 @@ import me.mrCookieSlime.Slimefun.api.item_transport.ItemTransportFlow;
  * Created by John on 16.05.2016.
  */
 public abstract class DeepDepthMiner extends SlimefunItem {
-    private static final int headBorder[] = {0, 1, 10, 18, 19};
-    private static final int resultBorder[] = {7, 8, 16, 25, 26};
-    private static final int toggleBorder[] = {27, 28, 36, 37, 45, 46, 34, 35, 43, 44, 52, 53};
-    private static final int stoneBorder[] = {20, 21, 23, 24, 29, 30, 32, 33, 38, 39, 41, 42};
-    private static final int bedrockBorder[] = {47, 48, 49, 50, 51};
-    private static final int laserBar[] = {13, 22, 31, 40};
+	
+    private static final int[] headBorder = {0, 1, 10, 18, 19};
+    private static final int[] resultBorder = {7, 8, 16, 25, 26};
+    private static final int[] toggleBorder = {27, 28, 36, 37, 45, 46, 34, 35, 43, 44, 52, 53};
+    private static final int[] stoneBorder = {20, 21, 23, 24, 29, 30, 32, 33, 38, 39, 41, 42};
+    private static final int[] bedrockBorder = {47, 48, 49, 50, 51};
+    private static final int[] laserBar = {13, 22, 31, 40};
 
     private static List<ItemStack> ores = new ArrayList<>();
 
@@ -65,6 +66,7 @@ public abstract class DeepDepthMiner extends SlimefunItem {
         ores.add(new ItemStack(Material.NETHER_QUARTZ_ORE));
 
         new BlockMenuPreset(name, getInventoryTitle()) {
+        	
             public void init() {
                 constructMenu(this);
             }
