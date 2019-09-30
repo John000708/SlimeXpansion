@@ -1,7 +1,6 @@
 main: me.john000708.SlimeXpansion
 name: SlimeXpansion
-version: 1.1.13
+version: ${project.version}
 api-version: 1.14
 author: John000708
 depend: [Slimefun]
-softdepend: [CS-CoreLib]
