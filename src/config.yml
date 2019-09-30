@@ -1,0 +1,50 @@
+# 
+# Name: SlimeXpansion
+# Author: John000708
+# 
+# Do not modify the Config while the Server is running
+# otherwise bad things might happen!
+# 
+# This Plugin also requires CS-CoreLib to run!
+# If you don't have it installed already, its going to be
+# automatically installed for you
+# 
+# This Plugin utilises an Auto-Updater. If you want to turn that off,
+# simply set options -> auto-update to false
+options:
+  auto-update: true
+  lootable-scrapbox: true
+  chunkloader-duration: 14440
+scrapbox-items:
+- DIAMOND
+- CAKE
+- GOLD_ORE
+- IRON_ORE
+- SLIME_BALL
+- COAL_ORE
+- COOKED_BEEF
+- REDSTONE
+- GLOWSTONE_DUST
+- COOKED_CHICKEN
+- BONE
+- FEATHER
+- LEATHER
+- SIGN
+- SOUL_SAND
+- BREAD
+- APPLE
+- MELON
+- PUMPKIN
+- NETHERRACK
+- ROTTEN_FLESH
+- GRAVEL
+- STICK
+- DIRT
+- GRASS_BLOCK
+- WOODEN_HOE
+- GOLD_HELMET
+- IRON_DUST
+- COPPER_DUST
+- TIN_DUST
+- GOLD_DUST
+- BATTERY

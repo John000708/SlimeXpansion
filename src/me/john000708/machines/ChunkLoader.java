@@ -1,0 +1,126 @@
+package me.john000708.machines;
+
+import me.john000708.Items;
+import me.john000708.SlimeXpansion;
+import me.mrCookieSlime.CSCoreLibPlugin.CSCoreLib;
+import me.mrCookieSlime.CSCoreLibPlugin.Configuration.Config;
+import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.ChestMenu;
+import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.ClickAction;
+import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.InvUtils;
+import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.Item.CustomItem;
+import me.mrCookieSlime.Slimefun.Lists.RecipeType;
+import me.mrCookieSlime.Slimefun.Objects.Category;
+import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SlimefunItem;
+import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.abstractItems.MachineHelper;
+import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.handlers.BlockTicker;
+import me.mrCookieSlime.Slimefun.Setup.SlimefunManager;
+import me.mrCookieSlime.Slimefun.api.BlockStorage;
+import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
+import me.mrCookieSlime.Slimefun.api.inventory.BlockMenuPreset;
+import me.mrCookieSlime.Slimefun.api.item_transport.ItemTransportFlow;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.MaterialData;
+
+/**
+ * Created by John on 22.05.2016.
+ */
+public class ChunkLoader extends SlimefunItem {
+
+    private int time = 0;
+    private int processTime;
+
+    public ChunkLoader(Category category, ItemStack itemStack, String name, RecipeType recipeType, ItemStack[] recipe) {
+        super(category, itemStack, name, recipeType, recipe);
+
+        new BlockMenuPreset(name, "&dChunk Loader") {
+            public void init() {
+                constructMenu(this);
+            }
+
+            public void newInstance(BlockMenu menu, Block block) {
+
+            }
+
+            public int[] getSlotsAccessedByItemTransport(ItemTransportFlow flow) {
+                if (flow.equals(ItemTransportFlow.INSERT)) return new int[]{22};
+                else return new int[]{22};
+            }
+
+            public boolean canOpen(Block block, Player p) {
+                return p.hasPermission("slimefun.inventory.bypass") || CSCoreLib.getLib().getProtectionManager().canAccessChest(p.getUniqueId(), block);
+            }
+        };
+    }
+
+    @Override
+    public void register(boolean slimefun) {
+        addItemHandler(new BlockTicker() {
+            @Override
+            public boolean isSynchronized() {
+                return false;
+            }
+
+            @Override
+            public void uniqueTick() {
+                time++;
+            }
+
+            @Override
+            public void tick(Block block, SlimefunItem slimefunItem, Config config) {
+                ChunkLoader.this.tick(block);
+            }
+        });
+        super.register(slimefun);
+    }
+
+    protected void tick(Block block) {
+        if (!(time % 2 == 0)) return;
+        if (BlockStorage.getBlockInfo(block, "timeLeft") == null) BlockStorage.addBlockInfo(block, "timeLeft", "0");
+
+        BlockMenu menu = BlockStorage.getInventory(block);
+        processTime = Integer.valueOf(BlockStorage.getBlockInfo(block, "timeLeft"));
+
+        if (processTime > 0) {
+            processTime--;
+
+            BlockStorage.addBlockInfo(block, "timeLeft", String.valueOf(Integer.valueOf(BlockStorage.getBlockInfo(block, "timeLeft")) - 1));
+            menu.replaceExistingItem(4, new CustomItem(new ItemStack(Material.CLOCK), MachineHelper.getTimeLeft(processTime), MachineHelper.getProgress(processTime, SlimeXpansion.plugin.getChunkLoaderDuration())));
+        } else {
+            if (menu.getItemInSlot(13) == null || !SlimefunManager.isItemSimiliar(menu.getItemInSlot(13), Items.THORIUM, true)) {
+                menu.replaceExistingItem(4, new CustomItem(Material.PURPLE_STAINED_GLASS_PANE, " "));
+                block.getWorld().setChunkForceLoaded(block.getChunk().getX(), block.getChunk().getZ(), false);
+                return;
+            }
+
+            BlockStorage.addBlockInfo(block, "timeLeft", String.valueOf(SlimeXpansion.plugin.getChunkLoaderDuration()));
+            block.getWorld().setChunkForceLoaded(block.getChunk().getX(), block.getChunk().getZ(), true);
+            menu.replaceExistingItem(13, InvUtils.decreaseItem(menu.getItemInSlot(13), 1));
+
+            processTime = SlimeXpansion.plugin.getChunkLoaderDuration();
+        }
+    }
+    private void constructMenu(BlockMenuPreset preset) {
+        for (int i = 0; i <= 12; i++) {
+            preset.addItem(i, new CustomItem(Material.PURPLE_STAINED_GLASS_PANE, " "), new ChestMenu.MenuClickHandler() {
+                @Override
+                public boolean onClick(Player player, int i, ItemStack itemStack, ClickAction clickAction) {
+                    return false;
+                }
+            });
+        }
+
+        for (int i = 14; i <= 26; i++) {
+            preset.addItem(i, new CustomItem(Material.PURPLE_STAINED_GLASS_PANE, " "), new ChestMenu.MenuClickHandler() {
+                @Override
+                public boolean onClick(Player player, int i, ItemStack itemStack, ClickAction clickAction) {
+                    return false;
+                }
+            });
+        }
+//13 empty
+    }
+}
