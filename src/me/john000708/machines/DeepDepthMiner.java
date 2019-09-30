@@ -1,46 +1,54 @@
 package me.john000708.machines;
 
-import me.john000708.Items;
-import me.john000708.SlimeXpansion;
-import me.mrCookieSlime.CSCoreLibPlugin.CSCoreLib;
-import me.mrCookieSlime.CSCoreLibPlugin.Configuration.Config;
-import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.ChestMenu;
-import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.ClickAction;
-import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.Item.CustomItem;
-import me.mrCookieSlime.Slimefun.GEO.OreGenSystem;
-import me.mrCookieSlime.Slimefun.Lists.RecipeType;
-import me.mrCookieSlime.Slimefun.Objects.Category;
-import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SlimefunItem;
-import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.handlers.BlockTicker;
-import me.mrCookieSlime.Slimefun.Setup.SlimefunManager;
-import me.mrCookieSlime.Slimefun.api.BlockStorage;
-import me.mrCookieSlime.Slimefun.api.energy.ChargableBlock;
-import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
-import me.mrCookieSlime.Slimefun.api.inventory.BlockMenuPreset;
-import me.mrCookieSlime.Slimefun.api.item_transport.ItemTransportFlow;
-import org.bukkit.*;
+import java.util.List;
+import java.util.Random;
+
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Color;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import io.github.thebusybiscuit.cscorelib2.materials.MaterialCollections;
+import me.john000708.Items;
+import me.john000708.SlimeXpansion;
+import me.mrCookieSlime.CSCoreLibPlugin.Configuration.Config;
+import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.ChestMenu;
+import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.ClickAction;
+import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.Item.CustomItem;
+import me.mrCookieSlime.Slimefun.SlimefunPlugin;
+import me.mrCookieSlime.Slimefun.GEO.OreGenSystem;
+import me.mrCookieSlime.Slimefun.Lists.RecipeType;
+import me.mrCookieSlime.Slimefun.Objects.Category;
+import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SlimefunItem;
+import me.mrCookieSlime.Slimefun.Objects.handlers.BlockTicker;
+import me.mrCookieSlime.Slimefun.Setup.SlimefunManager;
+import me.mrCookieSlime.Slimefun.api.BlockStorage;
+import me.mrCookieSlime.Slimefun.api.energy.ChargableBlock;
+import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
+import me.mrCookieSlime.Slimefun.api.inventory.BlockMenuPreset;
+import me.mrCookieSlime.Slimefun.api.item_transport.ItemTransportFlow;
+import me.mrCookieSlime.Slimefun.cscorelib2.protection.ProtectableAction;
 
 /**
  * Created by John on 16.05.2016.
  */
 public abstract class DeepDepthMiner extends SlimefunItem {
-    private static final int headBorder[] = {0, 1, 10, 18, 19};
-    private static final int resultBorder[] = {7, 8, 16, 25, 26};
-    private static final int toggleBorder[] = {27, 28, 36, 37, 45, 46, 34, 35, 43, 44, 52, 53};
-    private static final int stoneBorder[] = {20, 21, 23, 24, 29, 30, 32, 33, 38, 39, 41, 42};
-    private static final int bedrockBorder[] = {47, 48, 49, 50, 51};
-    private static final int laserBar[] = {13, 22, 31, 40};
+	
+    private static final int[] headBorder = {0, 1, 10, 18, 19};
+    private static final int[] resultBorder = {7, 8, 16, 25, 26};
+    private static final int[] toggleBorder = {27, 28, 36, 37, 45, 46, 34, 35, 43, 44, 52, 53};
+    private static final int[] stoneBorder = {20, 21, 23, 24, 29, 30, 32, 33, 38, 39, 41, 42};
+    private static final int[] bedrockBorder = {47, 48, 49, 50, 51};
+    private static final int[] laserBar = {13, 22, 31, 40};
 
-    private static List<ItemStack> ores = new ArrayList<>();
+    private static final Random random = new Random();
 
     private int time = 0;
     private int processTime = 3;
@@ -49,24 +57,16 @@ public abstract class DeepDepthMiner extends SlimefunItem {
     public DeepDepthMiner(Category category, ItemStack item, String name, RecipeType recipeType, final ItemStack[] recipe) {
         super(category, item, name, recipeType, recipe);
 
-        ores.add(new ItemStack(Material.COAL_ORE));
-        ores.add(new ItemStack(Material.IRON_ORE));
-        ores.add(new ItemStack(Material.GOLD_ORE));
-        ores.add(new ItemStack(Material.DIAMOND_ORE));
-        ores.add(new ItemStack(Material.EMERALD_ORE));
-        ores.add(new ItemStack(Material.REDSTONE_ORE));
-        ores.add(new ItemStack(Material.LAPIS_ORE));
-        ores.add(new ItemStack(Material.NETHER_QUARTZ_ORE));
-
         new BlockMenuPreset(name, getInventoryTitle()) {
+        	
             public void init() {
                 constructMenu(this);
             }
 
             @Override
             public void newInstance(final BlockMenu menu, final Block block) {
-                if (BlockStorage.getBlockInfo(block, "enabled") != null) {
-                    if (BlockStorage.getBlockInfo(block, "enabled").equals("true")) {
+                if (BlockStorage.getLocationInfo(block.getLocation(), "enabled") != null) {
+                    if (BlockStorage.getLocationInfo(block.getLocation(), "enabled").equals("true")) {
                         for (int i : toggleBorder) {
                             menu.replaceExistingItem(i, new CustomItem(Material.GREEN_STAINED_GLASS_PANE, "&aEnabled"));
                             menu.addMenuClickHandler(i, new MenuClickHandler() {
@@ -78,8 +78,8 @@ public abstract class DeepDepthMiner extends SlimefunItem {
                                 }
                             });
                         }
-                    } else if (BlockStorage.getBlockInfo(block, "enabled").equals("false")) {
-                        menu.replaceExistingItem(4, new CustomItem(Material.DIAMOND_BLOCK, "&3Laser Idle", 1));
+                    } else if (BlockStorage.getLocationInfo(block.getLocation(), "enabled").equals("false")) {
+                        menu.replaceExistingItem(4, new CustomItem(Material.DIAMOND_BLOCK, "&3Laser Idle"));
 
                         for (int i : toggleBorder) {
                             menu.replaceExistingItem(i, new CustomItem(Material.RED_STAINED_GLASS_PANE, "&cDisabled"));
@@ -104,8 +104,8 @@ public abstract class DeepDepthMiner extends SlimefunItem {
                 else return new int[]{17};
             }
 
-            public boolean canOpen(Block block, Player p) {
-                return p.hasPermission("slimefun.inventory.bypass") || CSCoreLib.getLib().getProtectionManager().canAccessChest(p.getUniqueId(), block);
+            public boolean canOpen(Block b, Player p) {
+                return p.hasPermission("slimefun.inventory.bypass") || SlimefunPlugin.getProtectionManager().hasPermission(p, b.getLocation(), ProtectableAction.ACCESS_INVENTORIES);
             }
         };
     }
@@ -141,7 +141,7 @@ public abstract class DeepDepthMiner extends SlimefunItem {
 
 
     protected void tick(final Block block) {
-        if (BlockStorage.getBlockInfo(block, "enabled") == null || BlockStorage.getBlockInfo(block, "enabled").equals("false"))
+        if (BlockStorage.getLocationInfo(block.getLocation(), "enabled") == null || BlockStorage.getLocationInfo(block.getLocation(), "enabled").equals("false"))
             return;
         if (!(time % 2 == 0)) return;
 
@@ -216,7 +216,7 @@ public abstract class DeepDepthMiner extends SlimefunItem {
         if (processTime == 0) {
             processTime = 3;
             ItemStack outputItem = null;
-            if (CSCoreLib.randomizer().nextInt(100) <= 5) {
+            if (random.nextInt(100) <= 5) {
                 if (OreGenSystem.wasResourceGenerated(OreGenSystem.getResource("Thorium"), block.getChunk())) {
                     if (OreGenSystem.getSupplies(OreGenSystem.getResource("Thorium"), block.getChunk(), false) > 0) {
                         OreGenSystem.setSupplies(OreGenSystem.getResource("Thorium"), block.getChunk(), OreGenSystem.getSupplies(OreGenSystem.getResource("Thorium"), block.getChunk(), false) - 1);
@@ -224,7 +224,8 @@ public abstract class DeepDepthMiner extends SlimefunItem {
                     }
                 }
             } else {
-                outputItem = ores.get(new Random().nextInt(ores.size()));
+            	Material[] ores = MaterialCollections.getAllOres();
+                outputItem = new ItemStack(ores[random.nextInt(ores.length)]);
             }
 
             if (outputItem != null && fits(block, new ItemStack[]{outputItem})) {
@@ -319,14 +320,14 @@ public abstract class DeepDepthMiner extends SlimefunItem {
             });
         }
 
-        preset.addItem(4, new CustomItem(Material.DIAMOND_BLOCK, "&3Laser Idle", 1));
+        preset.addItem(4, new CustomItem(Material.DIAMOND_BLOCK, "&3Laser Idle"));
     }
 
     private Inventory inject(Block b) {
         int size = BlockStorage.getInventory(b).toInventory().getSize();
         Inventory inv = Bukkit.createInventory(null, size);
         for (int i = 0; i < size; i++) {
-            inv.setItem(i, new CustomItem(Material.COMMAND_BLOCK, " §4ALL YOUR PLACEHOLDERS ARE BELONG TO US", 0));
+            inv.setItem(i, new CustomItem(Material.COMMAND_BLOCK, "&4ALL YOUR PLACEHOLDERS ARE BELONG TO US"));
         }
         inv.setItem(17, BlockStorage.getInventory(b).getItemInSlot(17));
         return inv;

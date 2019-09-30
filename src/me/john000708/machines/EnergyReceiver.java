@@ -1,5 +1,10 @@
 package me.john000708.machines;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.inventory.ItemStack;
+
 import me.mrCookieSlime.CSCoreLibPlugin.Configuration.Config;
 import me.mrCookieSlime.Slimefun.Lists.RecipeType;
 import me.mrCookieSlime.Slimefun.Objects.Category;
@@ -7,10 +12,6 @@ import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SlimefunItem;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import me.mrCookieSlime.Slimefun.api.energy.ChargableBlock;
 import me.mrCookieSlime.Slimefun.api.energy.EnergyTicker;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.inventory.ItemStack;
 
 
 /**
@@ -25,11 +26,12 @@ public class EnergyReceiver extends SlimefunItem {
     @Override
     public void register(boolean slimefun) {
         addItemHandler(new EnergyTicker() {
+        	
             @Override
             public double generateEnergy(Location l, SlimefunItem slimefunItem, Config config) {
-                if (BlockStorage.getBlockInfo(l, "transmitterLoc") == null) return 0;
-                Location location = deserializeLoc(BlockStorage.getBlockInfo(l, "transmitterLoc"));
-                if (BlockStorage.check(location, "ENERGY_TRANSMITTER") && Boolean.valueOf(BlockStorage.getBlockInfo(location, "enabled"))) {
+                if (BlockStorage.getLocationInfo(l, "transmitterLoc") == null) return 0;
+                Location location = deserializeLoc(BlockStorage.getLocationInfo(l, "transmitterLoc"));
+                if (BlockStorage.check(location, "ENERGY_TRANSMITTER") && Boolean.valueOf(BlockStorage.getLocationInfo(location, "enabled"))) {
                     if (ChargableBlock.getCharge(location) >= 200 && (ChargableBlock.getMaxCharge(l) - ChargableBlock.getCharge(l) >= 200)) {
                         ChargableBlock.addCharge(location, -200);
                         ChargableBlock.addCharge(l, 150);
@@ -43,6 +45,7 @@ public class EnergyReceiver extends SlimefunItem {
             public boolean explode(Location location) {
                 return false;
             }
+            
         });
         super.register(slimefun);
     }

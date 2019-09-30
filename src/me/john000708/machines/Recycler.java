@@ -1,23 +1,19 @@
 package me.john000708.machines;
 
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.inventory.ItemStack;
+
 import me.john000708.Items;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.InvUtils;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.Item.CustomItem;
 import me.mrCookieSlime.Slimefun.Lists.RecipeType;
 import me.mrCookieSlime.Slimefun.Objects.Category;
 import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.abstractItems.AContainer;
-import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.abstractItems.MachineHelper;
 import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.abstractItems.MachineRecipe;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import me.mrCookieSlime.Slimefun.api.energy.ChargableBlock;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.material.MaterialData;
-
-import java.util.ArrayList;
-import java.util.List;
+import me.mrCookieSlime.Slimefun.utils.MachineHelper;
 
 /**
  * Created by John on 14.04.2016.
@@ -32,10 +28,20 @@ public abstract class Recycler extends AContainer {
     public void registerDefaultRecipes() {
         registerRecipe(8, new ItemStack[]{}, new ItemStack[]{Items.SCRAP_BOX});
     }
+    
+    @Override
+    public ItemStack getProgressBar() {
+        return new ItemStack(Material.WOODEN_HOE);
+    }
+
+    @Override
+    public String getInventoryTitle() {
+        return "&4Recycler";
+    }
 
     @Override
     public String getMachineIdentifier() {
-        return "Recycler";
+        return "RECYCLER";
     }
 
     @Override
@@ -43,18 +49,7 @@ public abstract class Recycler extends AContainer {
         if (isProcessing(b)) {
             int timeleft = progress.get(b);
             if (timeleft > 0) {
-                ItemStack item = getProgressBar().clone();
-                item.setDurability(MachineHelper.getDurability(item, timeleft, processing.get(b).getTicks()));
-                ItemMeta im = item.getItemMeta();
-                im.setDisplayName(" ");
-                List<String> lore = new ArrayList<String>();
-                lore.add(MachineHelper.getProgress(timeleft, processing.get(b).getTicks()));
-                lore.add("");
-                lore.add(MachineHelper.getTimeLeft(timeleft / 2));
-                im.setLore(lore);
-                item.setItemMeta(im);
-
-                BlockStorage.getInventory(b).replaceExistingItem(22, item);
+            	MachineHelper.updateProgressbar(BlockStorage.getInventory(b), 22, timeleft, processing.get(b).getTicks(), getProgressBar());
 
                 if (ChargableBlock.isChargable(b)) {
                     if (ChargableBlock.getCharge(b) < getEnergyConsumption()) return;
