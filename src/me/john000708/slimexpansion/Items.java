@@ -1,8 +1,9 @@
-package me.john000708;
+package me.john000708.slimexpansion;
 
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.Item.CustomArmor;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.Item.CustomItem;
@@ -66,7 +67,12 @@ public class Items {
             LASER_CHARGE = new CustomItem(CustomSkull.getItem("eyJ0aW1lc3RhbXAiOjE0NjM1ODgyNjYwMTgsInByb2ZpbGVJZCI6ImQ2MmI1MjJkMTVjZjQyNWE4NTFlNmNjNDRkOGJlMDg5IiwicHJvZmlsZU5hbWUiOiJKb2huMDAwNzA4IiwidGV4dHVyZXMiOnsiU0tJTiI6eyJ1cmwiOiJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzI3OWY1N2M2OGI3YTkwZTBkODg1MGU3OTRhZGU1YjhlODEwZDMzOGUyNDU5ZWVlZjliYWJkNjgzMmNhMTY5YSJ9fX0="), "&cLaser Charge", "&fThis item is necessary for a", "&4Deep Depth Miner &fto mine Ores.", "", "&7Durability: 1024/1024");
             THORIUM = new CustomItem(CustomSkull.getItem("eyJ0aW1lc3RhbXAiOjE0NjM1OTgzMTg2NDgsInByb2ZpbGVJZCI6ImQ2MmI1MjJkMTVjZjQyNWE4NTFlNmNjNDRkOGJlMDg5IiwicHJvZmlsZU5hbWUiOiJKb2huMDAwNzA4IiwidGV4dHVyZXMiOnsiU0tJTiI6eyJ1cmwiOiJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzQyN2QxYTYxODRjNjJkNGM0YTY3Zjg2MmI4ZTE5ZWMwMDFhYmU0YzdkODg5ZjIzMzQ5ZThkYWZlNmQwMzMifX19"), "&8Thorium", "", "&2Radiation Level: HIGH", "&4&oHazmat Suit required");
             FOOD_SYNTHESIZER = new CustomItem(CustomSkull.getItem("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYTExYTJkZjdkMzdhZjQwZWQ1Y2U0NDJmZDJkNzhjZDhlYmNkY2RjMDI5ZDJhZTY5MWEyYjY0Mzk1Y2RmIn19fQ=="), "&dFood Synthesizer", "", "&fKeeps you fed with artificial food.", "&fComes in two flavors!", "", "&c&o&8\u21E8 &e\u26A1 &70 / 100 J");
+            
             SlimefunItem.setRadioactive(THORIUM);
+            
+            ItemMeta nanoBladeMeta = NANO_BLADE.getItemMeta();
+            nanoBladeMeta.setUnbreakable(true);
+            NANO_BLADE.setItemMeta(nanoBladeMeta);
         } catch (Exception ex) {
             ex.printStackTrace();
         }

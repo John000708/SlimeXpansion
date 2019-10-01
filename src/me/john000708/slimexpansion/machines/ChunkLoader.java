@@ -1,12 +1,12 @@
-package me.john000708.machines;
+package me.john000708.slimexpansion.machines;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import me.john000708.Items;
-import me.john000708.SlimeXpansion;
+import me.john000708.slimexpansion.Items;
+import me.john000708.slimexpansion.SlimeXpansion;
 import me.mrCookieSlime.CSCoreLibPlugin.Configuration.Config;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.ChestMenu;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.ClickAction;
@@ -15,6 +15,7 @@ import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.Item.CustomItem;
 import me.mrCookieSlime.Slimefun.SlimefunPlugin;
 import me.mrCookieSlime.Slimefun.Lists.RecipeType;
 import me.mrCookieSlime.Slimefun.Objects.Category;
+import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SimpleSlimefunItem;
 import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SlimefunItem;
 import me.mrCookieSlime.Slimefun.Objects.handlers.BlockTicker;
 import me.mrCookieSlime.Slimefun.Setup.SlimefunManager;
@@ -28,7 +29,7 @@ import me.mrCookieSlime.Slimefun.utils.MachineHelper;
 /**
  * Created by John on 22.05.2016.
  */
-public class ChunkLoader extends SlimefunItem {
+public class ChunkLoader extends SimpleSlimefunItem<BlockTicker> {
 
     private int time = 0;
     private int processTime;
@@ -37,19 +38,19 @@ public class ChunkLoader extends SlimefunItem {
         super(category, itemStack, name, recipeType, recipe);
 
         new BlockMenuPreset(name, "&dChunk Loader") {
+        	
+        	@Override
             public void init() {
                 constructMenu(this);
             }
 
-            public void newInstance(BlockMenu menu, Block block) {
-
-            }
-
+        	@Override
             public int[] getSlotsAccessedByItemTransport(ItemTransportFlow flow) {
                 if (flow.equals(ItemTransportFlow.INSERT)) return new int[]{22};
                 else return new int[]{22};
             }
 
+        	@Override
             public boolean canOpen(Block b, Player p) {
                 return p.hasPermission("slimefun.inventory.bypass") || SlimefunPlugin.getProtectionManager().hasPermission(p, b.getLocation(), ProtectableAction.ACCESS_INVENTORIES);
             }
@@ -57,8 +58,8 @@ public class ChunkLoader extends SlimefunItem {
     }
 
     @Override
-    public void register(boolean slimefun) {
-        addItemHandler(new BlockTicker() {
+    public BlockTicker getItemHandler() {
+    	return new BlockTicker() {
         	
             @Override
             public boolean isSynchronized() {
@@ -74,8 +75,7 @@ public class ChunkLoader extends SlimefunItem {
             public void tick(Block block, SlimefunItem slimefunItem, Config config) {
                 ChunkLoader.this.tick(block);
             }
-        });
-        super.register(slimefun);
+        };
     }
 
     protected void tick(Block block) {
@@ -104,6 +104,7 @@ public class ChunkLoader extends SlimefunItem {
             processTime = SlimeXpansion.plugin.getChunkLoaderDuration();
         }
     }
+    
     private void constructMenu(BlockMenuPreset preset) {
         for (int i = 0; i <= 12; i++) {
             preset.addItem(i, new CustomItem(Material.PURPLE_STAINED_GLASS_PANE, " "), new ChestMenu.MenuClickHandler() {

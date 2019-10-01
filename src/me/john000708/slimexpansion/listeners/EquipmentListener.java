@@ -1,4 +1,4 @@
-package me.john000708.listeners;
+package me.john000708.slimexpansion.listeners;
 
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -8,7 +8,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.ItemStack;
 
-import me.john000708.Items;
+import me.john000708.slimexpansion.Items;
 import me.mrCookieSlime.Slimefun.Setup.SlimefunManager;
 import me.mrCookieSlime.Slimefun.api.energy.ItemEnergy;
 
@@ -41,14 +41,11 @@ public class EquipmentListener implements Listener {
     public void onPlayerDamageDeal(EntityDamageByEntityEvent e) {
         if (e.getDamager() instanceof Player) {
             Player player = (Player) e.getDamager();
+            ItemStack itemInhand = player.getInventory().getItemInMainHand();
 
-            if (SlimefunManager.isItemSimiliar(player.getInventory().getItemInMainHand(), Items.NANO_BLADE, false)) {
-                ItemStack itemInhand = player.getInventory().getItemInMainHand();
-
+            if (SlimefunManager.isItemSimiliar(itemInhand, Items.NANO_BLADE, false)) {
                 if (itemInhand.containsEnchantment(Enchantment.ARROW_INFINITE)) {
                     if (ItemEnergy.getStoredEnergy(itemInhand) >= 5) {
-                        itemInhand.setDurability((short) 0);
-
                         e.setDamage(e.getDamage() * 2.5);
                         ItemEnergy.chargeItem(itemInhand, (float) -2.5);
                     }
