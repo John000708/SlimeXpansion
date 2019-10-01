@@ -16,20 +16,20 @@ public class RedstoneReceiver extends SimpleSlimefunItem<BlockTicker> {
 	public RedstoneReceiver(Category category, ItemStack item, String id, RecipeType recipeType, ItemStack[] recipe) {
 		super(category, item, id, recipeType, recipe);
 	}
-	
+
 	@Override
 	public BlockTicker getItemHandler() {
 		return new BlockTicker() {
-			
-			@Override
-            public boolean isSynchronized() {
-                return false;
-            }
 
-            @Override
-            public void tick(Block block, SlimefunItem slimefunItem, Config config) {
-                BlockStorage.addBlockInfo(block, "strength", String.valueOf(block.getBlockPower()));
-            }
+			@Override
+			public boolean isSynchronized() {
+				return false;
+			}
+
+			@Override
+			public void tick(Block block, SlimefunItem slimefunItem, Config config) {
+				BlockStorage.addBlockInfo(block, "strength", String.valueOf(block.getBlockPower()));
+			}
 		};
 	}
 
