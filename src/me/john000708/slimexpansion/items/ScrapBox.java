@@ -4,13 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.inventory.ItemStack;
 
 import me.john000708.slimexpansion.Items;
 import me.john000708.slimexpansion.SlimeXpansion;
-import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.InvUtils;
 import me.mrCookieSlime.Slimefun.Lists.RecipeType;
 import me.mrCookieSlime.Slimefun.Objects.Category;
 import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SimpleSlimefunItem;
@@ -38,7 +38,8 @@ public class ScrapBox extends SimpleSlimefunItem<ItemInteractionHandler> {
 			if (!player.isSneaking() && SlimefunManager.isItemSimiliar(itemStack, Items.SCRAP_BOX, true)) {
 				if (openScrapbox && random.nextInt(100) <= 25) {
 					player.playSound(player.getLocation(), Sound.ENTITY_HORSE_SADDLE, 0.5F, 1F);
-					player.getInventory().setItemInMainHand(InvUtils.decreaseItem(player.getInventory().getItemInMainHand(), 1));
+					if (player.getGameMode() != GameMode.CREATIVE)
+						player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);
 					player.getWorld().dropItem(player.getLocation().add(0, 1, 0), scrapBoxLoot.get(random.nextInt(scrapBoxLoot.size())));
 					e.setCancelled(true);
 				}
