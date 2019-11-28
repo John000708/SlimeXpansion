@@ -208,7 +208,7 @@ public class SlimeXpansion extends JavaPlugin {
         	@Override
             public boolean onRightClick(ItemUseEvent itemUseEvent, Player player, ItemStack itemStack) {
                 if (SlimefunManager.isItemSimiliar(itemStack, Items.NANO_BLADE, false)) {
-                    if (itemStack.getEnchantments().containsKey(Enchantment.ARROW_INFINITE) && itemStack.getEnchantments().get(Enchantment.ARROW_INFINITE) == 10) {
+                    if (itemStack.getEnchantments().containsKey(Enchantment.ARROW_INFINITE)) {
                         itemStack.removeEnchantment(Enchantment.ARROW_INFINITE);
                     } else {
                         itemStack.addUnsafeEnchantment(Enchantment.ARROW_INFINITE, 10);

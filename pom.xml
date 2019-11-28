@@ -4,7 +4,7 @@
 
   	<groupId>me.john000708</groupId>
   	<artifactId>SlimeXpansion</artifactId>
-  	<version>1.1.13</version>
+  	<version>1.1.14</version>
   
   	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
@@ -58,13 +58,13 @@
         <dependency>
 	        <groupId>com.github.TheBusyBiscuit</groupId>
 	        <artifactId>CS-CoreLib</artifactId>
-	        <version>45909a0324</version>
+	        <version>199e1b1e06</version>
   			<scope>provided</scope>
 	    </dependency>
         <dependency>
 	    	<groupId>com.github.TheBusyBiscuit</groupId>
 	   		<artifactId>Slimefun4</artifactId>
-	   		<version>4bb9abd247</version>
+	   		<version>6312d6c431</version>
   			<scope>provided</scope>
 	    </dependency>
     </dependencies>
