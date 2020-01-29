@@ -61,6 +61,7 @@ public class SlimeXpansion extends JavaPlugin {
     public Config config;
     private int chunkLoaderDuration;
 
+    @Override
     public void onEnable() {
         plugin = this;
         config = new Config(this);
@@ -91,6 +92,7 @@ public class SlimeXpansion extends JavaPlugin {
         getLogger().info("SlimeXpansion has been enabled!");
     }
 
+    @Override
     public void onDisable() {
         for (World world : Bukkit.getWorlds()) {
             for (Chunk loadedChunk : world.getLoadedChunks()) {
@@ -218,7 +220,7 @@ public class SlimeXpansion extends JavaPlugin {
             }
         });
 
-        new ChargableItem(Categories.TECH, Items.FOOD_SYNTHESIZER, "FOOD_SYNTHESIZER", RecipeType.ENHANCED_CRAFTING_TABLE, 
+        new ChargableItem(Categories.TECH, Items.FOOD_SYNTHESIZER, RecipeType.ENHANCED_CRAFTING_TABLE,
         new ItemStack[] {SlimefunItems.PLASTIC_SHEET, new ItemStack(Material.COOKED_BEEF), SlimefunItems.PLASTIC_SHEET, new ItemStack(Material.APPLE), SlimefunItems.COOLER, new ItemStack(Material.APPLE), SlimefunItems.PLASTIC_SHEET, new ItemStack(Material.COOKED_BEEF), SlimefunItems.PLASTIC_SHEET}, "Utility").register();
         
         new EnergyTransmitter(CustomCategories.SLIMEFUN_XPANSION, Items.ENERGY_TRANSMITTER, "ENERGY_TRANSMITTER", RecipeType.ENHANCED_CRAFTING_TABLE, 

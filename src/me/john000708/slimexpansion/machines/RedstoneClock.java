@@ -44,61 +44,45 @@ public class RedstoneClock extends SlimefunItem {
             public void newInstance(final BlockMenu blockMenu, final Block block) {
                 if (BlockStorage.getLocationInfo(block.getLocation(), "time") != null) {
                     blockMenu.replaceExistingItem(11, new CustomItem(new ItemStack(Material.REDSTONE_BLOCK), "&e+15 Seconds"));
-                    blockMenu.addMenuClickHandler(11, new MenuClickHandler() {
-                    	
-                        @Override
-                        public boolean onClick(Player player, int i, ItemStack itemStack, ClickAction clickAction) {
-                            if (checkTime(block, 15)) {
-                                BlockStorage.addBlockInfo(block, "time", String.valueOf(Integer.valueOf(BlockStorage.getLocationInfo(block.getLocation(), "time")) + 15));
-                                BlockStorage.addBlockInfo(block, "timeLeft", BlockStorage.getLocationInfo(block.getLocation(), "time"));
-                            }
-                            newInstance(blockMenu, block);
-                            return false;
+                    blockMenu.addMenuClickHandler(11, (player, i, itemStack, clickAction) -> {
+                        if (checkTime(block, 15)) {
+                            BlockStorage.addBlockInfo(block, "time", String.valueOf(Integer.parseInt(BlockStorage.getLocationInfo(block.getLocation(), "time")) + 15));
+                            BlockStorage.addBlockInfo(block, "timeLeft", BlockStorage.getLocationInfo(block.getLocation(), "time"));
                         }
+                        newInstance(blockMenu, block);
+                        return false;
                     });
 
                     blockMenu.replaceExistingItem(12, new CustomItem(new ItemStack(Material.REDSTONE_BLOCK), "&e+1 Second"));
-                    blockMenu.addMenuClickHandler(12, new MenuClickHandler() {
-                    	
-                        @Override
-                        public boolean onClick(Player player, int i, ItemStack itemStack, ClickAction clickAction) {
-                            if (checkTime(block, 1)) {
-                                BlockStorage.addBlockInfo(block, "time", String.valueOf(Integer.valueOf(BlockStorage.getLocationInfo(block.getLocation(), "time")) + 1));
-                                BlockStorage.addBlockInfo(block, "timeLeft", BlockStorage.getLocationInfo(block.getLocation(), "time"));
-                            }
-                            newInstance(blockMenu, block);
-                            return false;
+                    blockMenu.addMenuClickHandler(12, (player, i, itemStack, clickAction) -> {
+                        if (checkTime(block, 1)) {
+                            BlockStorage.addBlockInfo(block, "time", String.valueOf(Integer.parseInt(BlockStorage.getLocationInfo(block.getLocation(), "time")) + 1));
+                            BlockStorage.addBlockInfo(block, "timeLeft", BlockStorage.getLocationInfo(block.getLocation(), "time"));
                         }
+                        newInstance(blockMenu, block);
+                        return false;
                     });
 
                     blockMenu.replaceExistingItem(13, new CustomItem(Material.CLOCK, "&bTick Every &e" + BlockStorage.getLocationInfo(block.getLocation(), "time") + " &bSeconds"));
 
                     blockMenu.replaceExistingItem(14, new CustomItem(new ItemStack(Material.REDSTONE_BLOCK), "&e-1 Second"));
-                    blockMenu.addMenuClickHandler(14, new MenuClickHandler() {
-                    	
-                        @Override
-                        public boolean onClick(Player player, int i, ItemStack itemStack, ClickAction clickAction) {
-                            if (checkTime(block, -1)) {
-                                BlockStorage.addBlockInfo(block, "time", String.valueOf(Integer.valueOf(BlockStorage.getLocationInfo(block.getLocation(), "time")) - 1));
-                                BlockStorage.addBlockInfo(block, "timeLeft", BlockStorage.getLocationInfo(block.getLocation(), "time"));
-                            }
-                            newInstance(blockMenu, block);
-                            return false;
+                    blockMenu.addMenuClickHandler(14, (player, i, itemStack, clickAction) -> {
+                        if (checkTime(block, -1)) {
+                            BlockStorage.addBlockInfo(block, "time", String.valueOf(Integer.parseInt(BlockStorage.getLocationInfo(block.getLocation(), "time")) - 1));
+                            BlockStorage.addBlockInfo(block, "timeLeft", BlockStorage.getLocationInfo(block.getLocation(), "time"));
                         }
+                        newInstance(blockMenu, block);
+                        return false;
                     });
 
                     blockMenu.replaceExistingItem(15, new CustomItem(new ItemStack(Material.REDSTONE_BLOCK), "&e-15 Seconds"));
-                    blockMenu.addMenuClickHandler(15, new MenuClickHandler() {
-                    	
-                        @Override
-                        public boolean onClick(Player player, int i, ItemStack itemStack, ClickAction clickAction) {
-                            if (checkTime(block, -15)) {
-                                BlockStorage.addBlockInfo(block, "time", String.valueOf(Integer.valueOf(BlockStorage.getLocationInfo(block.getLocation(), "time")) - 15));
-                                BlockStorage.addBlockInfo(block, "timeLeft", BlockStorage.getLocationInfo(block.getLocation(), "time"));
-                            }
-                            newInstance(blockMenu, block);
-                            return false;
+                    blockMenu.addMenuClickHandler(15, (player, i, itemStack, clickAction) -> {
+                        if (checkTime(block, -15)) {
+                            BlockStorage.addBlockInfo(block, "time", String.valueOf(Integer.parseInt(BlockStorage.getLocationInfo(block.getLocation(), "time")) - 15));
+                            BlockStorage.addBlockInfo(block, "timeLeft", BlockStorage.getLocationInfo(block.getLocation(), "time"));
                         }
+                        newInstance(blockMenu, block);
+                        return false;
                     });
                 } else {
                     BlockStorage.addBlockInfo(block, "time", "1");
@@ -139,7 +123,7 @@ public class RedstoneClock extends SlimefunItem {
                 if ((tickTime % 2) != 0) return;
                 BlockStorage.getInventory(block).replaceExistingItem(13, new CustomItem(Material.CLOCK, "&bTick Every &e" + BlockStorage.getLocationInfo(block.getLocation(), "time") + " &bSeconds", "&7Time Left: " + BlockStorage.getLocationInfo(block.getLocation(), "timeLeft") + "s"));
 
-                int timeLeft = Integer.valueOf(BlockStorage.getLocationInfo(block.getLocation(), "timeLeft"));
+                int timeLeft = Integer.parseInt(BlockStorage.getLocationInfo(block.getLocation(), "timeLeft"));
 
                 if (timeLeft == 0) {
                     BlockStorage.addBlockInfo(block, "timeLeft", BlockStorage.getLocationInfo(block.getLocation(), "time"));
@@ -170,25 +154,16 @@ public class RedstoneClock extends SlimefunItem {
 
     private void constructMenu(BlockMenuPreset preset) {
         for (int i : boarder) {
-            preset.addItem(i, new CustomItem(Material.CYAN_STAINED_GLASS_PANE, " "), new ChestMenu.MenuClickHandler() {
-                @Override
-                public boolean onClick(Player player, int i, ItemStack itemStack, ClickAction clickAction) {
-                    return false;
-                }
-            });
+            preset.addItem(i, new CustomItem(Material.CYAN_STAINED_GLASS_PANE, " "), (player, i1, itemStack,
+                                                                                      clickAction) -> false);
         }
         for (int i = 11; i <= 15; i++) {
-            preset.addMenuClickHandler(i, new ChestMenu.MenuClickHandler() {
-                @Override
-                public boolean onClick(Player player, int i, ItemStack itemStack, ClickAction clickAction) {
-                    return false;
-                }
-            });
+            preset.addMenuClickHandler(i, (player, i12, itemStack, clickAction) -> false);
         }
     }
 
     private boolean checkTime(Block block, int time) {
-        int timeAfter = Integer.valueOf(BlockStorage.getLocationInfo(block.getLocation(), "time")) + time;
+        int timeAfter = Integer.parseInt(BlockStorage.getLocationInfo(block.getLocation(), "time")) + time;
 
         return timeAfter > 0 && timeAfter <= 3600;
     }

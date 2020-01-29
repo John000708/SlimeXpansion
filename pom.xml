@@ -64,7 +64,7 @@
         <dependency>
 	    	<groupId>com.github.TheBusyBiscuit</groupId>
 	   		<artifactId>Slimefun4</artifactId>
-	   		<version>4bb9abd247</version>
+	   		<version>6dc0907728</version>
   			<scope>provided</scope>
 	    </dependency>
     </dependencies>
