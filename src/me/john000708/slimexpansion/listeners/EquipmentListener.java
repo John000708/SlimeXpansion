@@ -9,7 +9,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.ItemStack;
 
 import me.john000708.slimexpansion.Items;
-import me.mrCookieSlime.Slimefun.Events.AutoDisenchantEvent;
+import io.github.thebusybiscuit.slimefun4.api.events.AutoDisenchantEvent;
 import me.mrCookieSlime.Slimefun.Setup.SlimefunManager;
 import me.mrCookieSlime.Slimefun.api.energy.ItemEnergy;
 
