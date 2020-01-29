@@ -9,6 +9,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.ItemStack;
 
 import me.john000708.slimexpansion.Items;
+import me.mrCookieSlime.Slimefun.Events.AutoDisenchantEvent;
 import me.mrCookieSlime.Slimefun.Setup.SlimefunManager;
 import me.mrCookieSlime.Slimefun.api.energy.ItemEnergy;
 
@@ -50,6 +51,16 @@ public class EquipmentListener implements Listener {
                         ItemEnergy.chargeItem(itemInhand, (float) -2.5);
                     }
                 }
+            }
+        }
+    }
+    @EventHandler
+    public void onNanoBladeDisenchant(AutoDisenchantEvent e) {
+        ItemStack item = e.getItem();
+        if (SlimefunManager.isItemSimiliar(item, Items.NANO_BLADE, false)) {
+            if (item.containsEnchantment(Enchantment.ARROW_INFINITE)) {
+                e.setCancelled(true);
+                item.removeEnchantment(Enchantment.ARROW_INFINITE);
             }
         }
     }

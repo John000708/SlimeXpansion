@@ -15,7 +15,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import io.github.thebusybiscuit.cscorelib2.materials.MaterialCollections;
 import me.john000708.slimexpansion.Items;
 import me.john000708.slimexpansion.SlimeXpansion;
 import me.mrCookieSlime.CSCoreLibPlugin.Configuration.Config;
@@ -35,6 +34,8 @@ import me.mrCookieSlime.Slimefun.api.energy.ChargableBlock;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenuPreset;
 import me.mrCookieSlime.Slimefun.api.item_transport.ItemTransportFlow;
+import me.mrCookieSlime.Slimefun.cscorelib2.materials.MaterialCollection;
+import me.mrCookieSlime.Slimefun.cscorelib2.materials.MaterialCollections;
 import me.mrCookieSlime.Slimefun.cscorelib2.protection.ProtectableAction;
 
 /**
@@ -220,8 +221,8 @@ public class DeepDepthMiner extends SimpleSlimefunItem<BlockTicker> {
                     }
                 }
             } else {
-            	Material[] ores = MaterialCollections.getAllOres();
-                outputItem = new ItemStack(ores[random.nextInt(ores.length)]);
+                MaterialCollection ores = MaterialCollections.getAllOres();
+                outputItem = new ItemStack(ores.get(random.nextInt(ores.size())));
             }
 
             if (outputItem != null && fits(block, new ItemStack[]{outputItem})) {

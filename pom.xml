@@ -4,7 +4,7 @@
 
   	<groupId>me.john000708</groupId>
   	<artifactId>SlimeXpansion</artifactId>
-  	<version>1.1.13</version>
+  	<version>1.1.14</version>
   
   	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
