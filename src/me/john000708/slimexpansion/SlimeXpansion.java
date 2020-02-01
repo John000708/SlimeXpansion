@@ -34,6 +34,8 @@ import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import me.mrCookieSlime.Slimefun.api.Slimefun;
 import me.mrCookieSlime.Slimefun.bstats.bukkit.Metrics;
 import me.mrCookieSlime.Slimefun.cscorelib2.config.Config;
+import me.mrCookieSlime.Slimefun.cscorelib2.updater.BukkitUpdater;
+import me.mrCookieSlime.Slimefun.cscorelib2.updater.GitHubBuildsUpdater;
 import me.mrCookieSlime.Slimefun.cscorelib2.updater.Updater;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
@@ -69,16 +71,16 @@ public class SlimeXpansion extends JavaPlugin {
         // Setting up the Auto-Updater
         Updater updater;
 
-//		if (!getDescription().getVersion().startsWith("DEV - ")) {
-//			// We are using an official build, use the BukkitDev Updater
-//			updater = new BukkitUpdater(this, getFile(), 102902);
-//		}
-//		else {
-//            // If we are using a development build, we want to switch to our custom
-//            updater = new GitHubBuildsUpdater(this, getFile(), "John000708/SlimeXpansion/master");
-//        }
-//
-//		if (config.getBoolean("options.auto-update")) updater.start();
+		if (!getDescription().getVersion().startsWith("DEV - ")) {
+			// We are using an official build, use the BukkitDev Updater
+			updater = new BukkitUpdater(this, getFile(), 102902);
+		}
+		else {
+            // If we are using a development build, we want to switch to our custom
+            updater = new GitHubBuildsUpdater(this, getFile(), "J3fftw1/SlimeXpansion/master");
+        }
+
+		if (config.getBoolean("options.auto-update")) updater.start();
 
         new ListenerSetup(this);
 

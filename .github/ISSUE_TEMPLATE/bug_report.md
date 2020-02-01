@@ -1,38 +1,31 @@
 ---
-name: Bug report
-about: Create a report to help us improve
+name: Bug Report
+about: Report a Bug or an Issue with SlimeExpansion.
 title: ''
-labels: ''
+labels: Bug Report
 assignees: ''
 
 ---
 
-**Describe the bug**
-A clear and concise description of what the bug is.
+## Description (Required)
+<!-- A clear and detailed description of what exactly the Issue consists of. -->
 
-**To Reproduce**
-Steps to reproduce the behavior:
-1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error
+## Steps to reproduce the Issue (Required)
+<!-- Youtube Videos and Screenshots are recommended! -->
 
-**Expected behavior**
-A clear and concise description of what you expected to happen.
+## Expected behavior (Required)
+<!-- What did you expect to happen? -->
 
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
+## Server Log / Error Report
+<!-- Take a look at your Server Log and please provide any error reports you can find via https://pastebin.com/ -->
+<!-- We may discard your Issue if you just post it here, as it's unreadable for us. Please use Pastebin! -->
 
-**Desktop (please complete the following information):**
- - OS: [e.g. iOS]
- - Browser [e.g. chrome, safari]
- - Version [e.g. 22]
+## Environment (Required)
+<!-- We may also close your Issue if you are not providing the exact version numbers. -->
+<!-- "latest" IS NOT A VERSION NUMBER. -->
+<!-- You can also just run "/sf versions" and show us a screenshot of that. -->
 
-**Smartphone (please complete the following information):**
- - Device: [e.g. iPhone6]
- - OS: [e.g. iOS8.1]
- - Browser [e.g. stock browser, safari]
- - Version [e.g. 22]
-
-**Additional context**
-Add any other context about the problem here.
+ - Minecraft Version:
+ - Slimefun Version:
+ - CS-CoreLib Version:
+ - SlimeExpansion Version:
