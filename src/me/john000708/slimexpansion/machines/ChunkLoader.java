@@ -1,30 +1,27 @@
 package me.john000708.slimexpansion.machines;
 
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-
 import me.john000708.slimexpansion.Items;
 import me.john000708.slimexpansion.SlimeXpansion;
 import me.mrCookieSlime.CSCoreLibPlugin.Configuration.Config;
-import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.ChestMenu;
-import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.ClickAction;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.InvUtils;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.Item.CustomItem;
-import me.mrCookieSlime.Slimefun.SlimefunPlugin;
 import me.mrCookieSlime.Slimefun.Lists.RecipeType;
 import me.mrCookieSlime.Slimefun.Objects.Category;
 import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SimpleSlimefunItem;
 import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SlimefunItem;
 import me.mrCookieSlime.Slimefun.Objects.handlers.BlockTicker;
 import me.mrCookieSlime.Slimefun.Setup.SlimefunManager;
+import me.mrCookieSlime.Slimefun.SlimefunPlugin;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenuPreset;
 import me.mrCookieSlime.Slimefun.api.item_transport.ItemTransportFlow;
 import me.mrCookieSlime.Slimefun.cscorelib2.protection.ProtectableAction;
 import me.mrCookieSlime.Slimefun.utils.MachineHelper;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 /**
  * Created by John on 22.05.2016.
@@ -38,19 +35,19 @@ public class ChunkLoader extends SimpleSlimefunItem<BlockTicker> {
         super(category, itemStack, name, recipeType, recipe);
 
         new BlockMenuPreset(name, "&dChunk Loader") {
-        	
-        	@Override
+
+            @Override
             public void init() {
                 constructMenu(this);
             }
 
-        	@Override
+            @Override
             public int[] getSlotsAccessedByItemTransport(ItemTransportFlow flow) {
-                if (flow.equals(ItemTransportFlow.INSERT)) return new int[]{22};
-                else return new int[]{22};
+                if (flow.equals(ItemTransportFlow.INSERT)) return new int[] {22};
+                else return new int[] {22};
             }
 
-        	@Override
+            @Override
             public boolean canOpen(Block b, Player p) {
                 return p.hasPermission("slimefun.inventory.bypass") || SlimefunPlugin.getProtectionManager().hasPermission(p, b.getLocation(), ProtectableAction.ACCESS_INVENTORIES);
             }
@@ -59,8 +56,8 @@ public class ChunkLoader extends SimpleSlimefunItem<BlockTicker> {
 
     @Override
     public BlockTicker getItemHandler() {
-    	return new BlockTicker() {
-        	
+        return new BlockTicker() {
+
             @Override
             public boolean isSynchronized() {
                 return false;
@@ -80,18 +77,23 @@ public class ChunkLoader extends SimpleSlimefunItem<BlockTicker> {
 
     protected void tick(Block block) {
         if (!(time % 2 == 0)) return;
-        if (BlockStorage.getLocationInfo(block.getLocation(), "timeLeft") == null) BlockStorage.addBlockInfo(block, "timeLeft", "0");
+        if (BlockStorage.getLocationInfo(block.getLocation(), "timeLeft") == null)
+            BlockStorage.addBlockInfo(block, "timeLeft", "0");
 
         BlockMenu menu = BlockStorage.getInventory(block);
-        processTime = Integer.valueOf(BlockStorage.getLocationInfo(block.getLocation(), "timeLeft"));
+        processTime = Integer.parseInt(BlockStorage.getLocationInfo(block.getLocation(), "timeLeft"));
 
         if (processTime > 0) {
             processTime--;
 
-            BlockStorage.addBlockInfo(block, "timeLeft", String.valueOf(Integer.valueOf(BlockStorage.getLocationInfo(block.getLocation(), "timeLeft")) - 1));
-            menu.replaceExistingItem(4, new CustomItem(new ItemStack(Material.CLOCK), MachineHelper.getTimeLeft(processTime), MachineHelper.getProgress(processTime, SlimeXpansion.plugin.getChunkLoaderDuration())));
+            BlockStorage.addBlockInfo(block, "timeLeft",
+                String.valueOf(Integer.parseInt(BlockStorage.getLocationInfo(block.getLocation(), "timeLeft")) - 1));
+            menu.replaceExistingItem(4, new CustomItem(new ItemStack(Material.CLOCK),
+                MachineHelper.getTimeLeft(processTime), MachineHelper.getProgress(processTime,
+                SlimeXpansion.plugin.getChunkLoaderDuration())));
         } else {
-            if (menu.getItemInSlot(13) == null || !SlimefunManager.isItemSimiliar(menu.getItemInSlot(13), Items.THORIUM, true)) {
+            if (menu.getItemInSlot(13) == null || !SlimefunManager.isItemSimiliar(menu.getItemInSlot(13),
+                Items.THORIUM, true)) {
                 menu.replaceExistingItem(4, new CustomItem(Material.PURPLE_STAINED_GLASS_PANE, " "));
                 block.getWorld().setChunkForceLoaded(block.getChunk().getX(), block.getChunk().getZ(), false);
                 return;
@@ -104,24 +106,16 @@ public class ChunkLoader extends SimpleSlimefunItem<BlockTicker> {
             processTime = SlimeXpansion.plugin.getChunkLoaderDuration();
         }
     }
-    
+
     private void constructMenu(BlockMenuPreset preset) {
         for (int i = 0; i <= 12; i++) {
-            preset.addItem(i, new CustomItem(Material.PURPLE_STAINED_GLASS_PANE, " "), new ChestMenu.MenuClickHandler() {
-                @Override
-                public boolean onClick(Player player, int i, ItemStack itemStack, ClickAction clickAction) {
-                    return false;
-                }
-            });
+            preset.addItem(i, new CustomItem(Material.PURPLE_STAINED_GLASS_PANE, " "), (player, i1, itemStack,
+                                                                                        clickAction) -> false);
         }
 
         for (int i = 14; i <= 26; i++) {
-            preset.addItem(i, new CustomItem(Material.PURPLE_STAINED_GLASS_PANE, " "), new ChestMenu.MenuClickHandler() {
-                @Override
-                public boolean onClick(Player player, int i, ItemStack itemStack, ClickAction clickAction) {
-                    return false;
-                }
-            });
+            preset.addItem(i, new CustomItem(Material.PURPLE_STAINED_GLASS_PANE, " "), (player, i12, itemStack,
+                                                                                        clickAction) -> false);
         }
 //13 empty
     }

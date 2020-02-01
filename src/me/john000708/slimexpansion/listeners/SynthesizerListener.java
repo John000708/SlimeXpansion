@@ -1,5 +1,8 @@
 package me.john000708.slimexpansion.listeners;
 
+import me.john000708.slimexpansion.Items;
+import me.mrCookieSlime.Slimefun.Setup.SlimefunManager;
+import me.mrCookieSlime.Slimefun.api.energy.ItemEnergy;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -7,15 +10,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.inventory.ItemStack;
 
-import me.john000708.slimexpansion.Items;
-import me.mrCookieSlime.Slimefun.Setup.SlimefunManager;
-import me.mrCookieSlime.Slimefun.api.energy.ItemEnergy;
-
 /**
  * Created by John on 30.10.2016.
  */
 public class SynthesizerListener implements Listener {
-	
+
     @EventHandler
     public void onHunger(FoodLevelChangeEvent e) {
         if (e.getFoodLevel() < ((Player) e.getEntity()).getFoodLevel()) {

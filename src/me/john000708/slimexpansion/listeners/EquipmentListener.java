@@ -1,5 +1,9 @@
 package me.john000708.slimexpansion.listeners;
 
+import io.github.thebusybiscuit.slimefun4.api.events.AutoDisenchantEvent;
+import me.john000708.slimexpansion.Items;
+import me.mrCookieSlime.Slimefun.Setup.SlimefunManager;
+import me.mrCookieSlime.Slimefun.api.energy.ItemEnergy;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -8,28 +12,27 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.ItemStack;
 
-import me.john000708.slimexpansion.Items;
-import io.github.thebusybiscuit.slimefun4.api.events.AutoDisenchantEvent;
-import me.mrCookieSlime.Slimefun.Setup.SlimefunManager;
-import me.mrCookieSlime.Slimefun.api.energy.ItemEnergy;
+import java.util.Objects;
 
 /**
  * Created by John on 19.05.2016.
  */
 public class EquipmentListener implements Listener {
-	
+
     @EventHandler
     public void onPlayerDamage(EntityDamageEvent e) {
         if (e.getEntity() instanceof Player) {
             Player player = (Player) e.getEntity();
 
-            if (player.getEquipment().getChestplate() != null) {
-                if (SlimefunManager.isItemSimiliar(player.getEquipment().getChestplate(), Items.ELECTRIC_CHESTPLATE, false)) {
+            if (Objects.requireNonNull(player.getEquipment()).getChestplate() != null) {
+                if (SlimefunManager.isItemSimiliar(player.getEquipment().getChestplate(), Items.ELECTRIC_CHESTPLATE,
+                    false)) {
 
                     ItemStack chestPlate = player.getEquipment().getChestplate();
 
                     if (ItemEnergy.getStoredEnergy(chestPlate) >= 5) {
-                        player.getEquipment().setChestplate(ItemEnergy.chargeItem(chestPlate, (float) (e.getDamage() / -1.75)));
+                        player.getEquipment().setChestplate(ItemEnergy.chargeItem(chestPlate,
+                            (float) (e.getDamage() / -1.75)));
 
                         e.setCancelled(true);
                     }
@@ -54,6 +57,7 @@ public class EquipmentListener implements Listener {
             }
         }
     }
+
     @EventHandler
     public void onNanoBladeDisenchant(AutoDisenchantEvent e) {
         ItemStack item = e.getItem();

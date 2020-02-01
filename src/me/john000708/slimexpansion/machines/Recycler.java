@@ -1,9 +1,5 @@
 package me.john000708.slimexpansion.machines;
 
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.inventory.ItemStack;
-
 import me.john000708.slimexpansion.Items;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.InvUtils;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.Item.CustomItem;
@@ -14,6 +10,9 @@ import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.abstractItems.MachineRecip
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import me.mrCookieSlime.Slimefun.api.energy.ChargableBlock;
 import me.mrCookieSlime.Slimefun.utils.MachineHelper;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.inventory.ItemStack;
 
 /**
  * Created by John on 14.04.2016.
@@ -26,9 +25,9 @@ public abstract class Recycler extends AContainer {
 
     @Override
     public void registerDefaultRecipes() {
-        registerRecipe(8, new ItemStack[]{}, new ItemStack[]{Items.SCRAP_BOX});
+        registerRecipe(8, new ItemStack[] {}, new ItemStack[] {Items.SCRAP_BOX});
     }
-    
+
     @Override
     public ItemStack getProgressBar() {
         return new ItemStack(Material.WOODEN_HOE);
@@ -49,7 +48,8 @@ public abstract class Recycler extends AContainer {
         if (isProcessing(b)) {
             int timeleft = progress.get(b);
             if (timeleft > 0) {
-            	MachineHelper.updateProgressbar(BlockStorage.getInventory(b), 22, timeleft, processing.get(b).getTicks(), getProgressBar());
+                MachineHelper.updateProgressbar(BlockStorage.getInventory(b), 22, timeleft,
+                    processing.get(b).getTicks(), getProgressBar());
 
                 if (ChargableBlock.isChargable(b)) {
                     if (ChargableBlock.getCharge(b) < getEnergyConsumption()) return;
@@ -57,7 +57,8 @@ public abstract class Recycler extends AContainer {
                     progress.put(b, timeleft - 1);
                 } else progress.put(b, timeleft - 1);
             } else {
-                BlockStorage.getInventory(b).replaceExistingItem(22, new CustomItem(Material.BLACK_STAINED_GLASS_PANE, " "));
+                BlockStorage.getInventory(b).replaceExistingItem(22, new CustomItem(Material.BLACK_STAINED_GLASS_PANE
+                    , " "));
                 pushItems(b, processing.get(b).getOutput());
 
                 progress.remove(b);
@@ -66,9 +67,10 @@ public abstract class Recycler extends AContainer {
         } else {
             for (int slot : getInputSlots()) {
                 if (BlockStorage.getInventory(b).getItemInSlot(slot) != null) {
-                    MachineRecipe r = new MachineRecipe(4, new ItemStack[0], new ItemStack[]{Items.SCRAP_BOX});
+                    MachineRecipe r = new MachineRecipe(4, new ItemStack[0], new ItemStack[] {Items.SCRAP_BOX});
                     if (!fits(b, r.getOutput())) return;
-                    BlockStorage.getInventory(b).replaceExistingItem(slot, InvUtils.decreaseItem(BlockStorage.getInventory(b).getItemInSlot(slot), 1));
+                    BlockStorage.getInventory(b).replaceExistingItem(slot,
+                        InvUtils.decreaseItem(BlockStorage.getInventory(b).getItemInSlot(slot), 1));
                     processing.put(b, r);
                     progress.put(b, r.getTicks());
                     break;

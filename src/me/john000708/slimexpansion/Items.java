@@ -72,7 +72,7 @@ public class Items {
         " Rate: 200 J/s", "&8\u21E8 &c75% Efficiency");
     public static final SlimefunItemStack ENERGY_RECEIVER = new SlimefunItemStack("ENERGY_RECEIVER",
         Material.LIME_TERRACOTTA, "&aEnergy Receiver", "", "&fThis receiver accepts power from", "&fan &cEnergy " +
-        "transmitter", "",  LoreBuilder.machine(MachineTier.END_GAME, MachineType.MACHINE));
+        "transmitter", "", LoreBuilder.machine(MachineTier.END_GAME, MachineType.MACHINE));
     public static final SlimefunItemStack TERRAFORMER = new SlimefunItemStack("TERRAFORMER",
         Material.GREEN_TERRACOTTA, "&2Terraformer", "", "&fA machine that allows you to change the biome", "&fof a " +
         "16x16 area", "", LoreBuilder.machine(MachineTier.END_GAME, MachineType.MACHINE), "&8\u21E8 &7Uses " +

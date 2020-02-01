@@ -1,7 +1,22 @@
 package me.john000708.slimexpansion.machines;
 
-import java.util.List;
-
+import me.john000708.slimexpansion.Items;
+import me.john000708.slimexpansion.SlimeXpansion;
+import me.mrCookieSlime.CSCoreLibPlugin.Configuration.Config;
+import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.Item.CustomItem;
+import me.mrCookieSlime.Slimefun.Lists.RecipeType;
+import me.mrCookieSlime.Slimefun.Objects.Category;
+import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SimpleSlimefunItem;
+import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SlimefunItem;
+import me.mrCookieSlime.Slimefun.Objects.handlers.BlockTicker;
+import me.mrCookieSlime.Slimefun.Setup.SlimefunManager;
+import me.mrCookieSlime.Slimefun.SlimefunPlugin;
+import me.mrCookieSlime.Slimefun.api.BlockStorage;
+import me.mrCookieSlime.Slimefun.api.energy.ChargableBlock;
+import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
+import me.mrCookieSlime.Slimefun.api.inventory.BlockMenuPreset;
+import me.mrCookieSlime.Slimefun.api.item_transport.ItemTransportFlow;
+import me.mrCookieSlime.Slimefun.cscorelib2.protection.ProtectableAction;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -15,25 +30,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import me.john000708.slimexpansion.Items;
-import me.john000708.slimexpansion.SlimeXpansion;
-import me.mrCookieSlime.CSCoreLibPlugin.Configuration.Config;
-import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.ChestMenu;
-import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.ClickAction;
-import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.Item.CustomItem;
-import me.mrCookieSlime.Slimefun.SlimefunPlugin;
-import me.mrCookieSlime.Slimefun.Lists.RecipeType;
-import me.mrCookieSlime.Slimefun.Objects.Category;
-import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SimpleSlimefunItem;
-import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SlimefunItem;
-import me.mrCookieSlime.Slimefun.Objects.handlers.BlockTicker;
-import me.mrCookieSlime.Slimefun.Setup.SlimefunManager;
-import me.mrCookieSlime.Slimefun.api.BlockStorage;
-import me.mrCookieSlime.Slimefun.api.energy.ChargableBlock;
-import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
-import me.mrCookieSlime.Slimefun.api.inventory.BlockMenuPreset;
-import me.mrCookieSlime.Slimefun.api.item_transport.ItemTransportFlow;
-import me.mrCookieSlime.Slimefun.cscorelib2.protection.ProtectableAction;
+import java.util.List;
 
 /**
  * Created by John on 18.04.2016.
@@ -49,43 +46,40 @@ public class BedrockBreaker extends SimpleSlimefunItem<BlockTicker> {
     private int time = 0;
     private int timeLeft = 15;
 
-    public BedrockBreaker(Category category, ItemStack item, String name, RecipeType recipeType, final ItemStack[] recipe) {
+    public BedrockBreaker(Category category, ItemStack item, String name, RecipeType recipeType,
+                          final ItemStack[] recipe) {
         super(category, item, name, recipeType, recipe);
 
         new BlockMenuPreset(name, "&4Bedrock Breaker") {
-        	
-        	@Override
+
+            @Override
             public void init() {
                 constructMenu(this);
             }
-        	
+
             @Override
             public void newInstance(final BlockMenu menu, final Block block) {
                 if (BlockStorage.getLocationInfo(block.getLocation(), "enabled") != null) {
-                    menu.replaceExistingItem(14, new CustomItem(new ItemStack(Material.DIAMOND_BLOCK), "&3Breaker Idle"));
-                    menu.replaceExistingItem(15, new CustomItem(new ItemStack(Material.DIAMOND_BLOCK), "&3Breaker Idle"));
+                    menu.replaceExistingItem(14, new CustomItem(new ItemStack(Material.DIAMOND_BLOCK), "&3Breaker " +
+                        "Idle"));
+                    menu.replaceExistingItem(15, new CustomItem(new ItemStack(Material.DIAMOND_BLOCK), "&3Breaker " +
+                        "Idle"));
                     if (!BlockStorage.getLocationInfo(block.getLocation(), "enabled").equalsIgnoreCase("true")) {
                         for (int i : toggleSlots) {
                             menu.replaceExistingItem(i, new CustomItem(Material.RED_STAINED_GLASS_PANE, "&cDisabled"));
-                            menu.addMenuClickHandler(i, new MenuClickHandler() {
-                                @Override
-                                public boolean onClick(Player player, int i, ItemStack itemStack, ClickAction clickAction) {
-                                    BlockStorage.addBlockInfo(block, "enabled", "true");
-                                    newInstance(menu, block);
-                                    return false;
-                                }
+                            menu.addMenuClickHandler(i, (player, i12, itemStack, clickAction) -> {
+                                BlockStorage.addBlockInfo(block, "enabled", "true");
+                                newInstance(menu, block);
+                                return false;
                             });
                         }
                     } else {
                         for (int i : toggleSlots) {
                             menu.replaceExistingItem(i, new CustomItem(Material.GREEN_STAINED_GLASS_PANE, "&aEnabled"));
-                            menu.addMenuClickHandler(i, new MenuClickHandler() {
-                                @Override
-                                public boolean onClick(Player player, int i, ItemStack itemStack, ClickAction clickAction) {
-                                    BlockStorage.addBlockInfo(block, "enabled", "false");
-                                    newInstance(menu, block);
-                                    return false;
-                                }
+                            menu.addMenuClickHandler(i, (player, i1, itemStack, clickAction) -> {
+                                BlockStorage.addBlockInfo(block, "enabled", "false");
+                                newInstance(menu, block);
+                                return false;
                             });
                         }
                     }
@@ -97,8 +91,8 @@ public class BedrockBreaker extends SimpleSlimefunItem<BlockTicker> {
 
 
             public int[] getSlotsAccessedByItemTransport(ItemTransportFlow flow) {
-                if (flow.equals(ItemTransportFlow.INSERT)) return new int[]{10};
-                else return new int[]{37};
+                if (flow.equals(ItemTransportFlow.INSERT)) return new int[] {10};
+                else return new int[] {37};
             }
 
             public boolean canOpen(Block b, Player p) {
@@ -106,15 +100,15 @@ public class BedrockBreaker extends SimpleSlimefunItem<BlockTicker> {
             }
         };
     }
-    
+
     public int getEnergyConsumption() {
         return 4098;
     }
 
     @Override
     public BlockTicker getItemHandler() {
-    	return new BlockTicker() {
-        	
+        return new BlockTicker() {
+
             @Override
             public boolean isSynchronized() {
                 return false;
@@ -129,35 +123,38 @@ public class BedrockBreaker extends SimpleSlimefunItem<BlockTicker> {
             public void tick(Block block, SlimefunItem slimefunItem, Config config) {
                 BedrockBreaker.this.tick(block);
             }
-    	};
+        };
     }
 
     protected void tick(final Block block) {
         if (!(time % 2 == 0)) return;
-        
+
         if (BlockStorage.getLocationInfo(block.getLocation(), "enabled") == null || BlockStorage.getLocationInfo(block.getLocation(), "enabled").equals("false"))
             return;
-        
+
         if (getEnergyConsumption() > ChargableBlock.getCharge(block)) return;
-        
+
         if (block.getRelative(BlockFace.DOWN).getType() != Material.BEDROCK) {
             updateStatus(block, new CustomItem(new ItemStack(Material.REDSTONE_BLOCK), "&4No Bedrock Found"));
             return;
         }
-        
+
         if (!(BlockStorage.getInventory(block).getItemInSlot(10) != null && SlimefunManager.isItemSimiliar(BlockStorage.getInventory(block).getItemInSlot(10), Items.BEDROCK_DRILL, false))) {
             updateStatus(block, new CustomItem(new ItemStack(Material.REDSTONE_BLOCK), "&4No Drill Found"));
             return;
         }
-        
+
         final Block bedrockBlock = block.getRelative(BlockFace.DOWN);
         ItemStack drillItem = BlockStorage.getInventory(block).getItemInSlot(10);
         ItemMeta meta = drillItem.getItemMeta();
+        assert meta != null;
         List<String> lore = meta.getLore();
-        int durability = Integer.valueOf(ChatColor.stripColor(lore.get(3).replace("Durability: ", "").split("/")[0]));
+        assert lore != null;
+        int durability = Integer.parseInt(ChatColor.stripColor(lore.get(3).replace("Durability: ", "").split("/")[0]));
 
         if (durability > 1) {
-            lore.set(3, ChatColor.translateAlternateColorCodes('&', "&7Durability: " + String.valueOf(durability - 1) + "/1024"));
+            lore.set(3, ChatColor.translateAlternateColorCodes('&',
+                "&7Durability: " + String.valueOf(durability - 1) + "/1024"));
             meta.setLore(lore);
             drillItem.setItemMeta(meta);
             BlockStorage.getInventory(block).replaceExistingItem(10, drillItem);
@@ -171,7 +168,7 @@ public class BedrockBreaker extends SimpleSlimefunItem<BlockTicker> {
         ChargableBlock.addCharge(block, -getEnergyConsumption());
 
         if (timeLeft == 0) {
-            if (Double.valueOf(BlockStorage.getLocationInfo(block.getLocation(), "durability")) == 0) {
+            if (Double.parseDouble(BlockStorage.getLocationInfo(block.getLocation(), "durability")) == 0) {
                 new BukkitRunnable() {
                     @Override
                     public void run() {
@@ -179,18 +176,21 @@ public class BedrockBreaker extends SimpleSlimefunItem<BlockTicker> {
                         block.getWorld().playSound(block.getLocation(), Sound.BLOCK_STONE_BREAK, 1F, .75F);
                     }
                 }.runTaskLater(SlimeXpansion.plugin, 1L);
-                if (fits(block, new ItemStack[]{Items.BEDROCK_DUST})) {
-                    pushItems(block, new ItemStack[]{Items.BEDROCK_DUST});
+                if (fits(block, new ItemStack[] {Items.BEDROCK_DUST})) {
+                    pushItems(block, new ItemStack[] {Items.BEDROCK_DUST});
                     BlockStorage.addBlockInfo(block, "durability", "10");
                 }
             } else {
-                BlockStorage.addBlockInfo(block, "durability", String.valueOf(Double.valueOf(BlockStorage.getLocationInfo(block.getLocation(), "durability")) - .5));
+                BlockStorage.addBlockInfo(block, "durability",
+                    String.valueOf(Double.parseDouble(BlockStorage.getLocationInfo(block.getLocation(), "durability")) - .5));
             }
             timeLeft = 15;
         } else {
 
-            block.getWorld().spawnParticle(Particle.BLOCK_CRACK, block.getLocation().add(.5, .5, .5), 50, Material.BEDROCK.createBlockData());
-            updateStatus(block, new CustomItem(new ItemStack(Material.EMERALD_BLOCK), "&aBreaker Operational", "", "&7Bedrock Durability: " + BlockStorage.getLocationInfo(block.getLocation(), "durability")));
+            block.getWorld().spawnParticle(Particle.BLOCK_CRACK, block.getLocation().add(.5, .5, .5), 50,
+                Material.BEDROCK.createBlockData());
+            updateStatus(block, new CustomItem(new ItemStack(Material.EMERALD_BLOCK), "&aBreaker Operational", "",
+                "&7Bedrock Durability: " + BlockStorage.getLocationInfo(block.getLocation(), "durability")));
             timeLeft--;
         }
     }
@@ -221,60 +221,38 @@ public class BedrockBreaker extends SimpleSlimefunItem<BlockTicker> {
     }
 
     public int[] getOutputSlots() {
-        return new int[]{37};
+        return new int[] {37};
     }
 
 
     private void constructMenu(final BlockMenuPreset preset) {
         for (int i : headBorder) {
-            preset.addItem(i, new CustomItem(Material.CYAN_STAINED_GLASS_PANE, " "), new ChestMenu.MenuClickHandler() {
-                @Override
-                public boolean onClick(Player player, int i, ItemStack itemStack, ClickAction clickAction) {
-                    return false;
-                }
-            });
+            preset.addItem(i, new CustomItem(Material.CYAN_STAINED_GLASS_PANE, " "), (player, i14, itemStack,
+                                                                                      clickAction) -> false);
         }
 
         for (int i : progressBorder) {
-            preset.addItem(i, new CustomItem(Material.GRAY_STAINED_GLASS_PANE, " "), new ChestMenu.MenuClickHandler() {
-                @Override
-                public boolean onClick(Player player, int i, ItemStack itemStack, ClickAction clickAction) {
-                    return false;
-                }
-            });
+            preset.addItem(i, new CustomItem(Material.GRAY_STAINED_GLASS_PANE, " "), (player, i13, itemStack,
+                                                                                      clickAction) -> false);
         }
         for (int i : resultBorder) {
-            preset.addItem(i, new CustomItem(Material.ORANGE_STAINED_GLASS_PANE, " "), new ChestMenu.MenuClickHandler() {
-                @Override
-                public boolean onClick(Player player, int i, ItemStack itemStack, ClickAction clickAction) {
-                    return false;
-                }
-            });
+            preset.addItem(i, new CustomItem(Material.ORANGE_STAINED_GLASS_PANE, " "), (player, i12, itemStack,
+                                                                                        clickAction) -> false);
         }
 
         for (int i : toggleBorder) {
-            preset.addItem(i, new CustomItem(Material.BLACK_STAINED_GLASS_PANE, " "), new ChestMenu.MenuClickHandler() {
-                @Override
-                public boolean onClick(Player player, int i, ItemStack itemStack, ClickAction clickAction) {
-                    return false;
-                }
-            });
+            preset.addItem(i, new CustomItem(Material.BLACK_STAINED_GLASS_PANE, " "), (player, i1, itemStack,
+                                                                                       clickAction) -> false);
         }
 
-        preset.addMenuClickHandler(14, new ChestMenu.MenuClickHandler() {
-            @Override
-            public boolean onClick(Player player, int i, ItemStack itemStack, ClickAction clickAction) {
-                preset.addItem(14, new CustomItem(new ItemStack(Material.DIAMOND_BLOCK), "&3Breaker Idle"));
-                return false;
-            }
+        preset.addMenuClickHandler(14, (player, i, itemStack, clickAction) -> {
+            preset.addItem(14, new CustomItem(new ItemStack(Material.DIAMOND_BLOCK), "&3Breaker Idle"));
+            return false;
         });
 
-        preset.addMenuClickHandler(15, new ChestMenu.MenuClickHandler() {
-            @Override
-            public boolean onClick(Player player, int i, ItemStack itemStack, ClickAction clickAction) {
-                preset.addItem(15, new CustomItem(new ItemStack(Material.DIAMOND_BLOCK), "&3Breaker Idle"));
-                return false;
-            }
+        preset.addMenuClickHandler(15, (player, i, itemStack, clickAction) -> {
+            preset.addItem(15, new CustomItem(new ItemStack(Material.DIAMOND_BLOCK), "&3Breaker Idle"));
+            return false;
         });
     }
 

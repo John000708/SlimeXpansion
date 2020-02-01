@@ -1,12 +1,5 @@
 package me.john000708.slimexpansion.machines;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.inventory.ItemStack;
-
 import me.john000708.slimexpansion.Items;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.InvUtils;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.Item.CustomItem;
@@ -18,12 +11,18 @@ import me.mrCookieSlime.Slimefun.Setup.SlimefunManager;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import me.mrCookieSlime.Slimefun.api.energy.ChargableBlock;
 import me.mrCookieSlime.Slimefun.utils.MachineHelper;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by John on 16.04.2016.
  */
 public abstract class UUFabricator extends AContainer {
-	
+
     public UUFabricator(Category category, ItemStack item, String name, RecipeType recipeType, ItemStack[] recipe) {
         super(category, item, name, recipeType, recipe);
     }
@@ -37,7 +36,7 @@ public abstract class UUFabricator extends AContainer {
     public String getMachineIdentifier() {
         return "UU_FABRICATOR";
     }
-    
+
     @Override
     public ItemStack getProgressBar() {
         return new ItemStack(Material.DIAMOND_AXE);
@@ -52,14 +51,17 @@ public abstract class UUFabricator extends AContainer {
         if (isProcessing(b)) {
             int timeleft = progress.get(b);
             if (timeleft > 0) {
-                MachineHelper.updateProgressbar(BlockStorage.getInventory(b), 22, timeleft, processing.get(b).getTicks(), getProgressBar());
+                MachineHelper.updateProgressbar(BlockStorage.getInventory(b), 22, timeleft,
+                    processing.get(b).getTicks(), getProgressBar());
 
                 if (ChargableBlock.isChargable(b)) {
                     if (ChargableBlock.getCharge(b) < getEnergyConsumption()) return;
                     ChargableBlock.addCharge(b, -getEnergyConsumption());
                     for (int slot : getInputSlots()) {
-                        if (SlimefunManager.isItemSimiliar(BlockStorage.getInventory(b).getItemInSlot(slot), Items.SCRAP_BOX, false)) {
-                            InvUtils.removeItem(BlockStorage.getInventory(b).toInventory(), BlockStorage.getInventory(b).getItemInSlot(slot), 1);
+                        if (SlimefunManager.isItemSimiliar(BlockStorage.getInventory(b).getItemInSlot(slot),
+                            Items.SCRAP_BOX, false)) {
+                            InvUtils.removeItem(BlockStorage.getInventory(b).toInventory(),
+                                BlockStorage.getInventory(b).getItemInSlot(slot), 1);
                             if (progress.get(b) < 6) progress.put(b, 0);
                             progress.put(b, timeleft - 6);
                             return;
@@ -68,7 +70,8 @@ public abstract class UUFabricator extends AContainer {
                     progress.put(b, timeleft - 1);
                 } else progress.put(b, timeleft - 1);
             } else {
-                BlockStorage.getInventory(b).replaceExistingItem(22, new CustomItem(Material.BLACK_STAINED_GLASS_PANE, " "));
+                BlockStorage.getInventory(b).replaceExistingItem(22, new CustomItem(Material.BLACK_STAINED_GLASS_PANE
+                    , " "));
                 pushItems(b, processing.get(b).getOutput());
 
                 progress.remove(b);
@@ -82,7 +85,8 @@ public abstract class UUFabricator extends AContainer {
                 for (ItemStack input : recipe.getInput()) {
                     slots:
                     for (int slot : getInputSlots()) {
-                        if (SlimefunManager.isItemSimiliar(BlockStorage.getInventory(b).getItemInSlot(slot), input, true)) {
+                        if (SlimefunManager.isItemSimiliar(BlockStorage.getInventory(b).getItemInSlot(slot), input,
+                            true)) {
                             found.put(slot, input.getAmount());
                             break slots;
                         }
@@ -97,7 +101,9 @@ public abstract class UUFabricator extends AContainer {
             if (r != null) {
                 if (!fits(b, r.getOutput())) return;
                 for (Map.Entry<Integer, Integer> entry : found.entrySet()) {
-                    BlockStorage.getInventory(b).replaceExistingItem(entry.getKey(), InvUtils.decreaseItem(BlockStorage.getInventory(b).getItemInSlot(entry.getKey()), entry.getValue()));
+                    BlockStorage.getInventory(b).replaceExistingItem(entry.getKey(),
+                        InvUtils.decreaseItem(BlockStorage.getInventory(b).getItemInSlot(entry.getKey()),
+                            entry.getValue()));
                 }
                 processing.put(b, r);
                 progress.put(b, r.getTicks());
