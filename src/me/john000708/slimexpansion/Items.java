@@ -115,6 +115,7 @@ public class Items {
         SlimefunItem.setRadioactive(THORIUM);
 
         ItemMeta nanoBladeMeta = NANO_BLADE.getItemMeta();
+        assert nanoBladeMeta != null;
         nanoBladeMeta.setUnbreakable(true);
         NANO_BLADE.setItemMeta(nanoBladeMeta);
     }

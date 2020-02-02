@@ -358,6 +358,6 @@ public class SlimeXpansion extends JavaPlugin {
             Items.LASER_CHARGE, Items.THORIUM);
         Slimefun.registerResearch(new Research(507, "Superalloys", 35), Items.MAG_THOR);
         Slimefun.registerResearch(new Research(508, "Chunk Loading", 85), Items.CHUNK_LOADER, Items.CHUNK_LOADER);
-        Slimefun.registerResearch(new Research(509, "Astronaut Food?", 45), Items.FOOD_SYNTHESIZER);
+        Slimefun.registerResearch(new Research(509, "Astronaut Food", 45), Items.FOOD_SYNTHESIZER);
     }
 }

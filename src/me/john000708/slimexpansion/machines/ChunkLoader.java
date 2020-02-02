@@ -29,7 +29,6 @@ import org.bukkit.inventory.ItemStack;
 public class ChunkLoader extends SimpleSlimefunItem<BlockTicker> {
 
     private int time = 0;
-    private int processTime;
 
     public ChunkLoader(Category category, ItemStack itemStack, String name, RecipeType recipeType, ItemStack[] recipe) {
         super(category, itemStack, name, recipeType, recipe);
@@ -81,7 +80,7 @@ public class ChunkLoader extends SimpleSlimefunItem<BlockTicker> {
             BlockStorage.addBlockInfo(block, "timeLeft", "0");
 
         BlockMenu menu = BlockStorage.getInventory(block);
-        processTime = Integer.parseInt(BlockStorage.getLocationInfo(block.getLocation(), "timeLeft"));
+        int processTime = Integer.parseInt(BlockStorage.getLocationInfo(block.getLocation(), "timeLeft"));
 
         if (processTime > 0) {
             processTime--;
