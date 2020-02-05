@@ -73,10 +73,6 @@ public class Items {
     public static final SlimefunItemStack ENERGY_RECEIVER = new SlimefunItemStack("ENERGY_RECEIVER",
         Material.LIME_TERRACOTTA, "&aEnergy Receiver", "", "&fThis receiver accepts power from", "&fan &cEnergy " +
         "transmitter", "", LoreBuilder.machine(MachineTier.END_GAME, MachineType.MACHINE));
-    public static final SlimefunItemStack TERRAFORMER = new SlimefunItemStack("TERRAFORMER",
-        Material.GREEN_TERRACOTTA, "&2Terraformer", "", "&fA machine that allows you to change the biome", "&fof a " +
-        "16x16 area", "", LoreBuilder.machine(MachineTier.END_GAME, MachineType.MACHINE), "&8\u21E8 &7Uses " +
-        "Terraformer Modules");
 
     //Weapons
     public static final SlimefunItemStack NANO_BLADE = new SlimefunItemStack("NANO_BLADE", Material.DIAMOND_SWORD,
@@ -115,7 +111,6 @@ public class Items {
         SlimefunItem.setRadioactive(THORIUM);
 
         ItemMeta nanoBladeMeta = NANO_BLADE.getItemMeta();
-        assert nanoBladeMeta != null;
         nanoBladeMeta.setUnbreakable(true);
         NANO_BLADE.setItemMeta(nanoBladeMeta);
     }
