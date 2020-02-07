@@ -302,17 +302,13 @@ public class SlimeXpansion extends JavaPlugin {
             public int getDefaultSupply(Biome biome) {
                 switch (biome) {
                     case MOUNTAINS:
-                        return random.nextInt(8) + 5;
                     case GRAVELLY_MOUNTAINS:
-                        return random.nextInt(12) + 10;
                     case WOODED_MOUNTAINS:
-                        return random.nextInt(4) + 3;
                     case SNOWY_MOUNTAINS:
-                        return random.nextInt(10) + 14;
                     case MODIFIED_GRAVELLY_MOUNTAINS:
-                        return random.nextInt(15) + 16;
+                        return random.nextInt(3) + 1;
                     default:
-                        return 4;
+                        return 1;
                 }
             }
 
