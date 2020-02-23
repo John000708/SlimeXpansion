@@ -133,7 +133,7 @@ public class UUTransmutator extends SlimefunItem {
                 itemToOutput.removeEnchantment(Enchantment.ARROW_INFINITE);
 
                 if (fits(block, new ItemStack[] {itemToOutput})) {
-                    if (SlimefunManager.isItemSimiliar(inv.getItemInSlot(10), Items.UU_MATTER, false)
+                    if (SlimefunManager.isItemSimilar(inv.getItemInSlot(10), Items.UU_MATTER, false)
                         && inv.getItemInSlot(10).getAmount() >= 1) {
                         inv.replaceExistingItem(10, InvUtils.decreaseItem(inv.getItemInSlot(10), 1));
                         ChargableBlock.addCharge(block, -getEnergyConsumption());

@@ -2,6 +2,7 @@ package me.john000708.slimexpansion;
 
 import io.github.thebusybiscuit.slimefun4.core.attributes.MachineTier;
 import io.github.thebusybiscuit.slimefun4.core.attributes.MachineType;
+import io.github.thebusybiscuit.slimefun4.core.attributes.Radioactivity;
 import io.github.thebusybiscuit.slimefun4.utils.LoreBuilder;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.Item.CustomArmor;
 import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SlimefunItem;
@@ -81,9 +82,9 @@ public class Items {
         " &70 / 500 J");
 
     //Armor
-    public static final CustomArmor ELECTRIC_CHESTPLATE = new CustomArmor(new SlimefunItemStack("ELECTRIC_CHESTPLATE"
-        , Material.LEATHER_CHESTPLATE, "&9Electric Chestplate", "", "&8\u21E8 &7Negates all the damage dealt to " +
-        "player.", "", "&c&o&8\u21E8 &e\u26A1 &70 / 250 J"), Color.TEAL);
+    public static final SlimefunItemStack ELECTRIC_CHESTPLATE = new SlimefunItemStack("ELECTRIC_CHESTPLATE",
+         Material.LEATHER_CHESTPLATE, Color.TEAL, "&9Electric Chestplate", "",
+        "&8\u21E8 &7Negates all the damage dealt to player.", "", "&c&o&8\u21E8 &e\u26A1 &70 / 250 J");
 
     //Custom Items
     public static final SlimefunItemStack SCRAP_BOX = new SlimefunItemStack("SCRAP_BOX",
@@ -102,14 +103,12 @@ public class Items {
         "necessary for a", "&4Deep Depth Miner &fto mine Ores.", "", "&7Durability: 1024/1024");
     public static final SlimefunItemStack THORIUM = new SlimefunItemStack("THORIUM",
         "427d1a6184c62d4c4a67f862b8e19ec001abe4c7d889f23349e8dafe6d033", "&8Thorium", "", "&2Radiation Level: HIGH",
-        "&4&oHazmat Suit required");
+        "&4&oHazmat Suit required",  LoreBuilder.radioactive(Radioactivity.MODERATE), LoreBuilder.HAZMAT_SUIT_REQUIRED);
     public static final SlimefunItemStack FOOD_SYNTHESIZER = new SlimefunItemStack("FOOD_SYNTHESIZER",
         "a11a2df7d37af40ed5ce442fd2d78cd8ebcdcdc029d2ae691a2b64395cdf", "&dFood Synthesizer", "", "&fKeeps you fed " +
         "with artificial food.", "&fComes in two flavors!", "", "&c&o&8\u21E8 &e\u26A1 &70 / 100 J");
 
     static {
-        SlimefunItem.setRadioactive(THORIUM);
-
         ItemMeta nanoBladeMeta = NANO_BLADE.getItemMeta();
         nanoBladeMeta.setUnbreakable(true);
         NANO_BLADE.setItemMeta(nanoBladeMeta);

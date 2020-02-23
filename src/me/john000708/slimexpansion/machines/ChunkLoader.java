@@ -13,11 +13,12 @@ import me.mrCookieSlime.Slimefun.Objects.handlers.BlockTicker;
 import me.mrCookieSlime.Slimefun.Setup.SlimefunManager;
 import me.mrCookieSlime.Slimefun.SlimefunPlugin;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
+import me.mrCookieSlime.Slimefun.api.SlimefunItemStack;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenuPreset;
 import me.mrCookieSlime.Slimefun.api.item_transport.ItemTransportFlow;
 import me.mrCookieSlime.Slimefun.cscorelib2.protection.ProtectableAction;
-import me.mrCookieSlime.Slimefun.utils.MachineHelper;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -30,8 +31,9 @@ public class ChunkLoader extends SimpleSlimefunItem<BlockTicker> {
 
     private int time = 0;
 
-    public ChunkLoader(Category category, ItemStack itemStack, String name, RecipeType recipeType, ItemStack[] recipe) {
-        super(category, itemStack, name, recipeType, recipe);
+    public ChunkLoader(Category category, SlimefunItemStack itemStack, String name, RecipeType recipeType,
+                       ItemStack[] recipe) {
+        super(category, itemStack, recipeType, recipe);
 
         new BlockMenuPreset(name, "&dChunk Loader") {
 
@@ -88,10 +90,10 @@ public class ChunkLoader extends SimpleSlimefunItem<BlockTicker> {
             BlockStorage.addBlockInfo(block, "timeLeft",
                 String.valueOf(Integer.parseInt(BlockStorage.getLocationInfo(block.getLocation(), "timeLeft")) - 1));
             menu.replaceExistingItem(4, new CustomItem(new ItemStack(Material.CLOCK),
-                MachineHelper.getTimeLeft(processTime), MachineHelper.getProgress(processTime,
+                getTimeLeft(processTime), getProgress(processTime,
                 SlimeXpansion.plugin.getChunkLoaderDuration())));
         } else {
-            if (menu.getItemInSlot(13) == null || !SlimefunManager.isItemSimiliar(menu.getItemInSlot(13),
+            if (menu.getItemInSlot(13) == null || !SlimefunManager.isItemSimilar(menu.getItemInSlot(13),
                 Items.THORIUM, true)) {
                 menu.replaceExistingItem(4, new CustomItem(Material.PURPLE_STAINED_GLASS_PANE, " "));
                 block.getWorld().setChunkForceLoaded(block.getChunk().getX(), block.getChunk().getZ(), false);
@@ -116,6 +118,45 @@ public class ChunkLoader extends SimpleSlimefunItem<BlockTicker> {
             preset.addItem(i, new CustomItem(Material.PURPLE_STAINED_GLASS_PANE, " "), (player, i12, itemStack,
                                                                                         clickAction) -> false);
         }
-//13 empty
+    }
+
+    private String getTimeLeft(int seconds) {
+        String timeleft = "";
+
+        int minutes = (int) (seconds / 60L);
+        if (minutes > 0) {
+            timeleft = timeleft + minutes + "m ";
+        }
+
+        seconds -= minutes * 60;
+        timeleft = timeleft + seconds + "s";
+        return ChatColor.translateAlternateColorCodes('&', "&7" + timeleft + " left");
+    }
+
+    private String getProgress(int time, int total) {
+        StringBuilder progress = new StringBuilder();
+        float percentage = Math.round(((((total - time) * 100.0F) / total) * 100.0F) / 100.0F);
+
+        if (percentage < 16.0F) progress.append("&4");
+        else if (percentage < 32.0F) progress.append("&c");
+        else if (percentage < 48.0F) progress.append("&6");
+        else if (percentage < 64.0F) progress.append("&e");
+        else if (percentage < 80.0F) progress.append("&2");
+        else progress.append("&a");
+
+        int rest = 20;
+        for (int i = (int) percentage; i >= 5; i = i - 5) {
+            progress.append(":");
+            rest--;
+        }
+
+        progress.append("&7");
+
+        for (int i = 0; i < rest; i++) {
+            progress.append(":");
+        }
+
+        progress.append(" - ").append(percentage).append("%");
+        return ChatColor.translateAlternateColorCodes('&', progress.toString());
     }
 }

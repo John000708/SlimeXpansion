@@ -8,6 +8,7 @@ import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SimpleSlimefunItem;
 import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SlimefunItem;
 import me.mrCookieSlime.Slimefun.Objects.handlers.BlockTicker;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
+import me.mrCookieSlime.Slimefun.api.SlimefunItemStack;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -18,9 +19,9 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class RedstoneTransmitter extends SimpleSlimefunItem<BlockTicker> {
 
-    public RedstoneTransmitter(Category category, ItemStack item, String id, RecipeType recipeType,
+    public RedstoneTransmitter(Category category, SlimefunItemStack item, RecipeType recipeType,
                                ItemStack[] recipe) {
-        super(category, item, id, recipeType, recipe);
+        super(category, item, recipeType, recipe);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package me.john000708.slimexpansion.machines;
 
+import io.github.thebusybiscuit.slimefun4.utils.ChestMenuUtils;
 import me.john000708.slimexpansion.Items;
 import me.mrCookieSlime.CSCoreLibPlugin.Configuration.Config;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.InvUtils;
@@ -12,8 +13,8 @@ import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.abstractItems.MachineRecip
 import me.mrCookieSlime.Slimefun.Objects.handlers.BlockTicker;
 import me.mrCookieSlime.Slimefun.Setup.SlimefunManager;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
+import me.mrCookieSlime.Slimefun.api.SlimefunItemStack;
 import me.mrCookieSlime.Slimefun.api.energy.ChargableBlock;
-import me.mrCookieSlime.Slimefun.utils.MachineHelper;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
@@ -26,8 +27,8 @@ import java.util.Map;
  */
 public class RainMaker extends AContainer {
 
-    public RainMaker(Category category, ItemStack item, String name, RecipeType recipeType, final ItemStack[] recipe) {
-        super(category, item, name, recipeType, recipe);
+    public RainMaker(Category category, SlimefunItemStack item, RecipeType recipeType, final ItemStack[] recipe) {
+        super(category, item, recipeType, recipe);
     }
 
     @Override
@@ -82,7 +83,7 @@ public class RainMaker extends AContainer {
         if (isProcessing(b)) {
             int timeleft = progress.get(b);
             if (timeleft > 0) {
-                MachineHelper.updateProgressbar(BlockStorage.getInventory(b), 22, timeleft,
+                ChestMenuUtils.updateProgressbar(BlockStorage.getInventory(b), 22, timeleft,
                     processing.get(b).getTicks(), getProgressBar());
 
                 if (ChargableBlock.isChargable(b)) {
@@ -92,8 +93,8 @@ public class RainMaker extends AContainer {
                 } else progress.put(b, timeleft - 1);
             } else {
                 ItemStack input = processing.get(b).getInput()[0];
-                if (SlimefunManager.isItemSimiliar(input, Items.IODINE_CHARGE, false)) b.getWorld().setStorm(true);
-                else if (SlimefunManager.isItemSimiliar(input, Items.DISSIPATION_CHARGE, false))
+                if (SlimefunManager.isItemSimilar(input, Items.IODINE_CHARGE, false)) b.getWorld().setStorm(true);
+                else if (SlimefunManager.isItemSimilar(input, Items.DISSIPATION_CHARGE, false))
                     b.getWorld().setStorm(false);
                 BlockStorage.getInventory(b).replaceExistingItem(22, new CustomItem(Material.BLACK_STAINED_GLASS_PANE
                     , " "));
@@ -108,7 +109,7 @@ public class RainMaker extends AContainer {
             for (MachineRecipe recipe : recipes) {
                 for (ItemStack input : recipe.getInput()) {
                     for (int slot : getInputSlots())
-                        if (SlimefunManager.isItemSimiliar(BlockStorage.getInventory(b).getItemInSlot(slot), input,
+                        if (SlimefunManager.isItemSimilar(BlockStorage.getInventory(b).getItemInSlot(slot), input,
                             true)) {
                             found.put(slot, input.getAmount());
                             break;
@@ -123,9 +124,9 @@ public class RainMaker extends AContainer {
             if (r != null) {
                 if (!fits(b, r.getOutput())) return;
                 ItemStack input = r.getInput()[0];
-                if (SlimefunManager.isItemSimiliar(input, Items.IODINE_CHARGE, false)) {
+                if (SlimefunManager.isItemSimilar(input, Items.IODINE_CHARGE, false)) {
                     if (b.getWorld().hasStorm()) return;
-                } else if (SlimefunManager.isItemSimiliar(input, Items.DISSIPATION_CHARGE, false)) {
+                } else if (SlimefunManager.isItemSimilar(input, Items.DISSIPATION_CHARGE, false)) {
                     if (!b.getWorld().hasStorm()) return;
                 }
                 for (Map.Entry<Integer, Integer> entry : found.entrySet()) {

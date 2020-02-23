@@ -12,6 +12,7 @@ import me.mrCookieSlime.Slimefun.Objects.handlers.BlockTicker;
 import me.mrCookieSlime.Slimefun.Setup.SlimefunManager;
 import me.mrCookieSlime.Slimefun.SlimefunPlugin;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
+import me.mrCookieSlime.Slimefun.api.SlimefunItemStack;
 import me.mrCookieSlime.Slimefun.api.energy.ChargableBlock;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenuPreset;
@@ -46,9 +47,9 @@ public class BedrockBreaker extends SimpleSlimefunItem<BlockTicker> {
     private int time = 0;
     private int timeLeft = 15;
 
-    public BedrockBreaker(Category category, ItemStack item, String name, RecipeType recipeType,
+    public BedrockBreaker(Category category, SlimefunItemStack item, String name, RecipeType recipeType,
                           final ItemStack[] recipe) {
-        super(category, item, name, recipeType, recipe);
+        super(category, item, recipeType, recipe);
 
         new BlockMenuPreset(name, "&4Bedrock Breaker") {
 
@@ -139,7 +140,7 @@ public class BedrockBreaker extends SimpleSlimefunItem<BlockTicker> {
             return;
         }
 
-        if (!(BlockStorage.getInventory(block).getItemInSlot(10) != null && SlimefunManager.isItemSimiliar(BlockStorage.getInventory(block).getItemInSlot(10), Items.BEDROCK_DRILL, false))) {
+        if (!(BlockStorage.getInventory(block).getItemInSlot(10) != null && SlimefunManager.isItemSimilar(BlockStorage.getInventory(block).getItemInSlot(10), Items.BEDROCK_DRILL, false))) {
             updateStatus(block, new CustomItem(new ItemStack(Material.REDSTONE_BLOCK), "&4No Drill Found"));
             return;
         }

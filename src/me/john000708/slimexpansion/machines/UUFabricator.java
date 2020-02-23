@@ -1,5 +1,6 @@
 package me.john000708.slimexpansion.machines;
 
+import io.github.thebusybiscuit.slimefun4.utils.ChestMenuUtils;
 import me.john000708.slimexpansion.Items;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.InvUtils;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.Item.CustomItem;
@@ -9,8 +10,8 @@ import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.abstractItems.AContainer;
 import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.abstractItems.MachineRecipe;
 import me.mrCookieSlime.Slimefun.Setup.SlimefunManager;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
+import me.mrCookieSlime.Slimefun.api.SlimefunItemStack;
 import me.mrCookieSlime.Slimefun.api.energy.ChargableBlock;
-import me.mrCookieSlime.Slimefun.utils.MachineHelper;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
@@ -23,8 +24,8 @@ import java.util.Map;
  */
 public abstract class UUFabricator extends AContainer {
 
-    public UUFabricator(Category category, ItemStack item, String name, RecipeType recipeType, ItemStack[] recipe) {
-        super(category, item, name, recipeType, recipe);
+    public UUFabricator(Category category, SlimefunItemStack item, RecipeType recipeType, ItemStack[] recipe) {
+        super(category, item, recipeType, recipe);
     }
 
     @Override
@@ -51,14 +52,14 @@ public abstract class UUFabricator extends AContainer {
         if (isProcessing(b)) {
             int timeleft = progress.get(b);
             if (timeleft > 0) {
-                MachineHelper.updateProgressbar(BlockStorage.getInventory(b), 22, timeleft,
+                ChestMenuUtils.updateProgressbar(BlockStorage.getInventory(b), 22, timeleft,
                     processing.get(b).getTicks(), getProgressBar());
 
                 if (ChargableBlock.isChargable(b)) {
                     if (ChargableBlock.getCharge(b) < getEnergyConsumption()) return;
                     ChargableBlock.addCharge(b, -getEnergyConsumption());
                     for (int slot : getInputSlots()) {
-                        if (SlimefunManager.isItemSimiliar(BlockStorage.getInventory(b).getItemInSlot(slot),
+                        if (SlimefunManager.isItemSimilar(BlockStorage.getInventory(b).getItemInSlot(slot),
                             Items.SCRAP_BOX, false)) {
                             InvUtils.removeItem(BlockStorage.getInventory(b).toInventory(),
                                 BlockStorage.getInventory(b).getItemInSlot(slot), 1);
@@ -85,7 +86,7 @@ public abstract class UUFabricator extends AContainer {
                 for (ItemStack input : recipe.getInput()) {
                     slots:
                     for (int slot : getInputSlots()) {
-                        if (SlimefunManager.isItemSimiliar(BlockStorage.getInventory(b).getItemInSlot(slot), input,
+                        if (SlimefunManager.isItemSimilar(BlockStorage.getInventory(b).getItemInSlot(slot), input,
                             true)) {
                             found.put(slot, input.getAmount());
                             break slots;

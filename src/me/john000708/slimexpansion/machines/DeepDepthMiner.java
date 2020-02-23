@@ -1,10 +1,10 @@
 package me.john000708.slimexpansion.machines;
 
+import io.github.thebusybiscuit.slimefun4.api.geo.GEOResource;
 import me.john000708.slimexpansion.Items;
 import me.john000708.slimexpansion.SlimeXpansion;
 import me.mrCookieSlime.CSCoreLibPlugin.Configuration.Config;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.Item.CustomItem;
-import me.mrCookieSlime.Slimefun.GEO.OreGenSystem;
 import me.mrCookieSlime.Slimefun.Lists.RecipeType;
 import me.mrCookieSlime.Slimefun.Objects.Category;
 import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SimpleSlimefunItem;
@@ -13,6 +13,7 @@ import me.mrCookieSlime.Slimefun.Objects.handlers.BlockTicker;
 import me.mrCookieSlime.Slimefun.Setup.SlimefunManager;
 import me.mrCookieSlime.Slimefun.SlimefunPlugin;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
+import me.mrCookieSlime.Slimefun.api.SlimefunItemStack;
 import me.mrCookieSlime.Slimefun.api.energy.ChargableBlock;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenuPreset;
@@ -25,6 +26,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.Particle;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -34,6 +36,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.OptionalInt;
 import java.util.Random;
 
 /**
@@ -50,13 +53,15 @@ public class DeepDepthMiner extends SimpleSlimefunItem<BlockTicker> {
 
     private static final Random random = new Random();
 
+    private final GEOResource thorium;
+
     private int time = 0;
     private int processTime = 3;
     private int laserPos = 0;
 
-    public DeepDepthMiner(Category category, ItemStack item, String name, RecipeType recipeType,
+    public DeepDepthMiner(Category category, SlimefunItemStack item, String name, RecipeType recipeType,
                           final ItemStack[] recipe) {
-        super(category, item, name, recipeType, recipe);
+        super(category, item, recipeType, recipe);
 
         new BlockMenuPreset(name, "&6Deep Depth Miner") {
 
@@ -103,6 +108,9 @@ public class DeepDepthMiner extends SimpleSlimefunItem<BlockTicker> {
                 return p.hasPermission("slimefun.inventory.bypass") || SlimefunPlugin.getProtectionManager().hasPermission(p, b.getLocation(), ProtectableAction.ACCESS_INVENTORIES);
             }
         };
+
+        thorium = SlimefunPlugin.getRegistry().getGEOResources()
+            .get(new NamespacedKey(SlimefunPlugin.instance, "thoruim")).orElse(null);
     }
 
     public int getEnergyConsumption() {
@@ -157,7 +165,8 @@ public class DeepDepthMiner extends SimpleSlimefunItem<BlockTicker> {
         ChargableBlock.addCharge(block, -getEnergyConsumption());
 
         if (!(BlockStorage.getInventory(block).getItemInSlot(9) != null
-            && SlimefunManager.isItemSimiliar(BlockStorage.getInventory(block).getItemInSlot(9), Items.LASER_CHARGE, false))) {
+            && SlimefunManager.isItemSimilar(BlockStorage.getInventory(block).getItemInSlot(9), Items.LASER_CHARGE,
+            false))) {
             BlockStorage.getInventory(block).replaceExistingItem(4,
                 new CustomItem(new ItemStack(Material.REDSTONE_BLOCK), "&4No Laser Charge Found"));
             return;
@@ -171,7 +180,7 @@ public class DeepDepthMiner extends SimpleSlimefunItem<BlockTicker> {
 
         if (durability > 1) {
             lore.set(3, ChatColor.translateAlternateColorCodes('&',
-                "&7Durability: " + String.valueOf(durability - 1) + "/1024"));
+                "&7Durability: " + (durability - 1) + "/1024"));
             meta.setLore(lore);
             laserCharge.setItemMeta(meta);
             BlockStorage.getInventory(block).replaceExistingItem(9, laserCharge);
@@ -211,23 +220,20 @@ public class DeepDepthMiner extends SimpleSlimefunItem<BlockTicker> {
             block.getWorld().spawnParticle(Particle.REDSTONE, new Location(block.getWorld(), block.getX() + 0.5, i,
                 block.getZ() + 0.5), 1, new Particle.DustOptions(Color.RED, 2));
         }
-        /*try {
-            ParticleEffect.REDSTONE.drawLine(block.getLocation().add(0.5, 0.5, 0.5), new Location(block.getWorld(),
-            block.getX() + 0.5, 0.5, block.getZ() + 0.5));
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }*/
 
         if (processTime == 0) {
             processTime = 3;
             ItemStack outputItem = null;
+
             if (random.nextInt(100) <= 5) {
-                if (OreGenSystem.wasResourceGenerated(OreGenSystem.getResource("Thorium"), block.getChunk())) {
-                    if (OreGenSystem.getSupplies(OreGenSystem.getResource("Thorium"), block.getChunk(), false) > 0) {
-                        OreGenSystem.setSupplies(OreGenSystem.getResource("Thorium"), block.getChunk(),
-                            OreGenSystem.getSupplies(OreGenSystem.getResource("Thorium"), block.getChunk(), false) - 1);
-                        outputItem = Items.THORIUM;
-                    }
+                final OptionalInt optSupplies = SlimefunPlugin.getGPSNetwork().getResourceManager()
+                    .getSupplies(thorium, block.getWorld(), block.getX() >> 4, block.getZ() >> 4);
+
+                if (optSupplies.isPresent() && optSupplies.getAsInt() > 0) {
+                    SlimefunPlugin.getGPSNetwork().getResourceManager()
+                        .setSupplies(thorium, block.getWorld(), block.getX() >> 4, block.getZ() >> 4,
+                            optSupplies.getAsInt());
+                    outputItem = Items.THORIUM;
                 }
             } else {
                 MaterialCollection ores = MaterialCollections.getAllOres();

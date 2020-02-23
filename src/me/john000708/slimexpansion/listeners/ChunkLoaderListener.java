@@ -12,8 +12,8 @@ public class ChunkLoaderListener implements Listener {
 
     @EventHandler
     public void onChunkUnload(ChunkUnloadEvent e) {
-        if (BlockStorage.getChunkInfo(e.getChunk(), "loaded") != null) {
-            BlockStorage.getChunkInfo(e.getChunk(), "loaded");
+        if (BlockStorage.getChunkInfo(e.getWorld(), e.getChunk().getX(), e.getChunk().getZ(), "loaded") != null) {
+            BlockStorage.getChunkInfo(e.getWorld(), e.getChunk().getX(), e.getChunk().getZ(), "loaded");
         }
     }
 }
