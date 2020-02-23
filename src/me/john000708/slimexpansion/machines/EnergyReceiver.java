@@ -1,5 +1,6 @@
 package me.john000708.slimexpansion.machines;
 
+import me.john000708.slimexpansion.SlimeXpansion;
 import me.mrCookieSlime.CSCoreLibPlugin.Configuration.Config;
 import me.mrCookieSlime.Slimefun.Lists.RecipeType;
 import me.mrCookieSlime.Slimefun.Objects.Category;
@@ -30,14 +31,15 @@ public class EnergyReceiver extends SlimefunItem {
             public double generateEnergy(Location l, SlimefunItem slimefunItem, Config config) {
                 if (BlockStorage.getLocationInfo(l, "transmitterLoc") == null) return 0;
                 Location location = deserializeLoc(BlockStorage.getLocationInfo(l, "transmitterLoc"));
-                if (BlockStorage.check(location, "ENERGY_TRANSMITTER")
-                    && Boolean.parseBoolean(BlockStorage.getLocationInfo(location, "enabled"))) {
-                    if (ChargableBlock.getCharge(location) >= 200
-                        && (ChargableBlock.getMaxCharge(l) - ChargableBlock.getCharge(l) >= 200)) {
-                        ChargableBlock.addCharge(location, -200);
-                        ChargableBlock.addCharge(l, 150);
-                        return 150;
-                    }
+                if (location != null
+                    && BlockStorage.check(location, "ENERGY_TRANSMITTER")
+                    && Boolean.parseBoolean(BlockStorage.getLocationInfo(location, "enabled"))
+                    && ChargableBlock.getCharge(location) >= 200
+                    && (ChargableBlock.getMaxCharge(l) - ChargableBlock.getCharge(l) >= 200)
+                ) {
+                    ChargableBlock.addCharge(location, -200);
+                    ChargableBlock.addCharge(l, 150);
+                    return 150;
                 }
                 return 0;
             }
@@ -48,11 +50,15 @@ public class EnergyReceiver extends SlimefunItem {
             }
 
         });
-        super.register(slimefun);
+        super.register(SlimeXpansion.plugin);
     }
 
     private Location deserializeLoc(String locString) {
-        String[] parts = ";".split(locString);
+        String[] parts = locString.split(";");
+        if (parts.length != 4) {
+            SlimeXpansion.plugin.getLogger().warning("Invalid location string: " + locString);
+            return null;
+        }
         World world = Bukkit.getWorld(parts[0]);
         int x = Integer.parseInt(parts[1]);
         int y = Integer.parseInt(parts[2]);
