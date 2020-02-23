@@ -26,7 +26,7 @@ public class ScrapBox extends SimpleSlimefunItem<ItemUseHandler> {
     private final List<ItemStack> scrapBoxLoot = new ArrayList<>();
 
     public ScrapBox(Category category, SlimefunItemStack item, RecipeType recipeType) {
-        super(category, item,  recipeType, new ItemStack[] {null, null, null, null, null, null, null, null, null});
+        super(category, item, recipeType, new ItemStack[] {null, null, null, null, null, null, null, null, null});
 
         openScrapbox = SlimeXpansion.plugin.config.getBoolean("options.lootable-scrapbox");
         parseScrapboxDrops(SlimeXpansion.plugin.config);

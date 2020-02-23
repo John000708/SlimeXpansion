@@ -155,7 +155,7 @@ public class BedrockBreaker extends SimpleSlimefunItem<BlockTicker> {
 
         if (durability > 1) {
             lore.set(3, ChatColor.translateAlternateColorCodes('&',
-                "&7Durability: " + String.valueOf(durability - 1) + "/1024"));
+                "&7Durability: " + (durability - 1) + "/1024"));
             meta.setLore(lore);
             drillItem.setItemMeta(meta);
             BlockStorage.getInventory(block).replaceExistingItem(10, drillItem);

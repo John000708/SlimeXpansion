@@ -14,7 +14,8 @@ public class CustomCategories {
     public static final Category SLIMEFUN_XPANSION;
 
     static {
-        SLIMEFUN_XPANSION = new Category(new NamespacedKey(SlimeXpansion.plugin, "slimexpansion"), new CustomItem(new ItemStack(Material.BEACON), "&5SlimeXpansion", "", "&a " +
+        SLIMEFUN_XPANSION = new Category(new NamespacedKey(SlimeXpansion.plugin, "slimexpansion"),
+            new CustomItem(new ItemStack(Material.BEACON), "&5SlimeXpansion", "", "&a " +
             ">Click to open"));
     }
 }

@@ -89,7 +89,7 @@ public abstract class UUFabricator extends AContainer {
                         if (SlimefunManager.isItemSimilar(BlockStorage.getInventory(b).getItemInSlot(slot), input,
                             true)) {
                             found.put(slot, input.getAmount());
-                            break slots;
+                            break;
                         }
                     }
                 }

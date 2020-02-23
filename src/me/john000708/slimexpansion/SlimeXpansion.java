@@ -19,7 +19,6 @@ import me.john000708.slimexpansion.machines.UUTransmutator;
 import me.john000708.slimexpansion.machines.WirelessCharger;
 import me.john000708.slimexpansion.resources.ThoriumResource;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.Item.CustomItem;
-import me.mrCookieSlime.Slimefun.Lists.Categories;
 import me.mrCookieSlime.Slimefun.Lists.RecipeType;
 import me.mrCookieSlime.Slimefun.Lists.SlimefunItems;
 import me.mrCookieSlime.Slimefun.Objects.Research;
@@ -210,7 +209,7 @@ public class SlimeXpansion extends JavaPlugin implements SlimefunAddon {
                 SlimefunItems.POWER_CRYSTAL, SlimefunItems.REINFORCED_PLATE}).register(this);
 
         new RedstoneTransmitter(CustomCategories.SLIMEFUN_XPANSION, Items.REDSTONE_TRANSMITTER,
-             RecipeType.ENHANCED_CRAFTING_TABLE,
+            RecipeType.ENHANCED_CRAFTING_TABLE,
             new ItemStack[] {SlimefunItems.DAMASCUS_STEEL_INGOT, SlimefunItems.ADVANCED_CIRCUIT_BOARD,
                 SlimefunItems.DAMASCUS_STEEL_INGOT, SlimefunItems.DAMASCUS_STEEL_INGOT,
                 new ItemStack(Material.REDSTONE_BLOCK), SlimefunItems.DAMASCUS_STEEL_INGOT,
