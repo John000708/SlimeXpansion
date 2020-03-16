@@ -6,6 +6,7 @@ import me.mrCookieSlime.CSCoreLibPlugin.Configuration.Config;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.InvUtils;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.Item.CustomItem;
 import me.mrCookieSlime.Slimefun.Lists.RecipeType;
+import me.mrCookieSlime.Slimefun.Lists.SlimefunItems;
 import me.mrCookieSlime.Slimefun.Objects.Category;
 import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SimpleSlimefunItem;
 import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SlimefunItem;
@@ -31,11 +32,18 @@ public class ChunkLoader extends SimpleSlimefunItem<BlockTicker> {
 
     private int time = 0;
 
-    public ChunkLoader(Category category, SlimefunItemStack itemStack, String name, RecipeType recipeType,
-                       ItemStack[] recipe) {
-        super(category, itemStack, recipeType, recipe);
+    private int chunkloaderDuration;
 
-        new BlockMenuPreset(name, "&dChunk Loader") {
+    public ChunkLoader(Category category, int chunkloaderDuration) {
+        super(category, Items.CHUNK_LOADER,
+                RecipeType.ENHANCED_CRAFTING_TABLE,
+                new ItemStack[]{SlimefunItems.GOLD_24K, SlimefunItems.BLISTERING_INGOT_3, SlimefunItems.GOLD_24K,
+                        Items.MAG_THOR, Items.THORIUM, Items.MAG_THOR, SlimefunItems.REINFORCED_PLATE,
+                        SlimefunItems.POWER_CRYSTAL, SlimefunItems.REINFORCED_PLATE});
+
+        this.chunkloaderDuration = chunkloaderDuration;
+
+        new BlockMenuPreset("CHUNK_LOADER", "&dChunk Loader") {
 
             @Override
             public void init() {
@@ -44,8 +52,8 @@ public class ChunkLoader extends SimpleSlimefunItem<BlockTicker> {
 
             @Override
             public int[] getSlotsAccessedByItemTransport(ItemTransportFlow flow) {
-                if (flow.equals(ItemTransportFlow.INSERT)) return new int[] {22};
-                else return new int[] {22};
+                if (flow.equals(ItemTransportFlow.INSERT)) return new int[]{22};
+                else return new int[]{22};
             }
 
             @Override
@@ -76,35 +84,35 @@ public class ChunkLoader extends SimpleSlimefunItem<BlockTicker> {
         };
     }
 
+    private static final String TIMELEFT = "timeLeft";
+
     protected void tick(Block block) {
-        if (!(time % 2 == 0)) return;
-        if (BlockStorage.getLocationInfo(block.getLocation(), "timeLeft") == null)
-            BlockStorage.addBlockInfo(block, "timeLeft", "0");
+        if (time % 2 != 0) return;
+        if (BlockStorage.getLocationInfo(block.getLocation(), TIMELEFT) == null)
+            BlockStorage.addBlockInfo(block, TIMELEFT, "0");
 
         BlockMenu menu = BlockStorage.getInventory(block);
-        int processTime = Integer.parseInt(BlockStorage.getLocationInfo(block.getLocation(), "timeLeft"));
+        int processTime = Integer.parseInt(BlockStorage.getLocationInfo(block.getLocation(), TIMELEFT));
 
         if (processTime > 0) {
             processTime--;
 
-            BlockStorage.addBlockInfo(block, "timeLeft",
-                String.valueOf(Integer.parseInt(BlockStorage.getLocationInfo(block.getLocation(), "timeLeft")) - 1));
+            BlockStorage.addBlockInfo(block, TIMELEFT,
+                    String.valueOf(Integer.parseInt(BlockStorage.getLocationInfo(block.getLocation(), TIMELEFT)) - 1));
             menu.replaceExistingItem(4, new CustomItem(new ItemStack(Material.CLOCK),
-                getTimeLeft(processTime), getProgress(processTime,
-                SlimeXpansion.plugin.getChunkLoaderDuration())));
+                    getTimeLeft(processTime), getProgress(processTime,
+                    chunkloaderDuration)));
         } else {
             if (menu.getItemInSlot(13) == null || !SlimefunManager.isItemSimilar(menu.getItemInSlot(13),
-                Items.THORIUM, true)) {
+                    Items.THORIUM, true)) {
                 menu.replaceExistingItem(4, new CustomItem(Material.PURPLE_STAINED_GLASS_PANE, " "));
                 block.getWorld().setChunkForceLoaded(block.getChunk().getX(), block.getChunk().getZ(), false);
                 return;
             }
 
-            BlockStorage.addBlockInfo(block, "timeLeft", String.valueOf(SlimeXpansion.plugin.getChunkLoaderDuration()));
+            BlockStorage.addBlockInfo(block, TIMELEFT, String.valueOf(chunkloaderDuration));
             block.getWorld().setChunkForceLoaded(block.getChunk().getX(), block.getChunk().getZ(), true);
             menu.replaceExistingItem(13, InvUtils.decreaseItem(menu.getItemInSlot(13), 1));
-
-            processTime = SlimeXpansion.plugin.getChunkLoaderDuration();
         }
     }
 

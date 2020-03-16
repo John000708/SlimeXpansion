@@ -1,28 +1,39 @@
 package me.john000708.slimexpansion.machines;
 
-import me.john000708.slimexpansion.SlimeXpansion;
+import me.john000708.slimexpansion.Items;
+import me.john000708.slimexpansion.utils.SchedulerHandler;
 import me.mrCookieSlime.CSCoreLibPlugin.Configuration.Config;
 import me.mrCookieSlime.Slimefun.Lists.RecipeType;
+import me.mrCookieSlime.Slimefun.Lists.SlimefunItems;
 import me.mrCookieSlime.Slimefun.Objects.Category;
 import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SimpleSlimefunItem;
 import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SlimefunItem;
 import me.mrCookieSlime.Slimefun.Objects.handlers.BlockTicker;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
-import me.mrCookieSlime.Slimefun.api.SlimefunItemStack;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.AnaloguePowerable;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
 
 public class RedstoneTransmitter extends SimpleSlimefunItem<BlockTicker> {
 
-    public RedstoneTransmitter(Category category, SlimefunItemStack item, RecipeType recipeType,
-                               ItemStack[] recipe) {
-        super(category, item, recipeType, recipe);
+    private SchedulerHandler schedulerHandler;
+
+    public RedstoneTransmitter(Category category, SchedulerHandler schedulerHandler) {
+        super(category, Items.REDSTONE_TRANSMITTER,
+                RecipeType.ENHANCED_CRAFTING_TABLE,
+                new ItemStack[]{SlimefunItems.DAMASCUS_STEEL_INGOT, SlimefunItems.ADVANCED_CIRCUIT_BOARD,
+                        SlimefunItems.DAMASCUS_STEEL_INGOT, SlimefunItems.DAMASCUS_STEEL_INGOT,
+                        new ItemStack(Material.REDSTONE_BLOCK), SlimefunItems.DAMASCUS_STEEL_INGOT,
+                        SlimefunItems.CORINTHIAN_BRONZE_INGOT, new ItemStack(Material.GLASS),
+                        SlimefunItems.CORINTHIAN_BRONZE_INGOT});
+
+        this.schedulerHandler = schedulerHandler;
     }
+
+    private static final String TRANSMITTERLOCATION = "transmitterLoc";
 
     @Override
     public BlockTicker getItemHandler() {
@@ -35,9 +46,9 @@ public class RedstoneTransmitter extends SimpleSlimefunItem<BlockTicker> {
 
             @Override
             public void tick(Block block, SlimefunItem slimefunItem, Config config) {
-                if (BlockStorage.getLocationInfo(block.getLocation(), "transmitterLoc") != null) {
+                if (BlockStorage.getLocationInfo(block.getLocation(), TRANSMITTERLOCATION) != null) {
                     String[] serializedLoc =
-                        BlockStorage.getLocationInfo(block.getLocation(), "transmitterLoc").split(";");
+                            BlockStorage.getLocationInfo(block.getLocation(), TRANSMITTERLOCATION).split(";");
                     World world = Bukkit.getWorld(serializedLoc[0]);
                     int x = Integer.parseInt(serializedLoc[1]);
                     int y = Integer.parseInt(serializedLoc[2]);
@@ -47,7 +58,7 @@ public class RedstoneTransmitter extends SimpleSlimefunItem<BlockTicker> {
                     Block transmitterBlock = world.getBlockAt(x, y, z);
 
                     if (transmitterBlock.getType() == Material.AIR) {
-                        BlockStorage.addBlockInfo(block, "transmitterLoc", null);
+                        BlockStorage.addBlockInfo(block, TRANSMITTERLOCATION, null);
                         AnaloguePowerable powerable = (AnaloguePowerable) block.getBlockData();
                         powerable.setPower(0);
                         block.setBlockData(powerable);
@@ -55,14 +66,11 @@ public class RedstoneTransmitter extends SimpleSlimefunItem<BlockTicker> {
                     }
 
                     int power = transmitterBlock.getBlockPower();
-                    new BukkitRunnable() {
-                        @Override
-                        public void run() {
-                            AnaloguePowerable powerable = (AnaloguePowerable) block.getBlockData();
-                            powerable.setPower(power);
-                            block.setBlockData(powerable); //TODO: make power dynamic
-                        }
-                    }.runTaskLater(SlimeXpansion.plugin, 1);
+                    schedulerHandler.runTaskLater(() -> {
+                        AnaloguePowerable powerable = (AnaloguePowerable) block.getBlockData();
+                        powerable.setPower(power);
+                        block.setBlockData(powerable); //TODO: make power dynamic
+                    }, 1L);
                 }
             }
         };

@@ -1,14 +1,14 @@
 package me.john000708.slimexpansion.items;
 
+import me.john000708.slimexpansion.CustomRecipeType;
 import me.john000708.slimexpansion.Items;
 import me.john000708.slimexpansion.SlimeXpansion;
-import me.mrCookieSlime.Slimefun.Lists.RecipeType;
+import me.john000708.slimexpansion.utils.XpansionLogger;
 import me.mrCookieSlime.Slimefun.Objects.Category;
 import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SimpleSlimefunItem;
 import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SlimefunItem;
 import me.mrCookieSlime.Slimefun.Objects.handlers.ItemUseHandler;
 import me.mrCookieSlime.Slimefun.Setup.SlimefunManager;
-import me.mrCookieSlime.Slimefun.api.SlimefunItemStack;
 import me.mrCookieSlime.Slimefun.cscorelib2.config.Config;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -18,6 +18,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.logging.Level;
 
 public class ScrapBox extends SimpleSlimefunItem<ItemUseHandler> {
 
@@ -25,25 +26,25 @@ public class ScrapBox extends SimpleSlimefunItem<ItemUseHandler> {
     private final Random random = new Random();
     private final List<ItemStack> scrapBoxLoot = new ArrayList<>();
 
-    public ScrapBox(Category category, SlimefunItemStack item, RecipeType recipeType) {
-        super(category, item, recipeType, new ItemStack[] {null, null, null, null, null, null, null, null, null});
+    public ScrapBox(Category category, Config config) {
+        super(category, Items.SCRAP_BOX, CustomRecipeType.RECYCLER, new ItemStack[]{null, null, null, null, null, null, null, null, null});
 
-        openScrapbox = SlimeXpansion.plugin.config.getBoolean("options.lootable-scrapbox");
-        parseScrapboxDrops(SlimeXpansion.plugin.config);
+        openScrapbox = config.getBoolean("options.lootable-scrapbox");
+        parseScrapboxDrops(config);
     }
 
     @Override
     public ItemUseHandler getItemHandler() {
-        return (e) -> {
-            if (!e.getPlayer().isSneaking() && SlimefunManager.isItemSimilar(e.getItem(), Items.SCRAP_BOX, true)) {
-                if (openScrapbox && random.nextInt(100) <= 25) {
-                    e.getPlayer().playSound(e.getPlayer().getLocation(), Sound.ENTITY_HORSE_SADDLE, 0.5F, 1F);
-                    if (e.getPlayer().getGameMode() != GameMode.CREATIVE)
-                        e.getPlayer().getInventory().getItemInMainHand().setAmount(e.getPlayer().getInventory().getItemInMainHand().getAmount() - 1);
-                    e.getPlayer().getWorld().dropItem(e.getPlayer().getLocation().add(0, 1, 0),
+        return event -> {
+            if (!event.getPlayer().isSneaking() &&
+                    SlimefunManager.isItemSimilar(event.getItem(), Items.SCRAP_BOX, true) &&
+                    openScrapbox && random.nextInt(100) <= 25) {
+                event.getPlayer().playSound(event.getPlayer().getLocation(), Sound.ENTITY_HORSE_SADDLE, 0.5F, 1F);
+                if (event.getPlayer().getGameMode() != GameMode.CREATIVE)
+                    event.getPlayer().getInventory().getItemInMainHand().setAmount(event.getPlayer().getInventory().getItemInMainHand().getAmount() - 1);
+                event.getPlayer().getWorld().dropItem(event.getPlayer().getLocation().add(0, 1, 0),
                         scrapBoxLoot.get(random.nextInt(scrapBoxLoot.size())));
-                    e.cancel();
-                }
+                event.cancel();
             }
         };
     }
@@ -53,8 +54,9 @@ public class ScrapBox extends SimpleSlimefunItem<ItemUseHandler> {
 
         for (String lootName : config.getStringList("scrapbox-items")) {
             boolean success;
-            if (Material.getMaterial(lootName) != null) {
-                scrapBoxLoot.add(new ItemStack(Material.getMaterial(lootName)));
+            Material material = Material.getMaterial(lootName);
+            if (material != null) {
+                scrapBoxLoot.add(new ItemStack(material));
                 success = true;
             } else {
                 success = false;
@@ -70,9 +72,8 @@ public class ScrapBox extends SimpleSlimefunItem<ItemUseHandler> {
             }
 
             if (!success) {
-                SlimeXpansion.plugin.getLogger().info("There is no such item with name " + lootName);
+                XpansionLogger.log(Level.INFO, "There is no such item with name " + lootName);
             }
         }
     }
-
 }

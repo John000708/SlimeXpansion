@@ -10,7 +10,6 @@ public class ListenerSetup {
 
     public ListenerSetup(JavaPlugin plugin) {
         Bukkit.getServer().getPluginManager().registerEvents(new EquipmentListener(), plugin);
-        //Bukkit.getServer().getPluginManager().registerEvents(new ChunkLoaderListener(), plugin);
         Bukkit.getServer().getPluginManager().registerEvents(new SynthesizerListener(), plugin);
     }
 }

@@ -20,14 +20,12 @@ public class SynthesizerListener implements Listener {
         if (e.getFoodLevel() < ((Player) e.getEntity()).getFoodLevel()) {
             Player p = (Player) e.getEntity();
             for (ItemStack item : p.getInventory().getContents()) {
-                if (SlimefunManager.isItemSimilar(item, Items.FOOD_SYNTHESIZER, false)) {
-                    if (ItemEnergy.getStoredEnergy(item) >= 3) {
-                        ItemEnergy.chargeItem(item, -3F);
-                        p.playSound(p.getLocation(), Sound.ENTITY_GENERIC_EAT, 1.5F, 1F);
-                        e.setFoodLevel(20);
-                        p.setSaturation(5);
-                        break;
-                    }
+                if (SlimefunManager.isItemSimilar(item, Items.FOOD_SYNTHESIZER, false) && ItemEnergy.getStoredEnergy(item) >= 3) {
+                    ItemEnergy.chargeItem(item, -3F);
+                    p.playSound(p.getLocation(), Sound.ENTITY_GENERIC_EAT, 1.5F, 1F);
+                    e.setFoodLevel(20);
+                    p.setSaturation(5);
+                    break;
                 }
             }
         }

@@ -16,6 +16,12 @@ public class ThoriumResource implements GEOResource {
     private final NamespacedKey key = new NamespacedKey(SlimefunPlugin.instance, "thorium");
     private final ThreadLocalRandom random = ThreadLocalRandom.current();
 
+    private boolean obtainableFromGEOMiner;
+
+    public ThoriumResource(boolean obtainableFromGEOMiner) {
+        this.obtainableFromGEOMiner = obtainableFromGEOMiner;
+    }
+
     @Override
     public int getDefaultSupply(World.Environment environment, Biome biome) {
         switch (biome) {
@@ -52,7 +58,7 @@ public class ThoriumResource implements GEOResource {
 
     @Override
     public boolean isObtainableFromGEOMiner() {
-        return SlimeXpansion.plugin.getConfig().getBoolean("options.thorium-via-geo-miner");
+        return obtainableFromGEOMiner;
     }
 
 }

@@ -1,9 +1,13 @@
 package me.john000708.slimexpansion.machines;
 
+import io.github.thebusybiscuit.slimefun4.api.SlimefunAddon;
+import me.john000708.slimexpansion.Items;
 import me.john000708.slimexpansion.SlimeXpansion;
+import me.john000708.slimexpansion.utils.SchedulerHandler;
 import me.mrCookieSlime.CSCoreLibPlugin.Configuration.Config;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.Item.CustomItem;
 import me.mrCookieSlime.Slimefun.Lists.RecipeType;
+import me.mrCookieSlime.Slimefun.Lists.SlimefunItems;
 import me.mrCookieSlime.Slimefun.Objects.Category;
 import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SlimefunItem;
 import me.mrCookieSlime.Slimefun.Objects.handlers.BlockTicker;
@@ -25,13 +29,22 @@ import org.bukkit.scheduler.BukkitRunnable;
  */
 public class RedstoneClock extends SlimefunItem {
 
-    private int boarder[] = new int[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26};
+    private int boarder[] = new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26};
     private int tickTime = 0;
 
-    public RedstoneClock(Category category, ItemStack item, String name, RecipeType recipeType, ItemStack[] recipe) {
-        super(category, item, name, recipeType, recipe);
+    private SchedulerHandler schedulerHandler;
 
-        new BlockMenuPreset(name, "&4Redstone Clock") {
+    public RedstoneClock(Category category, SchedulerHandler schedulerHandler) {
+        super(category, Items.REDSTONE_CLOCK,
+                RecipeType.ENHANCED_CRAFTING_TABLE,
+                new ItemStack[]{SlimefunItems.LEAD_INGOT, new ItemStack(Material.REDSTONE_BLOCK),
+                        SlimefunItems.LEAD_INGOT, new ItemStack(Material.REDSTONE_BLOCK), new ItemStack(Material.CLOCK),
+                        new ItemStack(Material.REDSTONE_BLOCK), SlimefunItems.LEAD_INGOT,
+                        new ItemStack(Material.REDSTONE_BLOCK), SlimefunItems.LEAD_INGOT});
+
+        this.schedulerHandler = schedulerHandler;
+
+        new BlockMenuPreset("REDSTONE_CLOCK", "&4Redstone Clock") {
 
             @Override
             public void init() {
@@ -41,60 +54,60 @@ public class RedstoneClock extends SlimefunItem {
             @Override
             public void newInstance(final BlockMenu blockMenu, final Block block) {
                 if (BlockStorage.getLocationInfo(block.getLocation(), "time") != null) {
-                    blockMenu.replaceExistingItem(11, new CustomItem(new ItemStack(Material.REDSTONE_BLOCK), "&e+15 " +
-                        "Seconds"));
+                    blockMenu.replaceExistingItem(11, new CustomItem(Material.REDSTONE_BLOCK, "&e+15 " +
+                            "Seconds"));
                     blockMenu.addMenuClickHandler(11, (player, i, itemStack, clickAction) -> {
                         if (checkTime(block, 15)) {
                             BlockStorage.addBlockInfo(block, "time",
-                                String.valueOf(Integer.parseInt(BlockStorage.getLocationInfo(block.getLocation(),
-                                    "time")) + 15));
+                                    String.valueOf(Integer.parseInt(BlockStorage.getLocationInfo(block.getLocation(),
+                                            "time")) + 15));
                             BlockStorage.addBlockInfo(block, "timeLeft",
-                                BlockStorage.getLocationInfo(block.getLocation(), "time"));
+                                    BlockStorage.getLocationInfo(block.getLocation(), "time"));
                         }
                         newInstance(blockMenu, block);
                         return false;
                     });
 
                     blockMenu.replaceExistingItem(12, new CustomItem(new ItemStack(Material.REDSTONE_BLOCK), "&e+1 " +
-                        "Second"));
+                            "Second"));
                     blockMenu.addMenuClickHandler(12, (player, i, itemStack, clickAction) -> {
                         if (checkTime(block, 1)) {
                             BlockStorage.addBlockInfo(block, "time",
-                                String.valueOf(Integer.parseInt(BlockStorage.getLocationInfo(block.getLocation(),
-                                    "time")) + 1));
+                                    String.valueOf(Integer.parseInt(BlockStorage.getLocationInfo(block.getLocation(),
+                                            "time")) + 1));
                             BlockStorage.addBlockInfo(block, "timeLeft",
-                                BlockStorage.getLocationInfo(block.getLocation(), "time"));
+                                    BlockStorage.getLocationInfo(block.getLocation(), "time"));
                         }
                         newInstance(blockMenu, block);
                         return false;
                     });
 
                     blockMenu.replaceExistingItem(13, new CustomItem(Material.CLOCK,
-                        "&bTick Every &e" + BlockStorage.getLocationInfo(block.getLocation(), "time") + " &bSeconds"));
+                            "&bTick Every &e" + BlockStorage.getLocationInfo(block.getLocation(), "time") + " &bSeconds"));
 
                     blockMenu.replaceExistingItem(14, new CustomItem(new ItemStack(Material.REDSTONE_BLOCK), "&e-1 " +
-                        "Second"));
+                            "Second"));
                     blockMenu.addMenuClickHandler(14, (player, i, itemStack, clickAction) -> {
                         if (checkTime(block, -1)) {
                             BlockStorage.addBlockInfo(block, "time",
-                                String.valueOf(Integer.parseInt(BlockStorage.getLocationInfo(block.getLocation(),
-                                    "time")) - 1));
+                                    String.valueOf(Integer.parseInt(BlockStorage.getLocationInfo(block.getLocation(),
+                                            "time")) - 1));
                             BlockStorage.addBlockInfo(block, "timeLeft",
-                                BlockStorage.getLocationInfo(block.getLocation(), "time"));
+                                    BlockStorage.getLocationInfo(block.getLocation(), "time"));
                         }
                         newInstance(blockMenu, block);
                         return false;
                     });
 
                     blockMenu.replaceExistingItem(15, new CustomItem(new ItemStack(Material.REDSTONE_BLOCK), "&e-15 " +
-                        "Seconds"));
+                            "Seconds"));
                     blockMenu.addMenuClickHandler(15, (player, i, itemStack, clickAction) -> {
                         if (checkTime(block, -15)) {
                             BlockStorage.addBlockInfo(block, "time",
-                                String.valueOf(Integer.parseInt(BlockStorage.getLocationInfo(block.getLocation(),
-                                    "time")) - 15));
+                                    String.valueOf(Integer.parseInt(BlockStorage.getLocationInfo(block.getLocation(),
+                                            "time")) - 15));
                             BlockStorage.addBlockInfo(block, "timeLeft",
-                                BlockStorage.getLocationInfo(block.getLocation(), "time"));
+                                    BlockStorage.getLocationInfo(block.getLocation(), "time"));
                         }
                         newInstance(blockMenu, block);
                         return false;
@@ -120,7 +133,7 @@ public class RedstoneClock extends SlimefunItem {
 
 
     @Override
-    public void register(boolean slimefun) {
+    public void register(SlimefunAddon addon) {
         addItemHandler(new BlockTicker() {
 
             @Override
@@ -137,36 +150,31 @@ public class RedstoneClock extends SlimefunItem {
             public void tick(final Block block, SlimefunItem slimefunItem, Config config) {
                 if ((tickTime % 2) != 0) return;
                 BlockStorage.getInventory(block).replaceExistingItem(13, new CustomItem(Material.CLOCK, "&bTick Every" +
-                    " &e" + BlockStorage.getLocationInfo(block.getLocation(), "time") + " &bSeconds",
-                    "&7Time Left: " + BlockStorage.getLocationInfo(block.getLocation(), "timeLeft") + "s"));
+                        " &e" + BlockStorage.getLocationInfo(block.getLocation(), "time") + " &bSeconds",
+                        "&7Time Left: " + BlockStorage.getLocationInfo(block.getLocation(), "timeLeft") + "s"));
 
                 int timeLeft = Integer.parseInt(BlockStorage.getLocationInfo(block.getLocation(), "timeLeft"));
 
                 if (timeLeft == 0) {
                     BlockStorage.addBlockInfo(block, "timeLeft", BlockStorage.getLocationInfo(block.getLocation(),
-                        "time"));
-                    new BukkitRunnable() {
-                        @Override
-                        public void run() {
-                            AnaloguePowerable powerable = (AnaloguePowerable) block.getBlockData();
-                            powerable.setPower(powerable.getMaximumPower());
-                            block.setBlockData(powerable);
-                        }
-                    }.runTaskLater(SlimeXpansion.plugin, 1);
-                    new BukkitRunnable() {
-                        @Override
-                        public void run() {
-                            AnaloguePowerable powerable = (AnaloguePowerable) block.getBlockData();
-                            powerable.setPower(0);
-                            block.setBlockData(powerable);
-                        }
-                    }.runTaskLater(SlimeXpansion.plugin, 20);
+                            "time"));
+                    schedulerHandler.runTaskLater(() -> {
+                        AnaloguePowerable powerable = (AnaloguePowerable) block.getBlockData();
+                        powerable.setPower(powerable.getMaximumPower());
+                        block.setBlockData(powerable);
+                    }, 1L);
+
+                    schedulerHandler.runTaskLater(() -> {
+                        AnaloguePowerable powerable = (AnaloguePowerable) block.getBlockData();
+                        powerable.setPower(0);
+                        block.setBlockData(powerable);
+                    }, 20L);
                 } else {
                     BlockStorage.addBlockInfo(block, "timeLeft", String.valueOf(timeLeft - 1));
                 }
             }
         });
-        super.register(slimefun);
+        super.register(addon);
     }
 
 

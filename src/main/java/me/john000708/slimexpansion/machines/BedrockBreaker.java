@@ -2,9 +2,11 @@ package me.john000708.slimexpansion.machines;
 
 import me.john000708.slimexpansion.Items;
 import me.john000708.slimexpansion.SlimeXpansion;
+import me.john000708.slimexpansion.utils.SchedulerHandler;
 import me.mrCookieSlime.CSCoreLibPlugin.Configuration.Config;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.Item.CustomItem;
 import me.mrCookieSlime.Slimefun.Lists.RecipeType;
+import me.mrCookieSlime.Slimefun.Lists.SlimefunItems;
 import me.mrCookieSlime.Slimefun.Objects.Category;
 import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SimpleSlimefunItem;
 import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SlimefunItem;
@@ -47,11 +49,21 @@ public class BedrockBreaker extends SimpleSlimefunItem<BlockTicker> {
     private int time = 0;
     private int timeLeft = 15;
 
-    public BedrockBreaker(Category category, SlimefunItemStack item, String name, RecipeType recipeType,
-                          final ItemStack[] recipe) {
-        super(category, item, recipeType, recipe);
+    private SchedulerHandler schedulerHandler;
 
-        new BlockMenuPreset(name, "&4Bedrock Breaker") {
+    private static final String ENABLED = "enabled";
+    private static final String FALSE = "false";
+
+    public BedrockBreaker(Category category, SchedulerHandler schedulerHandler) {
+        super(category, Items.BEDROCK_BREAKER,
+                RecipeType.ENHANCED_CRAFTING_TABLE,
+                new ItemStack[]{SlimefunItems.REINFORCED_PLATE, SlimefunItems.PLUTONIUM, SlimefunItems.REINFORCED_PLATE,
+                        SlimefunItems.SILVER_INGOT, SlimefunItems.POWER_CRYSTAL, SlimefunItems.SILVER_INGOT,
+                        SlimefunItems.BLISTERING_INGOT_3, Items.BEDROCK_DRILL, SlimefunItems.BLISTERING_INGOT_3});
+
+        this.schedulerHandler = schedulerHandler;
+
+        new BlockMenuPreset("BEDROCK_MINER", "&4Bedrock Breaker") {
 
             @Override
             public void init() {
@@ -60,16 +72,16 @@ public class BedrockBreaker extends SimpleSlimefunItem<BlockTicker> {
 
             @Override
             public void newInstance(final BlockMenu menu, final Block block) {
-                if (BlockStorage.getLocationInfo(block.getLocation(), "enabled") != null) {
+                if (BlockStorage.getLocationInfo(block.getLocation(), ENABLED) != null) {
                     menu.replaceExistingItem(14, new CustomItem(new ItemStack(Material.DIAMOND_BLOCK), "&3Breaker " +
-                        "Idle"));
+                            "Idle"));
                     menu.replaceExistingItem(15, new CustomItem(new ItemStack(Material.DIAMOND_BLOCK), "&3Breaker " +
-                        "Idle"));
-                    if (!BlockStorage.getLocationInfo(block.getLocation(), "enabled").equalsIgnoreCase("true")) {
+                            "Idle"));
+                    if (!BlockStorage.getLocationInfo(block.getLocation(), ENABLED).equalsIgnoreCase("true")) {
                         for (int i : toggleSlots) {
                             menu.replaceExistingItem(i, new CustomItem(Material.RED_STAINED_GLASS_PANE, "&cDisabled"));
                             menu.addMenuClickHandler(i, (player, i12, itemStack, clickAction) -> {
-                                BlockStorage.addBlockInfo(block, "enabled", "true");
+                                BlockStorage.addBlockInfo(block, ENABLED, "true");
                                 newInstance(menu, block);
                                 return false;
                             });
@@ -78,22 +90,22 @@ public class BedrockBreaker extends SimpleSlimefunItem<BlockTicker> {
                         for (int i : toggleSlots) {
                             menu.replaceExistingItem(i, new CustomItem(Material.GREEN_STAINED_GLASS_PANE, "&aEnabled"));
                             menu.addMenuClickHandler(i, (player, i1, itemStack, clickAction) -> {
-                                BlockStorage.addBlockInfo(block, "enabled", "false");
+                                BlockStorage.addBlockInfo(block, ENABLED, FALSE);
                                 newInstance(menu, block);
                                 return false;
                             });
                         }
                     }
                 } else {
-                    BlockStorage.addBlockInfo(block, "enabled", "false");
+                    BlockStorage.addBlockInfo(block, ENABLED, FALSE);
                     newInstance(menu, block);
                 }
             }
 
 
             public int[] getSlotsAccessedByItemTransport(ItemTransportFlow flow) {
-                if (flow.equals(ItemTransportFlow.INSERT)) return new int[] {10};
-                else return new int[] {37};
+                if (flow.equals(ItemTransportFlow.INSERT)) return new int[]{10};
+                else return new int[]{37};
             }
 
             public boolean canOpen(Block b, Player p) {
@@ -127,10 +139,12 @@ public class BedrockBreaker extends SimpleSlimefunItem<BlockTicker> {
         };
     }
 
-    protected void tick(final Block block) {
-        if (!(time % 2 == 0)) return;
+    private static final String DURABILITY = "durability";
 
-        if (BlockStorage.getLocationInfo(block.getLocation(), "enabled") == null || BlockStorage.getLocationInfo(block.getLocation(), "enabled").equals("false"))
+    protected void tick(final Block block) {
+        if (time % 2 != 0) return;
+
+        if (BlockStorage.getLocationInfo(block.getLocation(), ENABLED) == null || BlockStorage.getLocationInfo(block.getLocation(), ENABLED).equals(FALSE))
             return;
 
         if (getEnergyConsumption() > ChargableBlock.getCharge(block)) return;
@@ -155,7 +169,7 @@ public class BedrockBreaker extends SimpleSlimefunItem<BlockTicker> {
 
         if (durability > 1) {
             lore.set(3, ChatColor.translateAlternateColorCodes('&',
-                "&7Durability: " + (durability - 1) + "/1024"));
+                    "&7Durability: " + (durability - 1) + "/1024"));
             meta.setLore(lore);
             drillItem.setItemMeta(meta);
             BlockStorage.getInventory(block).replaceExistingItem(10, drillItem);
@@ -163,35 +177,32 @@ public class BedrockBreaker extends SimpleSlimefunItem<BlockTicker> {
             BlockStorage.getInventory(block).replaceExistingItem(10, new ItemStack(Material.AIR));
         }
 
-        if (BlockStorage.getLocationInfo(block.getLocation(), "durability") == null)
-            BlockStorage.addBlockInfo(block, "durability", "10");
+        if (BlockStorage.getLocationInfo(block.getLocation(), DURABILITY) == null)
+            BlockStorage.addBlockInfo(block, DURABILITY, "10");
 
         ChargableBlock.addCharge(block, -getEnergyConsumption());
 
         if (timeLeft == 0) {
-            if (Double.parseDouble(BlockStorage.getLocationInfo(block.getLocation(), "durability")) == 0) {
-                new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        bedrockBlock.setType(Material.AIR);
-                        block.getWorld().playSound(block.getLocation(), Sound.BLOCK_STONE_BREAK, 1F, .75F);
-                    }
-                }.runTaskLater(SlimeXpansion.plugin, 1L);
-                if (fits(block, new ItemStack[] {Items.BEDROCK_DUST})) {
-                    pushItems(block, new ItemStack[] {Items.BEDROCK_DUST});
-                    BlockStorage.addBlockInfo(block, "durability", "10");
+            if (Double.parseDouble(BlockStorage.getLocationInfo(block.getLocation(), DURABILITY)) == 0) {
+                schedulerHandler.runTaskLater(() -> {
+                    bedrockBlock.setType(Material.AIR);
+                    block.getWorld().playSound(block.getLocation(), Sound.BLOCK_STONE_BREAK, 1F, .75F);
+                }, 1L);
+                if (fits(block, new ItemStack[]{Items.BEDROCK_DUST})) {
+                    pushItems(block, new ItemStack[]{Items.BEDROCK_DUST});
+                    BlockStorage.addBlockInfo(block, DURABILITY, "10");
                 }
             } else {
-                BlockStorage.addBlockInfo(block, "durability",
-                    String.valueOf(Double.parseDouble(BlockStorage.getLocationInfo(block.getLocation(), "durability")) - .5));
+                BlockStorage.addBlockInfo(block, DURABILITY,
+                        String.valueOf(Double.parseDouble(BlockStorage.getLocationInfo(block.getLocation(), DURABILITY)) - .5));
             }
             timeLeft = 15;
         } else {
 
             block.getWorld().spawnParticle(Particle.BLOCK_CRACK, block.getLocation().add(.5, .5, .5), 50,
-                Material.BEDROCK.createBlockData());
+                    Material.BEDROCK.createBlockData());
             updateStatus(block, new CustomItem(new ItemStack(Material.EMERALD_BLOCK), "&aBreaker Operational", "",
-                "&7Bedrock Durability: " + BlockStorage.getLocationInfo(block.getLocation(), "durability")));
+                    "&7Bedrock Durability: " + BlockStorage.getLocationInfo(block.getLocation(), DURABILITY)));
             timeLeft--;
         }
     }
@@ -222,7 +233,7 @@ public class BedrockBreaker extends SimpleSlimefunItem<BlockTicker> {
     }
 
     public int[] getOutputSlots() {
-        return new int[] {37};
+        return new int[]{37};
     }
 
 

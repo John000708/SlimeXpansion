@@ -32,7 +32,7 @@ public class UUTransmutator extends SlimefunItem {
     private static final int[] uuBorder = {0, 1, 2, 9, 11, 18, 19, 20};
     private static final int[] itemBorder = {3, 8, 12, 17, 21, 22, 23, 24, 25, 26};
     private static final int[] resultBorder = {27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 44, 45, 46, 47, 48, 49, 50, 51
-        , 52, 53};
+            , 52, 53};
     private static final int[] itemsSlots = {4, 5, 6, 7, 13, 14, 15, 16};
 
     public UUTransmutator(Category category, ItemStack item, String name, RecipeType recipeType,
@@ -67,7 +67,7 @@ public class UUTransmutator extends SlimefunItem {
                         }
                         menu.addMenuClickHandler(i, (player, i1, itemStack, clickAction) -> {
                             ItemStack prevItem =
-                                BlockStorage.getInventory(b).getItemInSlot(Integer.parseInt(BlockStorage.getLocationInfo(b.getLocation(), "selected-item")));
+                                    BlockStorage.getInventory(b).getItemInSlot(Integer.parseInt(BlockStorage.getLocationInfo(b.getLocation(), "selected-item")));
                             prevItem.removeEnchantment(Enchantment.ARROW_INFINITE);
                             itemStack.addUnsafeEnchantment(Enchantment.ARROW_INFINITE, 1);
                             BlockStorage.addBlockInfo(b, "selected-item", String.valueOf(i1));
@@ -128,16 +128,16 @@ public class UUTransmutator extends SlimefunItem {
                 if (inv.getItemInSlot(10) == null) return;
 
                 ItemStack itemToOutput =
-                    inv.getItemInSlot(Integer.parseInt(BlockStorage.getLocationInfo(block.getLocation(), "selected" +
-                        "-item"))).clone();
+                        inv.getItemInSlot(Integer.parseInt(BlockStorage.getLocationInfo(block.getLocation(), "selected" +
+                                "-item"))).clone();
                 itemToOutput.removeEnchantment(Enchantment.ARROW_INFINITE);
 
-                if (fits(block, new ItemStack[] {itemToOutput})) {
+                if (fits(block, new ItemStack[]{itemToOutput})) {
                     if (SlimefunManager.isItemSimilar(inv.getItemInSlot(10), Items.UU_MATTER, false)
-                        && inv.getItemInSlot(10).getAmount() >= 1) {
+                            && inv.getItemInSlot(10).getAmount() >= 1) {
                         inv.replaceExistingItem(10, InvUtils.decreaseItem(inv.getItemInSlot(10), 1));
                         ChargableBlock.addCharge(block, -getEnergyConsumption());
-                        pushItems(block, new ItemStack[] {itemToOutput});
+                        pushItems(block, new ItemStack[]{itemToOutput});
                     }
                 }
             }
@@ -173,11 +173,11 @@ public class UUTransmutator extends SlimefunItem {
     }
 
     public int[] getInputSlots() {
-        return new int[] {10};
+        return new int[]{10};
     }
 
     public int[] getOutputSlots() {
-        return new int[] {37, 38, 39, 40, 41, 42, 43};
+        return new int[]{37, 38, 39, 40, 41, 42, 43};
     }
 
     private Inventory inject(Block b) {

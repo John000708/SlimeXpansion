@@ -12,8 +12,6 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.Objects;
-
 /**
  * Created by John on 19.05.2016.
  */
@@ -24,18 +22,17 @@ public class EquipmentListener implements Listener {
         if (e.getEntity() instanceof Player) {
             Player player = (Player) e.getEntity();
 
-            if (Objects.requireNonNull(player.getEquipment()).getChestplate() != null) {
-                if (SlimefunManager.isItemSimilar(player.getEquipment().getChestplate(), Items.ELECTRIC_CHESTPLATE,
-                    false)) {
+            if (player.getEquipment() != null &&
+                    player.getEquipment().getChestplate() != null &&
+                    SlimefunManager.isItemSimilar(player.getEquipment().getChestplate(), Items.ELECTRIC_CHESTPLATE,
+                            false)) {
+                ItemStack chestPlate = player.getEquipment().getChestplate();
 
-                    ItemStack chestPlate = player.getEquipment().getChestplate();
-
-                    if (ItemEnergy.getStoredEnergy(chestPlate) >= 5) {
-                        player.getEquipment().setChestplate(ItemEnergy.chargeItem(chestPlate,
+                if (ItemEnergy.getStoredEnergy(chestPlate) >= 5) {
+                    player.getEquipment().setChestplate(ItemEnergy.chargeItem(chestPlate,
                             (float) (e.getDamage() / -1.75)));
 
-                        e.setCancelled(true);
-                    }
+                    e.setCancelled(true);
                 }
             }
         }
@@ -47,13 +44,11 @@ public class EquipmentListener implements Listener {
             Player player = (Player) e.getDamager();
             ItemStack itemInhand = player.getInventory().getItemInMainHand();
 
-            if (SlimefunManager.isItemSimilar(itemInhand, Items.NANO_BLADE, false)) {
-                if (itemInhand.containsEnchantment(Enchantment.ARROW_INFINITE)) {
-                    if (ItemEnergy.getStoredEnergy(itemInhand) >= 5) {
-                        e.setDamage(e.getDamage() * 2.5);
-                        ItemEnergy.chargeItem(itemInhand, (float) -2.5);
-                    }
-                }
+            if (SlimefunManager.isItemSimilar(itemInhand, Items.NANO_BLADE, false) &&
+                    itemInhand.containsEnchantment(Enchantment.ARROW_INFINITE) &&
+                    ItemEnergy.getStoredEnergy(itemInhand) >= 5) {
+                e.setDamage(e.getDamage() * 2.5);
+                ItemEnergy.chargeItem(itemInhand, (float) -2.5);
             }
         }
     }
@@ -61,11 +56,10 @@ public class EquipmentListener implements Listener {
     @EventHandler
     public void onNanoBladeDisenchant(AutoDisenchantEvent e) {
         ItemStack item = e.getItem();
-        if (SlimefunManager.isItemSimilar(item, Items.NANO_BLADE, false)) {
-            if (item.containsEnchantment(Enchantment.ARROW_INFINITE)) {
-                e.setCancelled(true);
-                item.removeEnchantment(Enchantment.ARROW_INFINITE);
-            }
+        if (SlimefunManager.isItemSimilar(item, Items.NANO_BLADE, false) &&
+                item.containsEnchantment(Enchantment.ARROW_INFINITE)) {
+            e.setCancelled(true);
+            item.removeEnchantment(Enchantment.ARROW_INFINITE);
         }
     }
 }
