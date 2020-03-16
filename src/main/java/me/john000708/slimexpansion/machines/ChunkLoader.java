@@ -52,8 +52,7 @@ public class ChunkLoader extends SimpleSlimefunItem<BlockTicker> {
 
             @Override
             public int[] getSlotsAccessedByItemTransport(ItemTransportFlow flow) {
-                if (flow.equals(ItemTransportFlow.INSERT)) return new int[]{22};
-                else return new int[]{22};
+                return new int[]{22};
             }
 
             @Override
@@ -65,29 +64,12 @@ public class ChunkLoader extends SimpleSlimefunItem<BlockTicker> {
 
     @Override
     public BlockTicker getItemHandler() {
-        return new BlockTicker() {
-
-            @Override
-            public boolean isSynchronized() {
-                return false;
-            }
-
-            @Override
-            public void uniqueTick() {
-                time++;
-            }
-
-            @Override
-            public void tick(Block block, SlimefunItem slimefunItem, Config config) {
-                ChunkLoader.this.tick(block);
-            }
-        };
+        return new XpansionBlockTicker(this::tick);
     }
 
     private static final String TIMELEFT = "timeLeft";
 
     protected void tick(Block block) {
-        if (time % 2 != 0) return;
         if (BlockStorage.getLocationInfo(block.getLocation(), TIMELEFT) == null)
             BlockStorage.addBlockInfo(block, TIMELEFT, "0");
 

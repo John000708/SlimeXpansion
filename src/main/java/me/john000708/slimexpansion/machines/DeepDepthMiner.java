@@ -128,30 +128,13 @@ public class DeepDepthMiner extends SimpleSlimefunItem<BlockTicker> {
 
     @Override
     public BlockTicker getItemHandler() {
-        return new BlockTicker() {
-
-            @Override
-            public boolean isSynchronized() {
-                return false;
-            }
-
-            @Override
-            public void uniqueTick() {
-                time++;
-            }
-
-            @Override
-            public void tick(Block block, SlimefunItem slimefunItem, Config config) {
-                DeepDepthMiner.this.tick(block);
-            }
-        };
+        return new XpansionBlockTicker(this::tick);
     }
 
     protected void tick(final Block block) {
         if (BlockStorage.getLocationInfo(block.getLocation(), "enabled") == null
                 || BlockStorage.getLocationInfo(block.getLocation(), "enabled").equals("false"))
             return;
-        if (!(time % 2 == 0)) return;
 
         boolean stop = false;
 

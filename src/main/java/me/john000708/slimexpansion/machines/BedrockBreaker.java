@@ -1,7 +1,7 @@
 package me.john000708.slimexpansion.machines;
 
 import me.john000708.slimexpansion.Items;
-import me.john000708.slimexpansion.SlimeXpansion;
+import me.john000708.slimexpansion.utils.MachineUtils;
 import me.john000708.slimexpansion.utils.SchedulerHandler;
 import me.mrCookieSlime.CSCoreLibPlugin.Configuration.Config;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.Item.CustomItem;
@@ -14,24 +14,18 @@ import me.mrCookieSlime.Slimefun.Objects.handlers.BlockTicker;
 import me.mrCookieSlime.Slimefun.Setup.SlimefunManager;
 import me.mrCookieSlime.Slimefun.SlimefunPlugin;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
-import me.mrCookieSlime.Slimefun.api.SlimefunItemStack;
 import me.mrCookieSlime.Slimefun.api.energy.ChargableBlock;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenuPreset;
 import me.mrCookieSlime.Slimefun.api.item_transport.ItemTransportFlow;
 import me.mrCookieSlime.Slimefun.cscorelib2.protection.ProtectableAction;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.Particle;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
 
@@ -40,11 +34,11 @@ import java.util.List;
  */
 public class BedrockBreaker extends SimpleSlimefunItem<BlockTicker> {
 
-    private static final int headBorder[] = {0, 1, 2, 9, 11, 18, 19, 20};
-    private static final int progressBorder[] = {3, 4, 5, 6, 7, 8, 12, 13, 16, 17, 21, 22, 23, 24, 25, 26};
-    private static final int resultBorder[] = {27, 28, 29, 36, 38, 45, 46, 47};
-    private static final int toggleBorder[] = {30, 31, 32, 33, 34, 35, 39, 40, 43, 44, 48, 49, 50, 51, 52, 53};
-    private static final int toggleSlots[] = {41, 42};
+    private static final int[] headBorder = {0, 1, 2, 9, 11, 18, 19, 20};
+    private static final int[] progressBorder = {3, 4, 5, 6, 7, 8, 12, 13, 16, 17, 21, 22, 23, 24, 25, 26};
+    private static final int[] resultBorder = {27, 28, 29, 36, 38, 45, 46, 47};
+    private static final int[] toggleBorder = {30, 31, 32, 33, 34, 35, 39, 40, 43, 44, 48, 49, 50, 51, 52, 53};
+    private static final int[] toggleSlots = {41, 42};
 
     private int time = 0;
     private int timeLeft = 15;
@@ -120,30 +114,12 @@ public class BedrockBreaker extends SimpleSlimefunItem<BlockTicker> {
 
     @Override
     public BlockTicker getItemHandler() {
-        return new BlockTicker() {
-
-            @Override
-            public boolean isSynchronized() {
-                return false;
-            }
-
-            @Override
-            public void uniqueTick() {
-                time++;
-            }
-
-            @Override
-            public void tick(Block block, SlimefunItem slimefunItem, Config config) {
-                BedrockBreaker.this.tick(block);
-            }
-        };
+        return new XpansionBlockTicker(this::tick);
     }
 
     private static final String DURABILITY = "durability";
 
     protected void tick(final Block block) {
-        if (time % 2 != 0) return;
-
         if (BlockStorage.getLocationInfo(block.getLocation(), ENABLED) == null || BlockStorage.getLocationInfo(block.getLocation(), ENABLED).equals(FALSE))
             return;
 
@@ -217,15 +193,7 @@ public class BedrockBreaker extends SimpleSlimefunItem<BlockTicker> {
     }
 
     private Inventory inject(Block b) {
-        int size = BlockStorage.getInventory(b).toInventory().getSize();
-        Inventory inv = Bukkit.createInventory(null, size);
-        for (int i = 0; i < size; i++) {
-            inv.setItem(i, new CustomItem(Material.COMMAND_BLOCK, "&4ALL YOUR PLACEHOLDERS ARE BELONG TO US"));
-        }
-        for (int slot : getOutputSlots()) {
-            inv.setItem(slot, BlockStorage.getInventory(b).getItemInSlot(slot));
-        }
-        return inv;
+        return MachineUtils.inject(b, getOutputSlots());
     }
 
     protected boolean fits(Block b, ItemStack[] items) {

@@ -1,6 +1,7 @@
 package me.john000708.slimexpansion.machines;
 
 import me.john000708.slimexpansion.Items;
+import me.john000708.slimexpansion.utils.MachineUtils;
 import me.mrCookieSlime.CSCoreLibPlugin.Configuration.Config;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.InvUtils;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.Item.CustomItem;
@@ -181,15 +182,7 @@ public class UUTransmutator extends SlimefunItem {
     }
 
     private Inventory inject(Block b) {
-        int size = BlockStorage.getInventory(b).toInventory().getSize();
-        Inventory inv = Bukkit.createInventory(null, size);
-        for (int i = 0; i < size; i++) {
-            inv.setItem(i, new CustomItem(Material.COMMAND_BLOCK, "&4ALL YOUR PLACEHOLDERS ARE BELONG TO US"));
-        }
-        for (int slot : getOutputSlots()) {
-            inv.setItem(slot, BlockStorage.getInventory(b).getItemInSlot(slot));
-        }
-        return inv;
+        return MachineUtils.inject(b, getOutputSlots());
     }
 
     protected boolean fits(Block b, ItemStack[] items) {
