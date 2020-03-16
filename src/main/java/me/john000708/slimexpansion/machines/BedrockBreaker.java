@@ -40,7 +40,6 @@ public class BedrockBreaker extends SimpleSlimefunItem<BlockTicker> {
     private static final int[] toggleBorder = {30, 31, 32, 33, 34, 35, 39, 40, 43, 44, 48, 49, 50, 51, 52, 53};
     private static final int[] toggleSlots = {41, 42};
 
-    private int time = 0;
     private int timeLeft = 15;
 
     private SchedulerHandler schedulerHandler;

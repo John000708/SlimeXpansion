@@ -5,11 +5,11 @@ import me.john000708.slimexpansion.Items;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.InvUtils;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.Item.CustomItem;
 import me.mrCookieSlime.Slimefun.Lists.RecipeType;
+import me.mrCookieSlime.Slimefun.Lists.SlimefunItems;
 import me.mrCookieSlime.Slimefun.Objects.Category;
 import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.abstractItems.MachineRecipe;
 import me.mrCookieSlime.Slimefun.Setup.SlimefunManager;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
-import me.mrCookieSlime.Slimefun.api.SlimefunItemStack;
 import me.mrCookieSlime.Slimefun.api.energy.ChargableBlock;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -21,10 +21,15 @@ import java.util.Map;
 /**
  * Created by John on 16.04.2016.
  */
-public abstract class UUFabricator extends XpansionContainer {
+public class UUFabricator extends XpansionContainer {
 
-    public UUFabricator(Category category, SlimefunItemStack item, RecipeType recipeType, ItemStack[] recipe) {
-        super(category, item, recipeType, recipe);
+    public UUFabricator(Category category) {
+        super(category, Items.UU_FABRICATOR,
+                RecipeType.ENHANCED_CRAFTING_TABLE,
+                new ItemStack[]{SlimefunItems.REINFORCED_PLATE, SlimefunItems.POWER_CRYSTAL,
+                        SlimefunItems.REINFORCED_PLATE, SlimefunItems.BLISTERING_INGOT_3,
+                        SlimefunItems.CARBONADO_EDGED_CAPACITOR, SlimefunItems.BLISTERING_INGOT_3, SlimefunItems.PLUTONIUM,
+                        Items.SCRAP_BOX, SlimefunItems.PLUTONIUM});
     }
 
     @Override
@@ -45,6 +50,21 @@ public abstract class UUFabricator extends XpansionContainer {
     @Override
     public String getInventoryTitle() {
         return "&5UU Fabricator";
+    }
+
+    @Override
+    public int getCapacity() {
+        return 4098;
+    }
+
+    @Override
+    public int getEnergyConsumption() {
+        return 512;
+    }
+
+    @Override
+    public int getSpeed() {
+        return 1;
     }
 
     protected void tick(Block b) {

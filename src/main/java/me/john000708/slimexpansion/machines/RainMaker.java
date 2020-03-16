@@ -4,6 +4,7 @@ import me.john000708.slimexpansion.Items;
 import me.mrCookieSlime.CSCoreLibPlugin.Configuration.Config;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.Item.CustomItem;
 import me.mrCookieSlime.Slimefun.Lists.RecipeType;
+import me.mrCookieSlime.Slimefun.Lists.SlimefunItems;
 import me.mrCookieSlime.Slimefun.Objects.Category;
 import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SlimefunItem;
 import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.abstractItems.MachineRecipe;
@@ -23,8 +24,12 @@ import java.util.Map;
  */
 public class RainMaker extends XpansionContainer {
 
-    public RainMaker(Category category, SlimefunItemStack item, RecipeType recipeType, final ItemStack[] recipe) {
-        super(category, item, recipeType, recipe);
+    public RainMaker(Category category) {
+        super(category, Items.RAIN_MAKER,
+                RecipeType.ENHANCED_CRAFTING_TABLE,
+                new ItemStack[]{Items.IODINE_CHARGE, SlimefunItems.BLISTERING_INGOT_3, Items.DISSIPATION_CHARGE,
+                        SlimefunItems.SILVER_INGOT, SlimefunItems.MEDIUM_CAPACITOR, SlimefunItems.SILVER_INGOT,
+                        SlimefunItems.LEAD_INGOT, SlimefunItems.POWER_CRYSTAL, SlimefunItems.LEAD_INGOT});
     }
 
     @Override

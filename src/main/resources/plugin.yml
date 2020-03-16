@@ -1,6 +1,6 @@
-main: main.java.me.john000708.slimexpansion.SlimeXpansion
+main: me.john000708.slimexpansion.SlimeXpansion
 name: SlimeXpansion
 version: ${project.version}
-api-version: 1.14
+api-version: 1.15
 author: John000708
 depend: [Slimefun]

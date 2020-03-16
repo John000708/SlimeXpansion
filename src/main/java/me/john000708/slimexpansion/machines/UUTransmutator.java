@@ -6,6 +6,7 @@ import me.mrCookieSlime.CSCoreLibPlugin.Configuration.Config;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.InvUtils;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.Item.CustomItem;
 import me.mrCookieSlime.Slimefun.Lists.RecipeType;
+import me.mrCookieSlime.Slimefun.Lists.SlimefunItems;
 import me.mrCookieSlime.Slimefun.Objects.Category;
 import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SlimefunItem;
 import me.mrCookieSlime.Slimefun.Objects.handlers.BlockTicker;
@@ -36,11 +37,16 @@ public class UUTransmutator extends SlimefunItem {
             , 52, 53};
     private static final int[] itemsSlots = {4, 5, 6, 7, 13, 14, 15, 16};
 
-    public UUTransmutator(Category category, ItemStack item, String name, RecipeType recipeType,
-                          final ItemStack[] recipe) {
-        super(category, item, name, recipeType, recipe);
+    private static final String SELECTEDITEM = "selected-item";
 
-        new BlockMenuPreset(name, "&5UU Transmutator") {
+    public UUTransmutator(Category category) {
+        super(category, Items.UU_TRANSMUTATOR, "UU_TRANSMUTATOR",
+                RecipeType.ENHANCED_CRAFTING_TABLE,
+                new ItemStack[]{SlimefunItems.REINFORCED_PLATE, Items.UU_MATTER, SlimefunItems.REINFORCED_PLATE,
+                        SlimefunItems.POWER_CRYSTAL, Items.UU_FABRICATOR, SlimefunItems.POWER_CRYSTAL,
+                        SlimefunItems.PLUTONIUM, SlimefunItems.CARBONADO_EDGED_CAPACITOR, SlimefunItems.PLUTONIUM});
+
+        new BlockMenuPreset("UU_TRANSMUTATOR", "&5UU Transmutator") {
 
             public void init() {
                 constructMenu(this);
@@ -48,10 +54,10 @@ public class UUTransmutator extends SlimefunItem {
 
             @Override
             public void newInstance(final BlockMenu menu, final Block b) {
-                if (!BlockStorage.hasBlockInfo(b) || BlockStorage.getLocationInfo(b.getLocation(), "selected-item") == null) {
+                if (!BlockStorage.hasBlockInfo(b) || BlockStorage.getLocationInfo(b.getLocation(), SELECTEDITEM) == null) {
                     for (int i : itemsSlots) {
                         menu.addMenuClickHandler(i, (player, i12, itemStack, clickAction) -> {
-                            BlockStorage.addBlockInfo(b, "selected-item", String.valueOf(i12));
+                            BlockStorage.addBlockInfo(b, SELECTEDITEM, String.valueOf(i12));
                             ItemStack item1 = BlockStorage.getInventory(b).getItemInSlot(i12);
                             item1.addUnsafeEnchantment(Enchantment.ARROW_INFINITE, 1);
                             BlockStorage.getInventory(b).replaceExistingItem(i12, item1);
@@ -61,17 +67,17 @@ public class UUTransmutator extends SlimefunItem {
                     }
                 } else {
                     for (int i : itemsSlots) {
-                        if (Integer.parseInt(BlockStorage.getLocationInfo(b.getLocation(), "selected-item")) == i) {
+                        if (Integer.parseInt(BlockStorage.getLocationInfo(b.getLocation(), SELECTEDITEM)) == i) {
                             ItemStack targetItem = BlockStorage.getInventory(b).getItemInSlot(i);
                             targetItem.addUnsafeEnchantment(Enchantment.ARROW_INFINITE, 1);
                             BlockStorage.getInventory(b).replaceExistingItem(i, targetItem);
                         }
                         menu.addMenuClickHandler(i, (player, i1, itemStack, clickAction) -> {
                             ItemStack prevItem =
-                                    BlockStorage.getInventory(b).getItemInSlot(Integer.parseInt(BlockStorage.getLocationInfo(b.getLocation(), "selected-item")));
+                                    BlockStorage.getInventory(b).getItemInSlot(Integer.parseInt(BlockStorage.getLocationInfo(b.getLocation(), SELECTEDITEM)));
                             prevItem.removeEnchantment(Enchantment.ARROW_INFINITE);
                             itemStack.addUnsafeEnchantment(Enchantment.ARROW_INFINITE, 1);
-                            BlockStorage.addBlockInfo(b, "selected-item", String.valueOf(i1));
+                            BlockStorage.addBlockInfo(b, SELECTEDITEM, String.valueOf(i1));
                             newInstance(menu, b);
                             return false;
                         });
@@ -93,7 +99,7 @@ public class UUTransmutator extends SlimefunItem {
             }
 
         };
-        registerBlockHandler(name, (p, b, sfItem, reason) -> {
+        registerBlockHandler("UU_TRANSMUTATOR", (p, b, sfItem, reason) -> {
             for (int slot : getInputSlots()) {
                 if (BlockStorage.getInventory(b).getItemInSlot(slot) != null)
                     b.getWorld().dropItemNaturally(b.getLocation(), BlockStorage.getInventory(b).getItemInSlot(slot));
@@ -121,7 +127,7 @@ public class UUTransmutator extends SlimefunItem {
 
             @Override
             public void tick(Block block, SlimefunItem slimefunItem, Config config) {
-                if (BlockStorage.getLocationInfo(block.getLocation(), "selected-item") == null) return;
+                if (BlockStorage.getLocationInfo(block.getLocation(), SELECTEDITEM) == null) return;
                 if (ChargableBlock.getCharge(block) < getEnergyConsumption()) return;
 
                 BlockMenu inv = BlockStorage.getInventory(block);

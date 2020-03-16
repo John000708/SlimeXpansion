@@ -112,72 +112,29 @@ public class SlimeXpansion extends JavaPlugin implements SlimefunAddon {
                 new ItemStack[]{null, null, null, null, null, null, null, null, null}).register(this);
 
         //Machines
-        new Recycler(category);
+        new Recycler(category).register(this);
 
-        new UUFabricator(category, Items.UU_FABRICATOR,
-                RecipeType.ENHANCED_CRAFTING_TABLE,
-                new ItemStack[]{SlimefunItems.REINFORCED_PLATE, SlimefunItems.POWER_CRYSTAL,
-                        SlimefunItems.REINFORCED_PLATE, SlimefunItems.BLISTERING_INGOT_3,
-                        SlimefunItems.CARBONADO_EDGED_CAPACITOR, SlimefunItems.BLISTERING_INGOT_3, SlimefunItems.PLUTONIUM,
-                        Items.SCRAP_BOX, SlimefunItems.PLUTONIUM}) {
+        new UUFabricator(category).register(this);
 
-            @Override
-            public int getCapacity() {
-                return 4098;
-            }
+        new UUTransmutator(category).register(this);
 
-            @Override
-            public int getEnergyConsumption() {
-                return 512;
-            }
+        new BedrockBreaker(category, schedulerHandler).register(this);
 
-            @Override
-            public int getSpeed() {
-                return 1;
-            }
+        new DeepDepthMiner(category, schedulerHandler).register(this);
 
-        };
+        new WirelessCharger(category).register(this);
 
-        new UUTransmutator(category, Items.UU_TRANSMUTATOR, "UU_TRANSMUTATOR",
-                RecipeType.ENHANCED_CRAFTING_TABLE,
-                new ItemStack[]{SlimefunItems.REINFORCED_PLATE, Items.UU_MATTER, SlimefunItems.REINFORCED_PLATE,
-                        SlimefunItems.POWER_CRYSTAL, Items.UU_FABRICATOR, SlimefunItems.POWER_CRYSTAL,
-                        SlimefunItems.PLUTONIUM, SlimefunItems.CARBONADO_EDGED_CAPACITOR, SlimefunItems.PLUTONIUM});
-
-        new BedrockBreaker(category, schedulerHandler);
-
-        new DeepDepthMiner(category, schedulerHandler);
-
-        new WirelessCharger(category, Items.WIRELESS_CHARGER, "WIRELESS_CHARGER",
-                RecipeType.ENHANCED_CRAFTING_TABLE,
-                new ItemStack[]{null, SlimefunItems.POWER_CRYSTAL, null, SlimefunItems.GILDED_IRON,
-                        SlimefunItems.LARGE_CAPACITOR, SlimefunItems.GILDED_IRON, SlimefunItems.HEATING_COIL,
-                        SlimefunItems.ELECTRIC_MOTOR, SlimefunItems.HEATING_COIL});
-
-        new RainMaker(category, Items.RAIN_MAKER,
-                RecipeType.ENHANCED_CRAFTING_TABLE,
-                new ItemStack[]{Items.IODINE_CHARGE, SlimefunItems.BLISTERING_INGOT_3, Items.DISSIPATION_CHARGE,
-                        SlimefunItems.SILVER_INGOT, SlimefunItems.MEDIUM_CAPACITOR, SlimefunItems.SILVER_INGOT,
-                        SlimefunItems.LEAD_INGOT, SlimefunItems.POWER_CRYSTAL, SlimefunItems.LEAD_INGOT});
+        new RainMaker(category).register(this);
 
         new ChunkLoader(category, getChunkLoaderDuration()).register(this);
 
         new RedstoneTransmitter(category, schedulerHandler).register(this);
 
-        new RedstoneReceiver(category, Items.REDSTONE_RECEIVER,
-                RecipeType.ENHANCED_CRAFTING_TABLE,
-                new ItemStack[]{SlimefunItems.DAMASCUS_STEEL_INGOT, new ItemStack(Material.GLASS),
-                        SlimefunItems.DAMASCUS_STEEL_INGOT, SlimefunItems.DAMASCUS_STEEL_INGOT,
-                        new ItemStack(Material.REDSTONE_BLOCK), SlimefunItems.DAMASCUS_STEEL_INGOT,
-                        SlimefunItems.CORINTHIAN_BRONZE_INGOT, SlimefunItems.ADVANCED_CIRCUIT_BOARD,
-                        SlimefunItems.CORINTHIAN_BRONZE_INGOT}).register(this);
+        new RedstoneReceiver(category).register(this);
 
         new RedstoneClock(category, schedulerHandler).register(this);
 
-        new Linker(category, Items.LINKER,
-                RecipeType.ENHANCED_CRAFTING_TABLE,
-                new ItemStack[]{null, SlimefunItems.GOLD_24K, null, SlimefunItems.GOLD_24K,
-                        SlimefunItems.ENERGY_REGULATOR, SlimefunItems.GOLD_24K, null, SlimefunItems.GOLD_24K, null}).register(this);
+        new Linker(category).register(this);
 
         new SlimefunItem(category, Items.BEDROCK_DRILL, RecipeType.ENHANCED_CRAFTING_TABLE,
                 new ItemStack[]{null, SlimefunItems.REINFORCED_PLATE, null, SlimefunItems.REINFORCED_PLATE,
@@ -210,6 +167,7 @@ public class SlimeXpansion extends JavaPlugin implements SlimefunAddon {
         ChargableItem nanoBlade = new ChargableItem(category, Items.NANO_BLADE,
                 RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{null, Items.MAG_THOR, null, null, Items.MAG_THOR,
                 null, null, SlimefunItems.ADVANCED_CIRCUIT_BOARD, null});
+
         nanoBlade.addItemHandler((ItemUseHandler) event -> {
             if (SlimefunManager.isItemSimilar(event.getItem(), Items.NANO_BLADE, false)) {
                 if (event.getItem().getEnchantments().containsKey(Enchantment.ARROW_INFINITE)) {
@@ -219,6 +177,7 @@ public class SlimeXpansion extends JavaPlugin implements SlimefunAddon {
                 }
             }
         });
+
         nanoBlade.register(this);
 
         new ChargableItem(category, Items.FOOD_SYNTHESIZER,
@@ -231,13 +190,13 @@ public class SlimeXpansion extends JavaPlugin implements SlimefunAddon {
         new EnergyTransmitter(category, Items.ENERGY_TRANSMITTER, "ENERGY_TRANSMITTER",
                 RecipeType.ENHANCED_CRAFTING_TABLE,
                 new ItemStack[]{null, SlimefunItems.GOLD_24K, null, SlimefunItems.GOLD_24K, Items.LINKER,
-                        SlimefunItems.GOLD_24K, null, SlimefunItems.GOLD_24K, null});
+                        SlimefunItems.GOLD_24K, null, SlimefunItems.GOLD_24K, null}).register(this);
 
         new EnergyReceiver(category, Items.ENERGY_RECEIVER,
                 RecipeType.ENHANCED_CRAFTING_TABLE,
                 new ItemStack[]{null, SlimefunItems.BLISTERING_INGOT_3, null, SlimefunItems.BLISTERING_INGOT_3,
                         Items.ENERGY_TRANSMITTER, SlimefunItems.BLISTERING_INGOT_3, null, SlimefunItems.BLISTERING_INGOT_3,
-                        null});
+                        null}).register(this);
     }
 
     private void setupResearches() {

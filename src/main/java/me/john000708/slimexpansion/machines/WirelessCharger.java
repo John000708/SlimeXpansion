@@ -1,7 +1,9 @@
 package me.john000708.slimexpansion.machines;
 
+import me.john000708.slimexpansion.Items;
 import me.mrCookieSlime.CSCoreLibPlugin.Configuration.Config;
 import me.mrCookieSlime.Slimefun.Lists.RecipeType;
+import me.mrCookieSlime.Slimefun.Lists.SlimefunItems;
 import me.mrCookieSlime.Slimefun.Objects.Category;
 import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SlimefunItem;
 import me.mrCookieSlime.Slimefun.Objects.handlers.BlockTicker;
@@ -16,9 +18,12 @@ import org.bukkit.inventory.ItemStack;
  */
 public class WirelessCharger extends SlimefunItem {
 
-    public WirelessCharger(Category category, ItemStack item, String name, RecipeType recipeType,
-                           final ItemStack[] recipe) {
-        super(category, item, name, recipeType, recipe);
+    public WirelessCharger(Category category) {
+        super(category, Items.WIRELESS_CHARGER, "WIRELESS_CHARGER",
+                RecipeType.ENHANCED_CRAFTING_TABLE,
+                new ItemStack[]{null, SlimefunItems.POWER_CRYSTAL, null, SlimefunItems.GILDED_IRON,
+                        SlimefunItems.LARGE_CAPACITOR, SlimefunItems.GILDED_IRON, SlimefunItems.HEATING_COIL,
+                        SlimefunItems.ELECTRIC_MOTOR, SlimefunItems.HEATING_COIL});
     }
 
     public int getEnergyConsumption() {

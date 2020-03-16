@@ -3,12 +3,12 @@ package me.john000708.slimexpansion.items;
 import io.github.thebusybiscuit.slimefun4.api.events.PlayerRightClickEvent;
 import me.john000708.slimexpansion.Items;
 import me.mrCookieSlime.Slimefun.Lists.RecipeType;
+import me.mrCookieSlime.Slimefun.Lists.SlimefunItems;
 import me.mrCookieSlime.Slimefun.Objects.Category;
 import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SimpleSlimefunItem;
 import me.mrCookieSlime.Slimefun.Objects.handlers.ItemUseHandler;
 import me.mrCookieSlime.Slimefun.Setup.SlimefunManager;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
-import me.mrCookieSlime.Slimefun.api.SlimefunItemStack;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
@@ -19,8 +19,11 @@ import java.util.Optional;
 
 public class Linker extends SimpleSlimefunItem<ItemUseHandler> {
 
-    public Linker(Category category, SlimefunItemStack item, RecipeType recipeType, ItemStack[] recipe) {
-        super(category, item, recipeType, recipe);
+    public Linker(Category category) {
+        super(category, Items.LINKER,
+                RecipeType.ENHANCED_CRAFTING_TABLE,
+                new ItemStack[]{null, SlimefunItems.GOLD_24K, null, SlimefunItems.GOLD_24K,
+                        SlimefunItems.ENERGY_REGULATOR, SlimefunItems.GOLD_24K, null, SlimefunItems.GOLD_24K, null});
     }
 
     @Override
