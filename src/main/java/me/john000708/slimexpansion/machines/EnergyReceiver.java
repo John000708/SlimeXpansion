@@ -73,11 +73,11 @@ public class EnergyReceiver extends SimpleSlimefunItem<GeneratorTicker> implemen
 
     @Override
     public EnergyNetComponentType getEnergyComponentType() {
-        return null;
+        return EnergyNetComponentType.CONSUMER;
     }
 
     @Override
     public int getCapacity() {
-        return 0;
+        return 12000;
     }
 }

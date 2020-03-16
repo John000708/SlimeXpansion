@@ -19,7 +19,7 @@ import org.bukkit.inventory.ItemStack;
 
 public class RedstoneTransmitter extends SimpleSlimefunItem<BlockTicker> {
 
-    private SchedulerHandler schedulerHandler;
+    private final SchedulerHandler schedulerHandler;
 
     public RedstoneTransmitter(Category category, SchedulerHandler schedulerHandler) {
         super(category, Items.REDSTONE_TRANSMITTER,
@@ -38,7 +38,6 @@ public class RedstoneTransmitter extends SimpleSlimefunItem<BlockTicker> {
     @Override
     public BlockTicker getItemHandler() {
         return new BlockTicker() {
-
             @Override
             public boolean isSynchronized() {
                 return false;

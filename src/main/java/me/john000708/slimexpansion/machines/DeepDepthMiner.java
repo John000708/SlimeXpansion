@@ -50,7 +50,7 @@ public class DeepDepthMiner extends SimpleSlimefunItem<BlockTicker> {
     private int processTime = 3;
     private int laserPos = 0;
 
-    private SchedulerHandler schedulerHandler;
+    private final SchedulerHandler schedulerHandler;
 
     public DeepDepthMiner(Category category, SchedulerHandler schedulerHandler) {
         super(category, Items.DEEP_DEPTH_MINER, RecipeType.ENHANCED_CRAFTING_TABLE,

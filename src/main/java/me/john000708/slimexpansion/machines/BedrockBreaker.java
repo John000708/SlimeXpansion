@@ -43,7 +43,7 @@ public class BedrockBreaker extends SimpleSlimefunItem<BlockTicker> {
 
     private int timeLeft = 15;
 
-    private SchedulerHandler schedulerHandler;
+    private final SchedulerHandler schedulerHandler;
 
     private static final String ENABLED = "enabled";
     private static final String FALSE = "false";

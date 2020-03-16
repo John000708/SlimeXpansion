@@ -7,7 +7,6 @@ import me.mrCookieSlime.Slimefun.Lists.RecipeType;
 import me.mrCookieSlime.Slimefun.Lists.SlimefunItems;
 import me.mrCookieSlime.Slimefun.Objects.Category;
 import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SimpleSlimefunItem;
-import me.mrCookieSlime.Slimefun.Objects.handlers.BlockTicker;
 import me.mrCookieSlime.Slimefun.Setup.SlimefunManager;
 import me.mrCookieSlime.Slimefun.SlimefunPlugin;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
@@ -24,7 +23,7 @@ import org.bukkit.inventory.ItemStack;
 /**
  * Created by John on 22.05.2016.
  */
-public class ChunkLoader extends SimpleSlimefunItem<BlockTicker> {
+public class ChunkLoader extends SimpleSlimefunItem<XpansionBlockTicker> {
 
     private int chunkloaderDuration;
 
@@ -57,7 +56,7 @@ public class ChunkLoader extends SimpleSlimefunItem<BlockTicker> {
     }
 
     @Override
-    public BlockTicker getItemHandler() {
+    public XpansionBlockTicker getItemHandler() {
         return new XpansionBlockTicker(this::tick);
     }
 

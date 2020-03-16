@@ -3,6 +3,9 @@ package me.john000708.slimexpansion.utils;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
+/**
+ * Wrapper class for BukkitScheduler class.
+ */
 public class SchedulerHandler {
     private JavaPlugin plugin;
 

@@ -7,7 +7,6 @@ import me.mrCookieSlime.Slimefun.Lists.SlimefunItems;
 import me.mrCookieSlime.Slimefun.Objects.Category;
 import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SimpleSlimefunItem;
 import me.mrCookieSlime.Slimefun.Objects.handlers.ItemUseHandler;
-import me.mrCookieSlime.Slimefun.Setup.SlimefunManager;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
@@ -35,12 +34,11 @@ public class Linker extends SimpleSlimefunItem<ItemUseHandler> {
 
             final Block clickedBlock = optClickedBlock.get();
 
-            if (SlimefunManager.isItemSimilar(event.getItem(), Items.LINKER, false) && BlockStorage.check(clickedBlock) != null) {
-                if (BlockStorage.check(clickedBlock, "REDSTONE_TRANSMITTER") || BlockStorage.check(clickedBlock,
-                        "ENERGY_TRANSMITTER")) {
+            String id = BlockStorage.checkID(clickedBlock);
+            if (id != null) {
+                if (id.equals("REDSTONE_TRANSMITTER") || id.equals("ENERGY_TRANSMITTER")) {
                     onTransmitterClick(event, clickedBlock);
-                } else if (BlockStorage.check(clickedBlock, "REDSTONE_RECEIVER") || BlockStorage.check(clickedBlock,
-                        "ENERGY_RECEIVER")) {
+                } else if (id.equals("REDSTONE_RECEIVER") || id.equals("ENERGY_RECEIVER")) {
                     onRecieverClick(event, clickedBlock);
                 }
             }
@@ -49,8 +47,7 @@ public class Linker extends SimpleSlimefunItem<ItemUseHandler> {
 
     private void onRecieverClick(PlayerRightClickEvent event, Block clickedBlock) {
         ItemMeta itemMeta = event.getItem().getItemMeta();
-        assert itemMeta != null && itemMeta.getLore() != null;
-        if (itemMeta.getLore().size() != 4 || !itemMeta.getLore().get(3).equals("")) {
+        if (!itemMeta.getLore().isEmpty() || !itemMeta.getLore().get(3).equals("")) {
             BlockStorage.addBlockInfo(clickedBlock, "transmitterLoc",
                     itemMeta.getLore().get(4));
             event.getPlayer().sendMessage(ChatColor.GREEN + "Transmitter Location set!");
@@ -61,11 +58,9 @@ public class Linker extends SimpleSlimefunItem<ItemUseHandler> {
 
     private void onTransmitterClick(PlayerRightClickEvent event, Block clickedBlock) {
         ItemMeta itemMeta = event.getItem().getItemMeta();
-        assert itemMeta != null && itemMeta.getLore() != null;
-        String[] lore = {"", itemMeta.getLore().get(1), itemMeta.getLore().get(2), "",
+        itemMeta.setLore(Arrays.asList("", itemMeta.getLore().get(1), itemMeta.getLore().get(2), "",
                 clickedBlock.getWorld().getName() + ";" + clickedBlock.getX() + ";" + clickedBlock.getY() +
-                        ";" + clickedBlock.getZ()};
-        itemMeta.setLore(Arrays.asList(lore));
+                        ";" + clickedBlock.getZ()));
         event.getItem().setItemMeta(itemMeta);
         event.getPlayer().sendMessage(ChatColor.GREEN + "Transmitter Location bound!");
     }

@@ -9,6 +9,7 @@ import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SlimefunItem;
 import me.mrCookieSlime.Slimefun.Objects.handlers.ItemUseHandler;
 import me.mrCookieSlime.Slimefun.Setup.SlimefunManager;
 import me.mrCookieSlime.Slimefun.cscorelib2.config.Config;
+import me.mrCookieSlime.Slimefun.cscorelib2.inventory.ItemUtils;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -36,11 +37,10 @@ public class ScrapBox extends SimpleSlimefunItem<ItemUseHandler> {
     public ItemUseHandler getItemHandler() {
         return event -> {
             if (!event.getPlayer().isSneaking() &&
-                    SlimefunManager.isItemSimilar(event.getItem(), Items.SCRAP_BOX, true) &&
                     openScrapbox && random.nextInt(100) <= 25) {
                 event.getPlayer().playSound(event.getPlayer().getLocation(), Sound.ENTITY_HORSE_SADDLE, 0.5F, 1F);
                 if (event.getPlayer().getGameMode() != GameMode.CREATIVE)
-                    event.getPlayer().getInventory().getItemInMainHand().setAmount(event.getPlayer().getInventory().getItemInMainHand().getAmount() - 1);
+                    ItemUtils.consumeItem(event.getPlayer().getInventory().getItemInMainHand(), false);
                 event.getPlayer().getWorld().dropItem(event.getPlayer().getLocation().add(0, 1, 0),
                         scrapBoxLoot.get(random.nextInt(scrapBoxLoot.size())));
                 event.cancel();

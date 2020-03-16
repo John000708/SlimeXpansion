@@ -1,16 +1,12 @@
 package me.john000708.slimexpansion.machines;
 
-import io.github.thebusybiscuit.slimefun4.api.SlimefunAddon;
 import me.john000708.slimexpansion.Items;
-import me.john000708.slimexpansion.SlimeXpansion;
 import me.john000708.slimexpansion.utils.SchedulerHandler;
-import me.mrCookieSlime.CSCoreLibPlugin.Configuration.Config;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.Item.CustomItem;
 import me.mrCookieSlime.Slimefun.Lists.RecipeType;
 import me.mrCookieSlime.Slimefun.Lists.SlimefunItems;
 import me.mrCookieSlime.Slimefun.Objects.Category;
-import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SlimefunItem;
-import me.mrCookieSlime.Slimefun.Objects.handlers.BlockTicker;
+import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SimpleSlimefunItem;
 import me.mrCookieSlime.Slimefun.SlimefunPlugin;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
@@ -22,17 +18,16 @@ import org.bukkit.block.Block;
 import org.bukkit.block.data.AnaloguePowerable;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
 
 /**
  * Created by John on 13.11.2016.
  */
-public class RedstoneClock extends SlimefunItem {
+public class RedstoneClock extends SimpleSlimefunItem<XpansionBlockTicker> {
 
-    private int boarder[] = new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26};
+    private final int[] border = new int[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26};
     private int tickTime = 0;
 
-    private SchedulerHandler schedulerHandler;
+    private final SchedulerHandler schedulerHandler;
 
     public RedstoneClock(Category category, SchedulerHandler schedulerHandler) {
         super(category, Items.REDSTONE_CLOCK,
@@ -131,55 +126,8 @@ public class RedstoneClock extends SlimefunItem {
         };
     }
 
-
-    @Override
-    public void register(SlimefunAddon addon) {
-        addItemHandler(new BlockTicker() {
-
-            @Override
-            public boolean isSynchronized() {
-                return false;
-            }
-
-            @Override
-            public void uniqueTick() {
-                tickTime++;
-            }
-
-            @Override
-            public void tick(final Block block, SlimefunItem slimefunItem, Config config) {
-                if ((tickTime % 2) != 0) return;
-                BlockStorage.getInventory(block).replaceExistingItem(13, new CustomItem(Material.CLOCK, "&bTick Every" +
-                        " &e" + BlockStorage.getLocationInfo(block.getLocation(), "time") + " &bSeconds",
-                        "&7Time Left: " + BlockStorage.getLocationInfo(block.getLocation(), "timeLeft") + "s"));
-
-                int timeLeft = Integer.parseInt(BlockStorage.getLocationInfo(block.getLocation(), "timeLeft"));
-
-                if (timeLeft == 0) {
-                    BlockStorage.addBlockInfo(block, "timeLeft", BlockStorage.getLocationInfo(block.getLocation(),
-                            "time"));
-                    schedulerHandler.runTaskLater(() -> {
-                        AnaloguePowerable powerable = (AnaloguePowerable) block.getBlockData();
-                        powerable.setPower(powerable.getMaximumPower());
-                        block.setBlockData(powerable);
-                    }, 1L);
-
-                    schedulerHandler.runTaskLater(() -> {
-                        AnaloguePowerable powerable = (AnaloguePowerable) block.getBlockData();
-                        powerable.setPower(0);
-                        block.setBlockData(powerable);
-                    }, 20L);
-                } else {
-                    BlockStorage.addBlockInfo(block, "timeLeft", String.valueOf(timeLeft - 1));
-                }
-            }
-        });
-        super.register(addon);
-    }
-
-
     private void constructMenu(BlockMenuPreset preset) {
-        for (int i : boarder) {
+        for (int i : border) {
             preset.addItem(i, new CustomItem(Material.CYAN_STAINED_GLASS_PANE, " "), (player, i1, itemStack,
                                                                                       clickAction) -> false);
         }
@@ -192,5 +140,36 @@ public class RedstoneClock extends SlimefunItem {
         int timeAfter = Integer.parseInt(BlockStorage.getLocationInfo(block.getLocation(), "time")) + time;
 
         return timeAfter > 0 && timeAfter <= 3600;
+    }
+
+    private void tick(Block block) {
+        BlockStorage.getInventory(block).replaceExistingItem(13, new CustomItem(Material.CLOCK, "&bTick Every" +
+                " &e" + BlockStorage.getLocationInfo(block.getLocation(), "time") + " &bSeconds",
+                "&7Time Left: " + BlockStorage.getLocationInfo(block.getLocation(), "timeLeft") + "s"));
+
+        int timeLeft = Integer.parseInt(BlockStorage.getLocationInfo(block.getLocation(), "timeLeft"));
+
+        if (timeLeft == 0) {
+            BlockStorage.addBlockInfo(block, "timeLeft", BlockStorage.getLocationInfo(block.getLocation(),
+                    "time"));
+            schedulerHandler.runTaskLater(() -> {
+                AnaloguePowerable powerable = (AnaloguePowerable) block.getBlockData();
+                powerable.setPower(powerable.getMaximumPower());
+                block.setBlockData(powerable);
+            }, 1L);
+
+            schedulerHandler.runTaskLater(() -> {
+                AnaloguePowerable powerable = (AnaloguePowerable) block.getBlockData();
+                powerable.setPower(0);
+                block.setBlockData(powerable);
+            }, 20L);
+        } else {
+            BlockStorage.addBlockInfo(block, "timeLeft", String.valueOf(timeLeft - 1));
+        }
+    }
+
+    @Override
+    public XpansionBlockTicker getItemHandler() {
+        return new XpansionBlockTicker(this::tick);
     }
 }
