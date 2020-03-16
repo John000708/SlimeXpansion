@@ -3,6 +3,7 @@ package me.john000708.slimexpansion;
 import io.github.thebusybiscuit.slimefun4.api.SlimefunAddon;
 import io.github.thebusybiscuit.slimefun4.implementation.items.Alloy;
 import me.john000708.slimexpansion.items.Linker;
+import me.john000708.slimexpansion.items.NanoBlade;
 import me.john000708.slimexpansion.items.ScrapBox;
 import me.john000708.slimexpansion.listeners.ListenerSetup;
 import me.john000708.slimexpansion.machines.*;
@@ -47,9 +48,8 @@ public class SlimeXpansion extends JavaPlugin implements SlimefunAddon {
 
     @Override
     public void onEnable() {
-        category = new Category(new NamespacedKey(this, "me/john000708/slimexpansion"),
-                new CustomItem(Material.BEACON, "&5SlimeXpansion", "", "&a " +
-                        ">Click to open"));
+        category = new Category(new NamespacedKey(this, "SlimeXpansion"),
+                new CustomItem(Material.BEACON, "&5SlimeXpansion"));
 
         setLogger(getLogger());
 
@@ -81,17 +81,14 @@ public class SlimeXpansion extends JavaPlugin implements SlimefunAddon {
 
     private void setupUpdater() {
         // Setting up the Auto-Updater
-        Updater updater;
+        Updater updater = null;
 
-        if (!getDescription().getVersion().startsWith("DEV - ")) {
-            // We are using an official build, use the BukkitDev Updater
-            updater = new BukkitUpdater(this, getFile(), 102902);
-        } else {
+        if (getDescription().getVersion().startsWith("DEV - ")) {
             // If we are using a development build, we want to switch to our custom
             updater = new GitHubBuildsUpdater(this, getFile(), "J3fftw1/SlimeXpansion/master");
         }
 
-        if (config.getBoolean("options.auto-update")) updater.start();
+        if (updater != null && config.getBoolean("options.auto-update")) updater.start();
     }
 
     public int getChunkLoaderDuration() {
@@ -103,7 +100,7 @@ public class SlimeXpansion extends JavaPlugin implements SlimefunAddon {
         new ThoriumResource(config.getBoolean("options.thorium-via-geo-miner")).register();
 
         // Other crap
-        new ScrapBox(category, getConfiguration()).register(this);
+        new ScrapBox(category, config).register(this);
 
         new SlimefunItem(category, Items.UU_MATTER, CustomRecipeType.UU_FABRICATOR,
                 new ItemStack[]{null, null, null, null, null, null, null, null, null}).register(this);
@@ -177,21 +174,7 @@ public class SlimeXpansion extends JavaPlugin implements SlimefunAddon {
                 new ItemStack[]{Items.MAG_THOR, null, Items.MAG_THOR, Items.MAG_THOR, SlimefunItems.POWER_CRYSTAL,
                         Items.MAG_THOR, Items.MAG_THOR, Items.MAG_THOR, Items.MAG_THOR}).register(this);
 
-        ChargableItem nanoBlade = new ChargableItem(category, Items.NANO_BLADE,
-                RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{null, Items.MAG_THOR, null, null, Items.MAG_THOR,
-                null, null, SlimefunItems.ADVANCED_CIRCUIT_BOARD, null});
-
-        nanoBlade.addItemHandler((ItemUseHandler) event -> {
-            if (SlimefunManager.isItemSimilar(event.getItem(), Items.NANO_BLADE, false)) {
-                if (event.getItem().getEnchantments().containsKey(Enchantment.ARROW_INFINITE)) {
-                    event.getItem().removeEnchantment(Enchantment.ARROW_INFINITE);
-                } else {
-                    event.getItem().addUnsafeEnchantment(Enchantment.ARROW_INFINITE, 10);
-                }
-            }
-        });
-
-        nanoBlade.register(this);
+        new NanoBlade(category).register(this);
 
         new ChargableItem(category, Items.FOOD_SYNTHESIZER,
                 RecipeType.ENHANCED_CRAFTING_TABLE,
@@ -215,8 +198,7 @@ public class SlimeXpansion extends JavaPlugin implements SlimefunAddon {
     private void setupResearches() {
         Slimefun.registerResearch(new Research(new NamespacedKey(this, "going_green"), 500, "Going Green", 25),
                 Items.RECYCLER);
-        Slimefun.registerResearch(new Research(new NamespacedKey(this, "wireless_charging"), 501, "Wireless Charging"
-                , 40), Items.WIRELESS_CHARGER);
+        Slimefun.registerResearch(new Research(new NamespacedKey(this, "wireless_charging"), 501, "Wireless Charging", 40), Items.WIRELESS_CHARGER);
         Slimefun.registerResearch(new Research(new NamespacedKey(this, "weather_manipulation"), 502, "Weather " +
                         "Manipulation", 50), Items.RAIN_MAKER,
                 Items.DISSIPATION_CHARGE, Items.IODINE_CHARGE, Items.EMPTY_CAPSULE);
@@ -227,10 +209,8 @@ public class SlimeXpansion extends JavaPlugin implements SlimefunAddon {
                         "Energy", 65), Items.UU_MATTER, Items.UU_FABRICATOR,
                 Items.UU_TRANSMUTATOR);
         Slimefun.registerResearch(new Research(new NamespacedKey(this, "bedrock_mining"), 505, "Bedrock Mining", 75),
-                Items.BEDROCK_BREAKER, Items.BEDROCK_DRILL
-                , Items.BEDROCK_DUST);
-        Slimefun.registerResearch(new Research(new NamespacedKey(this, "deep_depth_mining"), 506, "Deep Depth Mining"
-                        , 55), Items.DEEP_DEPTH_MINER,
+                Items.BEDROCK_BREAKER, Items.BEDROCK_DRILL, Items.BEDROCK_DUST);
+        Slimefun.registerResearch(new Research(new NamespacedKey(this, "deep_depth_mining"), 506, "Deep Depth Mining", 55), Items.DEEP_DEPTH_MINER,
                 Items.LASER_CHARGE, Items.THORIUM);
         Slimefun.registerResearch(new Research(new NamespacedKey(this, "superalloys"), 507, "Superalloys", 35),
                 Items.MAG_THOR);
@@ -240,11 +220,6 @@ public class SlimeXpansion extends JavaPlugin implements SlimefunAddon {
                 Items.FOOD_SYNTHESIZER);
     }
 
-    public Config getConfiguration() {
-        return config;
-    }
-
-    public Category getCategory() { return category; }
     @Override
     public JavaPlugin getJavaPlugin() {
         return this;

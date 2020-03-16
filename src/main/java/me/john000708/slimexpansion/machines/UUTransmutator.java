@@ -186,16 +186,12 @@ public class UUTransmutator extends SlimefunItem {
         return new int[]{37, 38, 39, 40, 41, 42, 43};
     }
 
-    private Inventory inject(Block b) {
-        return MachineUtils.inject(b, getOutputSlots());
-    }
-
     protected boolean fits(Block b, ItemStack[] items) {
-        return inject(b).addItem(items).isEmpty();
+        return MachineUtils.inject(b, getOutputSlots()).addItem(items).isEmpty();
     }
 
     protected void pushItems(Block b, ItemStack[] items) {
-        Inventory inv = inject(b);
+        Inventory inv = MachineUtils.inject(b, getOutputSlots());
         inv.addItem(items);
 
         for (int slot : getOutputSlots()) {
