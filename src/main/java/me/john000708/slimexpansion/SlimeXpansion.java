@@ -30,11 +30,12 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.logging.Logger;
+
 /**
  * Created by John on 14.04.2016.
  */
 public class SlimeXpansion extends JavaPlugin implements SlimefunAddon {
-
     private Config config;
     private int chunkLoaderDuration;
 
@@ -42,11 +43,15 @@ public class SlimeXpansion extends JavaPlugin implements SlimefunAddon {
 
     private SchedulerHandler schedulerHandler;
 
+    private static Logger logger;
+
     @Override
     public void onEnable() {
         category = new Category(new NamespacedKey(this, "me/john000708/slimexpansion"),
                 new CustomItem(Material.BEACON, "&5SlimeXpansion", "", "&a " +
                         ">Click to open"));
+
+        setLogger(getLogger());
 
         schedulerHandler = new SchedulerHandler(this);
 
@@ -64,6 +69,14 @@ public class SlimeXpansion extends JavaPlugin implements SlimefunAddon {
         registerItems();
         setupResearches();
         getLogger().info("SlimeXpansion has been enabled!");
+    }
+
+    private static void setLogger(Logger logger) {
+        SlimeXpansion.logger = logger;
+    }
+
+    public static Logger getXpansionLogger() {
+        return logger;
     }
 
     private void setupUpdater() {

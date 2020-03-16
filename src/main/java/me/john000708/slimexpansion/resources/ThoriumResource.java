@@ -16,7 +16,7 @@ public class ThoriumResource implements GEOResource {
     private final NamespacedKey key = new NamespacedKey(SlimefunPlugin.instance, "thorium");
     private final ThreadLocalRandom random = ThreadLocalRandom.current();
 
-    private boolean obtainableFromGEOMiner;
+    private final boolean obtainableFromGEOMiner;
 
     public ThoriumResource(boolean obtainableFromGEOMiner) {
         this.obtainableFromGEOMiner = obtainableFromGEOMiner;

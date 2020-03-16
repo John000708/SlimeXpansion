@@ -2,7 +2,7 @@ package me.john000708.slimexpansion.machines;
 
 import io.github.thebusybiscuit.slimefun4.core.attributes.EnergyNetComponent;
 import io.github.thebusybiscuit.slimefun4.core.networks.energy.EnergyNetComponentType;
-import me.john000708.slimexpansion.utils.XpansionLogger;
+import me.john000708.slimexpansion.SlimeXpansion;
 import me.mrCookieSlime.CSCoreLibPlugin.Configuration.Config;
 import me.mrCookieSlime.Slimefun.Lists.RecipeType;
 import me.mrCookieSlime.Slimefun.Objects.Category;
@@ -32,7 +32,7 @@ public class EnergyReceiver extends SimpleSlimefunItem<GeneratorTicker> implemen
     private Location deserializeLoc(String locString) {
         String[] parts = locString.split(";");
         if (parts.length != 4) {
-            XpansionLogger.log(Level.WARNING, "Invalid location string: " + locString);
+            SlimeXpansion.getXpansionLogger().log(Level.WARNING, "Invalid location string: " + locString);
             return null;
         }
         World world = Bukkit.getWorld(parts[0]);

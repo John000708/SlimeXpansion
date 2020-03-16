@@ -3,7 +3,6 @@ package me.john000708.slimexpansion.items;
 import me.john000708.slimexpansion.CustomRecipeType;
 import me.john000708.slimexpansion.Items;
 import me.john000708.slimexpansion.SlimeXpansion;
-import me.john000708.slimexpansion.utils.XpansionLogger;
 import me.mrCookieSlime.Slimefun.Objects.Category;
 import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SimpleSlimefunItem;
 import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SlimefunItem;
@@ -72,7 +71,7 @@ public class ScrapBox extends SimpleSlimefunItem<ItemUseHandler> {
             }
 
             if (!success) {
-                XpansionLogger.log(Level.INFO, "There is no such item with name " + lootName);
+                SlimeXpansion.getXpansionLogger().log(Level.INFO, "There is no such item with name " + lootName);
             }
         }
     }
