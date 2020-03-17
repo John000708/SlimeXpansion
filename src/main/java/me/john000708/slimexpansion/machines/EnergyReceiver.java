@@ -32,7 +32,7 @@ public class EnergyReceiver extends SimpleSlimefunItem<GeneratorTicker> implemen
     private Location deserializeLoc(String locString) {
         String[] parts = locString.split(";");
         if (parts.length != 4) {
-            SlimeXpansion.getXpansionLogger().log(Level.WARNING, "Invalid location string: " + locString);
+            SlimeXpansion.getXpansionLogger().log(Level.WARNING, "Invalid location string: {0}", locString);
             return null;
         }
         World world = Bukkit.getWorld(parts[0]);

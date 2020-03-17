@@ -7,7 +7,6 @@ import me.mrCookieSlime.Slimefun.Objects.Category;
 import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SimpleSlimefunItem;
 import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SlimefunItem;
 import me.mrCookieSlime.Slimefun.Objects.handlers.ItemUseHandler;
-import me.mrCookieSlime.Slimefun.Setup.SlimefunManager;
 import me.mrCookieSlime.Slimefun.cscorelib2.config.Config;
 import me.mrCookieSlime.Slimefun.cscorelib2.inventory.ItemUtils;
 import org.bukkit.GameMode;
@@ -71,7 +70,7 @@ public class ScrapBox extends SimpleSlimefunItem<ItemUseHandler> {
             }
 
             if (!success) {
-                SlimeXpansion.getXpansionLogger().log(Level.INFO, "There is no such item with name " + lootName);
+                SlimeXpansion.getXpansionLogger().log(Level.INFO, "There is no such item with name {0}", lootName);
             }
         }
     }

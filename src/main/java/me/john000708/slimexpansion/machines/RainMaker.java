@@ -2,7 +2,6 @@ package me.john000708.slimexpansion.machines;
 
 import me.john000708.slimexpansion.Items;
 import me.mrCookieSlime.CSCoreLibPlugin.Configuration.Config;
-import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.Item.CustomItem;
 import me.mrCookieSlime.Slimefun.Lists.RecipeType;
 import me.mrCookieSlime.Slimefun.Lists.SlimefunItems;
 import me.mrCookieSlime.Slimefun.Objects.Category;
@@ -11,6 +10,7 @@ import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.abstractItems.MachineRecip
 import me.mrCookieSlime.Slimefun.Objects.handlers.BlockTicker;
 import me.mrCookieSlime.Slimefun.Setup.SlimefunManager;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
+import me.mrCookieSlime.Slimefun.cscorelib2.item.CustomItem;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
@@ -89,8 +89,7 @@ public class RainMaker extends XpansionContainer {
                 if (SlimefunManager.isItemSimilar(input, Items.IODINE_CHARGE, false)) block.getWorld().setStorm(true);
                 else if (SlimefunManager.isItemSimilar(input, Items.DISSIPATION_CHARGE, false))
                     block.getWorld().setStorm(false);
-                BlockStorage.getInventory(block).replaceExistingItem(22, new CustomItem(Material.BLACK_STAINED_GLASS_PANE
-                        , " "));
+                BlockStorage.getInventory(block).replaceExistingItem(22, new CustomItem(Material.BLACK_STAINED_GLASS_PANE, " "));
                 pushItems(block, processing.get(block).getOutput());
 
                 progress.remove(block);
@@ -103,10 +102,11 @@ public class RainMaker extends XpansionContainer {
             if (recipe != null) {
                 if (!fits(block, recipe.getOutput())) return;
                 ItemStack input = recipe.getInput()[0];
-                if (SlimefunManager.isItemSimilar(input, Items.IODINE_CHARGE, false)) {
-                    if (block.getWorld().hasStorm()) return;
-                } else if (SlimefunManager.isItemSimilar(input, Items.DISSIPATION_CHARGE, false)) {
-                    if (!block.getWorld().hasStorm()) return;
+                if (SlimefunManager.isItemSimilar(input, Items.IODINE_CHARGE, false)
+                        && block.getWorld().hasStorm()
+                        || SlimefunManager.isItemSimilar(input, Items.DISSIPATION_CHARGE, false)
+                        && !block.getWorld().hasStorm()) {
+                    return;
                 }
                 checkFoundRecipes(found, block, recipe);
             }

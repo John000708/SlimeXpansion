@@ -4,7 +4,6 @@ import me.john000708.slimexpansion.Items;
 import me.john000708.slimexpansion.utils.MachineUtils;
 import me.mrCookieSlime.CSCoreLibPlugin.Configuration.Config;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.InvUtils;
-import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.Item.CustomItem;
 import me.mrCookieSlime.Slimefun.Lists.RecipeType;
 import me.mrCookieSlime.Slimefun.Lists.SlimefunItems;
 import me.mrCookieSlime.Slimefun.Objects.Category;
@@ -17,6 +16,7 @@ import me.mrCookieSlime.Slimefun.api.energy.ChargableBlock;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenuPreset;
 import me.mrCookieSlime.Slimefun.api.item_transport.ItemTransportFlow;
+import me.mrCookieSlime.Slimefun.cscorelib2.item.CustomItem;
 import me.mrCookieSlime.Slimefun.cscorelib2.protection.ProtectableAction;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -37,15 +37,16 @@ public class UUTransmutator extends SlimefunItem {
     private static final int[] itemsSlots = {4, 5, 6, 7, 13, 14, 15, 16};
 
     private static final String SELECTEDITEM = "selected-item";
+    private static final String NAME = "UU_TRANSMUTATOR";
 
     public UUTransmutator(Category category) {
-        super(category, Items.UU_TRANSMUTATOR, "UU_TRANSMUTATOR",
+        super(category, Items.UU_TRANSMUTATOR,
                 RecipeType.ENHANCED_CRAFTING_TABLE,
                 new ItemStack[]{SlimefunItems.REINFORCED_PLATE, Items.UU_MATTER, SlimefunItems.REINFORCED_PLATE,
                         SlimefunItems.POWER_CRYSTAL, Items.UU_FABRICATOR, SlimefunItems.POWER_CRYSTAL,
                         SlimefunItems.PLUTONIUM, SlimefunItems.CARBONADO_EDGED_CAPACITOR, SlimefunItems.PLUTONIUM});
 
-        new BlockMenuPreset("UU_TRANSMUTATOR", "&5UU Transmutator") {
+        new BlockMenuPreset(NAME, "&5UU Transmutator") {
 
             public void init() {
                 constructMenu(this);
@@ -98,7 +99,7 @@ public class UUTransmutator extends SlimefunItem {
             }
 
         };
-        registerBlockHandler("UU_TRANSMUTATOR", (p, b, sfItem, reason) -> {
+        registerBlockHandler(NAME, (p, b, sfItem, reason) -> {
             for (int slot : getInputSlots()) {
                 if (BlockStorage.getInventory(b).getItemInSlot(slot) != null)
                     b.getWorld().dropItemNaturally(b.getLocation(), BlockStorage.getInventory(b).getItemInSlot(slot));
@@ -111,8 +112,10 @@ public class UUTransmutator extends SlimefunItem {
         });
     }
 
+    private static final int ENERGYCONSUMPTION = 512;
+
     public int getEnergyConsumption() {
-        return 512;
+        return ENERGYCONSUMPTION;
     }
 
     @Override

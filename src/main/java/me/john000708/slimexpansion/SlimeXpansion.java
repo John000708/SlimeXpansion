@@ -44,7 +44,7 @@ public class SlimeXpansion extends JavaPlugin implements SlimefunAddon {
 
     @Override
     public void onEnable() {
-        category = new Category(new NamespacedKey(this, "SlimeXpansion"),
+        category = new Category(new NamespacedKey(this, "slimexpansion"),
                 new CustomItem(Material.BEACON, "&5SlimeXpansion"));
 
         setLogger(getLogger());

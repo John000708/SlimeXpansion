@@ -61,6 +61,13 @@
         </dependency>
         <dependency>
             <groupId>com.github.TheBusyBiscuit</groupId>
+            <artifactId>CS-CoreLib2</artifactId>
+            <!--Version is the hash of the latest commit-->
+            <version>148e40d</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.TheBusyBiscuit</groupId>
             <artifactId>Slimefun4</artifactId>
             <!--Version is the hash of the latest commit-->
             <version>19609edf53</version>
