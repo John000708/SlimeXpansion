@@ -39,7 +39,7 @@
                 <directory>${basedir}/src/main/resources</directory>
                 <filtering>true</filtering>
                 <includes>
-                    <include>*.yml</include>
+                    <include>*</include>
                 </includes>
             </resource>
         </resources>
@@ -83,11 +83,11 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <!--Annotation library-->
         <dependency>
-            <groupId>com.intellij</groupId>
-            <artifactId>annotations</artifactId>
-            <version>12.0</version>
-            <scope>provided</scope>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>jsr305</artifactId>
+            <version>3.0.2</version>
         </dependency>
     </dependencies>
 
