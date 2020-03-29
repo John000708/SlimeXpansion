@@ -49,7 +49,7 @@
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
-            <version>1.15.2-R0.1-SNAPSHOT</version>
+            <version>1.14.2-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -70,7 +70,7 @@
             <groupId>com.github.TheBusyBiscuit</groupId>
             <artifactId>Slimefun4</artifactId>
             <!--Version is the hash of the latest commit-->
-            <version>19609edf53</version>
+            <version>babc54dc6c</version>
             <scope>provided</scope>
             <exclusions>
                 <exclusion>

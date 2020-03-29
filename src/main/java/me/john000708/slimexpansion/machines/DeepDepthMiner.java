@@ -19,7 +19,13 @@ import me.mrCookieSlime.Slimefun.api.item_transport.ItemTransportFlow;
 import me.mrCookieSlime.Slimefun.cscorelib2.materials.MaterialCollection;
 import me.mrCookieSlime.Slimefun.cscorelib2.materials.MaterialCollections;
 import me.mrCookieSlime.Slimefun.cscorelib2.protection.ProtectableAction;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Color;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.Particle;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -61,7 +67,7 @@ public class DeepDepthMiner extends SimpleSlimefunItem<BlockTicker> {
 
         this.schedulerHandler = schedulerHandler;
 
-        new BlockMenuPreset("DEEP_MINER", "&6Deep Depth Miner") {
+        new BlockMenuPreset(Items.DEEP_DEPTH_MINER.getItemID(), "&6Deep Depth Miner") {
 
             public void init() {
                 constructMenu(this);

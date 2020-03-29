@@ -7,7 +7,7 @@ import org.bukkit.block.Block;
 
 import java.util.function.Consumer;
 
-public class XpansionBlockTicker extends BlockTicker {
+public final class XpansionBlockTicker extends BlockTicker {
     private Consumer<Block> onTick;
     private int time = 0;
 

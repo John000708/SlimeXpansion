@@ -2,9 +2,11 @@ package me.john000708.slimexpansion.machines;
 
 import io.github.thebusybiscuit.slimefun4.core.attributes.EnergyNetComponent;
 import io.github.thebusybiscuit.slimefun4.core.networks.energy.EnergyNetComponentType;
+import me.john000708.slimexpansion.Items;
 import me.john000708.slimexpansion.SlimeXpansion;
 import me.mrCookieSlime.CSCoreLibPlugin.Configuration.Config;
 import me.mrCookieSlime.Slimefun.Lists.RecipeType;
+import me.mrCookieSlime.Slimefun.Lists.SlimefunItems;
 import me.mrCookieSlime.Slimefun.Objects.Category;
 import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SimpleSlimefunItem;
 import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SlimefunItem;
@@ -25,8 +27,12 @@ import java.util.logging.Level;
  */
 public class EnergyReceiver extends SimpleSlimefunItem<GeneratorTicker> implements EnergyNetComponent {
 
-    public EnergyReceiver(Category category, SlimefunItemStack item, RecipeType recipeType, ItemStack[] recipe) {
-        super(category, item, recipeType, recipe);
+    public EnergyReceiver(Category category) {
+        super(category, Items.ENERGY_RECEIVER,
+                RecipeType.ENHANCED_CRAFTING_TABLE,
+                new ItemStack[]{null, SlimefunItems.BLISTERING_INGOT_3, null, SlimefunItems.BLISTERING_INGOT_3,
+                        Items.ENERGY_TRANSMITTER, SlimefunItems.BLISTERING_INGOT_3, null, SlimefunItems.BLISTERING_INGOT_3,
+                        null});
     }
 
     private Location deserializeLoc(String locString) {

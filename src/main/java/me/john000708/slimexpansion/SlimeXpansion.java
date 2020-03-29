@@ -1,7 +1,6 @@
 package me.john000708.slimexpansion;
 
 import io.github.thebusybiscuit.slimefun4.api.SlimefunAddon;
-import io.github.thebusybiscuit.slimefun4.implementation.items.Alloy;
 import me.john000708.slimexpansion.items.Linker;
 import me.john000708.slimexpansion.items.NanoBlade;
 import me.john000708.slimexpansion.items.ScrapBox;
@@ -168,7 +167,7 @@ public class SlimeXpansion extends JavaPlugin implements SlimefunAddon {
                         "first GEO-Scan the chunk in which you are", "&a&omining to discover Thorium!"), null, null, null,
                         null}).register(this);
 
-        new Alloy(category, Items.MAG_THOR,
+        new SlimefunItem(category, Items.MAG_THOR, RecipeType.SMELTERY,
                 new ItemStack[]{SlimefunItems.REINFORCED_ALLOY_INGOT, Items.THORIUM, SlimefunItems.MAGNESIUM_INGOT,
                         SlimefunItems.ZINC_INGOT, null, null, null, null, null}).register(this);
 
@@ -191,16 +190,9 @@ public class SlimeXpansion extends JavaPlugin implements SlimefunAddon {
                         new ItemStack(Material.APPLE), SlimefunItems.PLASTIC_SHEET, new ItemStack(Material.COOKED_BEEF),
                         SlimefunItems.PLASTIC_SHEET}).register(this);
 
-        new EnergyTransmitter(category, Items.ENERGY_TRANSMITTER, "ENERGY_TRANSMITTER",
-                RecipeType.ENHANCED_CRAFTING_TABLE,
-                new ItemStack[]{null, SlimefunItems.GOLD_24K, null, SlimefunItems.GOLD_24K, Items.LINKER,
-                        SlimefunItems.GOLD_24K, null, SlimefunItems.GOLD_24K, null}).register(this);
+        new EnergyTransmitter(category).register(this);
 
-        new EnergyReceiver(category, Items.ENERGY_RECEIVER,
-                RecipeType.ENHANCED_CRAFTING_TABLE,
-                new ItemStack[]{null, SlimefunItems.BLISTERING_INGOT_3, null, SlimefunItems.BLISTERING_INGOT_3,
-                        Items.ENERGY_TRANSMITTER, SlimefunItems.BLISTERING_INGOT_3, null, SlimefunItems.BLISTERING_INGOT_3,
-                        null}).register(this);
+        new EnergyReceiver(category).register(this);
     }
 
     private void setupResearches() {

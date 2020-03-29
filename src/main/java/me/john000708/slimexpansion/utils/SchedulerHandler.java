@@ -6,7 +6,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 /**
  * Wrapper class for BukkitScheduler class.
  */
-public class SchedulerHandler {
+public final class SchedulerHandler {
     private JavaPlugin plugin;
 
     public SchedulerHandler(JavaPlugin plugin) {

@@ -20,6 +20,8 @@ import org.bukkit.inventory.ItemStack;
 public class RedstoneTransmitter extends SimpleSlimefunItem<BlockTicker> {
 
     private final SchedulerHandler schedulerHandler;
+    
+    private static final String TRANSMITTERLOCATION = "transmitterLoc";
 
     public RedstoneTransmitter(Category category, SchedulerHandler schedulerHandler) {
         super(category, Items.REDSTONE_TRANSMITTER,
@@ -32,8 +34,6 @@ public class RedstoneTransmitter extends SimpleSlimefunItem<BlockTicker> {
 
         this.schedulerHandler = schedulerHandler;
     }
-
-    private static final String TRANSMITTERLOCATION = "transmitterLoc";
 
     @Override
     public BlockTicker getItemHandler() {

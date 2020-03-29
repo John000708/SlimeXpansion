@@ -27,6 +27,8 @@ public class ChunkLoader extends SimpleSlimefunItem<XpansionBlockTicker> {
 
     private int chunkloaderDuration;
 
+    private static final String TIMELEFT = "timeLeft";
+
     public ChunkLoader(Category category, int chunkloaderDuration) {
         super(category, Items.CHUNK_LOADER,
                 RecipeType.ENHANCED_CRAFTING_TABLE,
@@ -36,7 +38,7 @@ public class ChunkLoader extends SimpleSlimefunItem<XpansionBlockTicker> {
 
         this.chunkloaderDuration = chunkloaderDuration;
 
-        new BlockMenuPreset("CHUNK_LOADER", "&dChunk Loader") {
+        new BlockMenuPreset(Items.CHUNK_LOADER.getItemID(), "&dChunk Loader") {
 
             @Override
             public void init() {
@@ -59,8 +61,6 @@ public class ChunkLoader extends SimpleSlimefunItem<XpansionBlockTicker> {
     public XpansionBlockTicker getItemHandler() {
         return new XpansionBlockTicker(this::tick);
     }
-
-    private static final String TIMELEFT = "timeLeft";
 
     protected void tick(Block block) {
         if (BlockStorage.getLocationInfo(block.getLocation(), TIMELEFT) == null)

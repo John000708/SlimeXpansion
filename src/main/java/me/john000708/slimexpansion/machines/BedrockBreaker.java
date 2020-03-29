@@ -57,7 +57,7 @@ public class BedrockBreaker extends SimpleSlimefunItem<BlockTicker> {
 
         this.schedulerHandler = schedulerHandler;
 
-        new BlockMenuPreset("BEDROCK_MINER", "&4Bedrock Breaker") {
+        new BlockMenuPreset(Items.BEDROCK_BREAKER.getItemID(), "&4Bedrock Breaker") {
 
             @Override
             public void init() {

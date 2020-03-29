@@ -38,7 +38,7 @@ public class RedstoneClock extends SimpleSlimefunItem<XpansionBlockTicker> {
 
         this.schedulerHandler = schedulerHandler;
 
-        new BlockMenuPreset("REDSTONE_CLOCK", "&4Redstone Clock") {
+        new BlockMenuPreset(Items.REDSTONE_CLOCK.getItemID(), "&4Redstone Clock") {
 
             @Override
             public void init() {
