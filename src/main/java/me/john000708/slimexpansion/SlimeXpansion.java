@@ -1,6 +1,8 @@
 package me.john000708.slimexpansion;
 
 import io.github.thebusybiscuit.slimefun4.api.SlimefunAddon;
+import io.github.thebusybiscuit.slimefun4.core.attributes.Radioactivity;
+import io.github.thebusybiscuit.slimefun4.implementation.items.RadioactiveItem;
 import me.john000708.slimexpansion.items.Linker;
 import me.john000708.slimexpansion.items.NanoBlade;
 import me.john000708.slimexpansion.items.ScrapBox;
@@ -147,7 +149,7 @@ public class SlimeXpansion extends JavaPlugin implements SlimefunAddon {
                 new ItemStack(Material.REDSTONE), SlimefunItems.REINFORCED_ALLOY_INGOT, null,
                 SlimefunItems.REINFORCED_ALLOY_INGOT, null}).register(this);
 
-        new SlimefunItem(category, Items.THORIUM, RecipeType.GEO_MINER,
+        new RadioactiveItem(category, Radioactivity.HIGH, Items.THORIUM, RecipeType.GEO_MINER,
             new ItemStack[] {null, null, null,
                 null, new CustomItem(Material.PAPER, "&fHint!",
                 "&a&oMake sure to first GEO-Scan the chunk in which you are", "&a&omining to discover Thorium!"),
