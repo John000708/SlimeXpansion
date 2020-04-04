@@ -1,7 +1,7 @@
 package me.john000708.slimexpansion;
 
-import io.github.thebusybiscuit.cscorelib2.item.CustomItem;
 import me.mrCookieSlime.Slimefun.Lists.RecipeType;
+import me.mrCookieSlime.Slimefun.cscorelib2.item.CustomItem;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 
@@ -24,6 +24,11 @@ public final class CustomRecipeType {
         new NamespacedKey(SlimeXpansion.getInstance(), "bedrock_breaker"),
         new CustomItem(Material.IRON_BLOCK, "&aBedrock Breaker",
             "", "&a&oObtain it by mining bedrock using the Bedrock Breaker")
+    );
+    public static final RecipeType DEEP_MINER = new RecipeType(
+        new NamespacedKey(SlimeXpansion.getInstance(), "deep_miner"),
+        new CustomItem(Material.BEACON, "&aDeep Depth Miner",
+            "", "&a&0Mine it with the Deep Depth Miner")
     );
 
     private CustomRecipeType() {}

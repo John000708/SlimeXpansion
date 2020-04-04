@@ -55,7 +55,7 @@ public class Recycler extends XpansionContainer {
             } else {
                 BlockStorage.getInventory(block).replaceExistingItem(22,
                     new CustomItem(Material.BLACK_STAINED_GLASS_PANE
-                    , " "));
+                        , " "));
                 pushItems(block, processing.get(block).getOutput());
 
                 progress.remove(block);

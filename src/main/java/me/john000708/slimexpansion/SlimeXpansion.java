@@ -1,6 +1,5 @@
 package me.john000708.slimexpansion;
 
-import io.github.thebusybiscuit.cscorelib2.item.CustomItem;
 import io.github.thebusybiscuit.slimefun4.api.SlimefunAddon;
 import me.john000708.slimexpansion.items.Linker;
 import me.john000708.slimexpansion.items.NanoBlade;
@@ -31,14 +30,12 @@ import me.mrCookieSlime.Slimefun.api.Slimefun;
 import me.mrCookieSlime.Slimefun.api.SlimefunItemStack;
 import me.mrCookieSlime.Slimefun.bstats.bukkit.Metrics;
 import me.mrCookieSlime.Slimefun.cscorelib2.config.Config;
+import me.mrCookieSlime.Slimefun.cscorelib2.item.CustomItem;
 import me.mrCookieSlime.Slimefun.cscorelib2.updater.GitHubBuildsUpdater;
-import me.mrCookieSlime.Slimefun.cscorelib2.updater.Updater;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.util.logging.Logger;
 
 /**
  * Created by John on 14.04.2016.
@@ -59,7 +56,7 @@ public class SlimeXpansion extends JavaPlugin implements SlimefunAddon {
         instance = this;
 
         category = new Category(new NamespacedKey(this, "slimexpansion"),
-                new CustomItem(Material.BEACON, "&5SlimeXpansion"));
+            new CustomItem(Material.BEACON, "&5SlimeXpansion"));
 
         schedulerHandler = new SchedulerHandler(this);
 
@@ -98,23 +95,23 @@ public class SlimeXpansion extends JavaPlugin implements SlimefunAddon {
         new ScrapBox(category, config).register(this);
 
         new SlimefunItem(category, Items.UU_MATTER, CustomRecipeType.UU_FABRICATOR,
-                new ItemStack[]{null, null, null, null, null, null, null, null, null}).register(this);
+            new ItemStack[] {null, null, null, null, null, null, null, null, null}).register(this);
 
         new SlimefunItem(category, Items.EMPTY_CAPSULE, RecipeType.ENHANCED_CRAFTING_TABLE,
-                new ItemStack[]{null, SlimefunItems.TIN_INGOT, null, SlimefunItems.TIN_INGOT, SlimefunItems.CAN,
-                        SlimefunItems.TIN_INGOT, null, SlimefunItems.TIN_INGOT, null}).register(this);
+            new ItemStack[] {null, SlimefunItems.TIN_INGOT, null, SlimefunItems.TIN_INGOT, SlimefunItems.CAN,
+                SlimefunItems.TIN_INGOT, null, SlimefunItems.TIN_INGOT, null}).register(this);
 
         new SlimefunItem(category, Items.IODINE_CHARGE, RecipeType.ENHANCED_CRAFTING_TABLE,
-                new ItemStack[]{Items.EMPTY_CAPSULE, SlimefunItems.SALT, SlimefunItems.SALT,
-                        new ItemStack(Material.GUNPOWDER), null, null, null, null, null, null}).register(this);
+            new ItemStack[] {Items.EMPTY_CAPSULE, SlimefunItems.SALT, SlimefunItems.SALT,
+                new ItemStack(Material.GUNPOWDER), null, null, null, null, null, null}).register(this);
 
         new SlimefunItem(category, Items.DISSIPATION_CHARGE,
-                RecipeType.ENHANCED_CRAFTING_TABLE,
-                new ItemStack[]{Items.EMPTY_CAPSULE, new ItemStack(Material.SAND), Items.IODINE_CHARGE, null, null, null
-                        , null, null, null}).register(this);
+            RecipeType.ENHANCED_CRAFTING_TABLE,
+            new ItemStack[] {Items.EMPTY_CAPSULE, new ItemStack(Material.SAND), Items.IODINE_CHARGE, null, null, null
+                , null, null, null}).register(this);
 
         new SlimefunItem(category, Items.BEDROCK_DUST, CustomRecipeType.BEDROCK_BREAKER,
-                new ItemStack[]{null, null, null, null, null, null, null, null, null}).register(this);
+            new ItemStack[] {null, null, null, null, null, null, null, null, null}).register(this);
 
         //Machines
         new Recycler(category).register(this);
@@ -142,43 +139,43 @@ public class SlimeXpansion extends JavaPlugin implements SlimefunAddon {
         new Linker(category).register(this);
 
         new SlimefunItem(category, Items.BEDROCK_DRILL, RecipeType.ENHANCED_CRAFTING_TABLE,
-                new ItemStack[]{null, SlimefunItems.REINFORCED_PLATE, null, SlimefunItems.REINFORCED_PLATE,
-                        Items.UU_MATTER, SlimefunItems.REINFORCED_PLATE, null, SlimefunItems.REINFORCED_PLATE, null}).register(this);
+            new ItemStack[] {null, SlimefunItems.REINFORCED_PLATE, null, SlimefunItems.REINFORCED_PLATE,
+                Items.UU_MATTER, SlimefunItems.REINFORCED_PLATE, null, SlimefunItems.REINFORCED_PLATE, null}).register(this);
 
         new SlimefunItem(category, Items.LASER_CHARGE, RecipeType.ENHANCED_CRAFTING_TABLE,
-                new ItemStack[]{null, SlimefunItems.REINFORCED_ALLOY_INGOT, null, SlimefunItems.REINFORCED_ALLOY_INGOT,
-                        new ItemStack(Material.REDSTONE), SlimefunItems.REINFORCED_ALLOY_INGOT, null,
-                        SlimefunItems.REINFORCED_ALLOY_INGOT, null}).register(this);
+            new ItemStack[] {null, SlimefunItems.REINFORCED_ALLOY_INGOT, null, SlimefunItems.REINFORCED_ALLOY_INGOT,
+                new ItemStack(Material.REDSTONE), SlimefunItems.REINFORCED_ALLOY_INGOT, null,
+                SlimefunItems.REINFORCED_ALLOY_INGOT, null}).register(this);
 
         new SlimefunItem(category, Items.THORIUM, RecipeType.GEO_MINER,
-                new ItemStack[]{null, null, null,
-                    null, new CustomItem(Material.PAPER, "&fHint!",
-                    "&a&oMake sure to first GEO-Scan the chunk in which you are", "&a&omining to discover Thorium!"),
-                    null, null, null, null})
+            new ItemStack[] {null, null, null,
+                null, new CustomItem(Material.PAPER, "&fHint!",
+                "&a&oMake sure to first GEO-Scan the chunk in which you are", "&a&omining to discover Thorium!"),
+                null, null, null, null})
             .register(this);
 
         new SlimefunItem(category, Items.MAG_THOR, RecipeType.SMELTERY,
-                new ItemStack[]{SlimefunItems.REINFORCED_ALLOY_INGOT, Items.THORIUM, SlimefunItems.MAGNESIUM_INGOT,
-                        SlimefunItems.ZINC_INGOT, null, null, null, null, null}).register(this);
+            new ItemStack[] {SlimefunItems.REINFORCED_ALLOY_INGOT, Items.THORIUM, SlimefunItems.MAGNESIUM_INGOT,
+                SlimefunItems.ZINC_INGOT, null, null, null, null, null}).register(this);
 
         new SlimefunItem(category, new SlimefunItemStack("BEDROCK", Material.BEDROCK,
-                "&8Bedrock"), RecipeType.ENHANCED_CRAFTING_TABLE,
-                new ItemStack[]{null, Items.BEDROCK_DUST, null, Items.BEDROCK_DUST, Items.THORIUM, Items.BEDROCK_DUST,
-                        null, Items.BEDROCK_DUST, null}).register(this);
+            "&8Bedrock"), RecipeType.ENHANCED_CRAFTING_TABLE,
+            new ItemStack[] {null, Items.BEDROCK_DUST, null, Items.BEDROCK_DUST, Items.THORIUM, Items.BEDROCK_DUST,
+                null, Items.BEDROCK_DUST, null}).register(this);
 
         new ChargableItem(category, Items.ELECTRIC_CHESTPLATE,
-                RecipeType.ENHANCED_CRAFTING_TABLE,
-                new ItemStack[]{Items.MAG_THOR, null, Items.MAG_THOR, Items.MAG_THOR, SlimefunItems.POWER_CRYSTAL,
-                        Items.MAG_THOR, Items.MAG_THOR, Items.MAG_THOR, Items.MAG_THOR}).register(this);
+            RecipeType.ENHANCED_CRAFTING_TABLE,
+            new ItemStack[] {Items.MAG_THOR, null, Items.MAG_THOR, Items.MAG_THOR, SlimefunItems.POWER_CRYSTAL,
+                Items.MAG_THOR, Items.MAG_THOR, Items.MAG_THOR, Items.MAG_THOR}).register(this);
 
         new NanoBlade(category).register(this);
 
         new ChargableItem(category, Items.FOOD_SYNTHESIZER,
-                RecipeType.ENHANCED_CRAFTING_TABLE,
-                new ItemStack[]{SlimefunItems.PLASTIC_SHEET, new ItemStack(Material.COOKED_BEEF),
-                        SlimefunItems.PLASTIC_SHEET, new ItemStack(Material.APPLE), SlimefunItems.COOLER,
-                        new ItemStack(Material.APPLE), SlimefunItems.PLASTIC_SHEET, new ItemStack(Material.COOKED_BEEF),
-                        SlimefunItems.PLASTIC_SHEET}).register(this);
+            RecipeType.ENHANCED_CRAFTING_TABLE,
+            new ItemStack[] {SlimefunItems.PLASTIC_SHEET, new ItemStack(Material.COOKED_BEEF),
+                SlimefunItems.PLASTIC_SHEET, new ItemStack(Material.APPLE), SlimefunItems.COOLER,
+                new ItemStack(Material.APPLE), SlimefunItems.PLASTIC_SHEET, new ItemStack(Material.COOKED_BEEF),
+                SlimefunItems.PLASTIC_SHEET}).register(this);
 
         new EnergyTransmitter(category).register(this);
 
@@ -187,27 +184,29 @@ public class SlimeXpansion extends JavaPlugin implements SlimefunAddon {
 
     private void setupResearches() {
         Slimefun.registerResearch(new Research(new NamespacedKey(this, "going_green"), 500, "Going Green", 25),
-                Items.RECYCLER);
-        Slimefun.registerResearch(new Research(new NamespacedKey(this, "wireless_charging"), 501, "Wireless Charging", 40), Items.WIRELESS_CHARGER);
+            Items.RECYCLER);
+        Slimefun.registerResearch(new Research(new NamespacedKey(this, "wireless_charging"), 501, "Wireless Charging"
+            , 40), Items.WIRELESS_CHARGER);
         Slimefun.registerResearch(new Research(new NamespacedKey(this, "weather_manipulation"), 502, "Weather " +
-                        "Manipulation", 50), Items.RAIN_MAKER,
-                Items.DISSIPATION_CHARGE, Items.IODINE_CHARGE, Items.EMPTY_CAPSULE);
+                "Manipulation", 50), Items.RAIN_MAKER,
+            Items.DISSIPATION_CHARGE, Items.IODINE_CHARGE, Items.EMPTY_CAPSULE);
         Slimefun.registerResearch(new Research(new NamespacedKey(this, "redstone_revolution"), 503, "Redstone " +
-                        "Revolution", 35), Items.LINKER,
-                Items.REDSTONE_TRANSMITTER, Items.REDSTONE_RECEIVER, Items.REDSTONE_CLOCK);
+                "Revolution", 35), Items.LINKER,
+            Items.REDSTONE_TRANSMITTER, Items.REDSTONE_RECEIVER, Items.REDSTONE_CLOCK);
         Slimefun.registerResearch(new Research(new NamespacedKey(this, "matter_from_energy"), 504, "Matter from " +
-                        "Energy", 65), Items.UU_MATTER, Items.UU_FABRICATOR,
-                Items.UU_TRANSMUTATOR);
+                "Energy", 65), Items.UU_MATTER, Items.UU_FABRICATOR,
+            Items.UU_TRANSMUTATOR);
         Slimefun.registerResearch(new Research(new NamespacedKey(this, "bedrock_mining"), 505, "Bedrock Mining", 75),
-                Items.BEDROCK_BREAKER, Items.BEDROCK_DRILL, Items.BEDROCK_DUST);
-        Slimefun.registerResearch(new Research(new NamespacedKey(this, "deep_depth_mining"), 506, "Deep Depth Mining", 55), Items.DEEP_DEPTH_MINER,
-                Items.LASER_CHARGE, Items.THORIUM);
+            Items.BEDROCK_BREAKER, Items.BEDROCK_DRILL, Items.BEDROCK_DUST);
+        Slimefun.registerResearch(new Research(new NamespacedKey(this, "deep_depth_mining"), 506, "Deep Depth Mining"
+                , 55), Items.DEEP_DEPTH_MINER,
+            Items.LASER_CHARGE, Items.THORIUM);
         Slimefun.registerResearch(new Research(new NamespacedKey(this, "superalloys"), 507, "Superalloys", 35),
-                Items.MAG_THOR);
+            Items.MAG_THOR);
         Slimefun.registerResearch(new Research(new NamespacedKey(this, "chunk_loading"), 508, "Chunk Loading", 85),
-                Items.CHUNK_LOADER, Items.CHUNK_LOADER);
+            Items.CHUNK_LOADER, Items.CHUNK_LOADER);
         Slimefun.registerResearch(new Research(new NamespacedKey(this, "astronaut_food"), 509, "Astronaut Food", 45),
-                Items.FOOD_SYNTHESIZER);
+            Items.FOOD_SYNTHESIZER);
     }
 
     @Override
