@@ -23,13 +23,14 @@ public class EquipmentListener implements Listener {
             Player player = (Player) e.getEntity();
 
             if (player.getEquipment() != null
-                    && player.getEquipment().getChestplate() != null
-                    && SlimefunManager.isItemSimilar(player.getEquipment().getChestplate(), Items.ELECTRIC_CHESTPLATE, false)) {
+                && player.getEquipment().getChestplate() != null
+                && SlimefunManager.isItemSimilar(player.getEquipment().getChestplate(), Items.ELECTRIC_CHESTPLATE,
+                false)) {
                 ItemStack chestPlate = player.getEquipment().getChestplate();
 
                 if (ItemEnergy.getStoredEnergy(chestPlate) >= 5) {
                     player.getEquipment().setChestplate(ItemEnergy.chargeItem(chestPlate,
-                            (float) (e.getDamage() / -1.75)));
+                        (float) (e.getDamage() / -1.75)));
 
                     e.setCancelled(true);
                 }
@@ -43,8 +44,8 @@ public class EquipmentListener implements Listener {
             Player player = (Player) e.getDamager();
             ItemStack itemInhand = player.getInventory().getItemInMainHand();
             if (SlimefunManager.isItemSimilar(itemInhand, Items.NANO_BLADE, false)
-                    && itemInhand.containsEnchantment(Enchantment.ARROW_INFINITE)
-                    && ItemEnergy.getStoredEnergy(itemInhand) >= 5) {
+                && itemInhand.containsEnchantment(Enchantment.ARROW_INFINITE)
+                && ItemEnergy.getStoredEnergy(itemInhand) >= 5) {
                 e.setDamage(e.getDamage() * 2.5);
                 ItemEnergy.chargeItem(itemInhand, (float) -2.5);
             }
@@ -55,7 +56,7 @@ public class EquipmentListener implements Listener {
     public void onNanoBladeDisenchant(AutoDisenchantEvent e) {
         ItemStack item = e.getItem();
         if (SlimefunManager.isItemSimilar(item, Items.NANO_BLADE, false)
-                && item.containsEnchantment(Enchantment.ARROW_INFINITE)) {
+            && item.containsEnchantment(Enchantment.ARROW_INFINITE)) {
             e.setCancelled(true);
             item.removeEnchantment(Enchantment.ARROW_INFINITE);
         }

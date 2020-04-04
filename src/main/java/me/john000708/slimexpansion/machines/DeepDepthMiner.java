@@ -60,10 +60,10 @@ public class DeepDepthMiner extends SimpleSlimefunItem<BlockTicker> {
 
     public DeepDepthMiner(Category category, SchedulerHandler schedulerHandler) {
         super(category, Items.DEEP_DEPTH_MINER, RecipeType.ENHANCED_CRAFTING_TABLE,
-                new ItemStack[]{SlimefunItems.REINFORCED_PLATE, Items.BEDROCK_DUST, SlimefunItems.REINFORCED_PLATE,
-                        SlimefunItems.REINFORCED_ALLOY_INGOT, SlimefunItems.CARBONADO_EDGED_CAPACITOR,
-                        SlimefunItems.REINFORCED_ALLOY_INGOT, SlimefunItems.REINFORCED_ALLOY_INGOT,
-                        new ItemStack(Material.BEACON), SlimefunItems.REINFORCED_ALLOY_INGOT});
+            new ItemStack[] {SlimefunItems.REINFORCED_PLATE, Items.BEDROCK_DUST, SlimefunItems.REINFORCED_PLATE,
+                SlimefunItems.REINFORCED_ALLOY_INGOT, SlimefunItems.CARBONADO_EDGED_CAPACITOR,
+                SlimefunItems.REINFORCED_ALLOY_INGOT, SlimefunItems.REINFORCED_ALLOY_INGOT,
+                new ItemStack(Material.BEACON), SlimefunItems.REINFORCED_ALLOY_INGOT});
 
         this.schedulerHandler = schedulerHandler;
 
@@ -104,8 +104,8 @@ public class DeepDepthMiner extends SimpleSlimefunItem<BlockTicker> {
             }
 
             public int[] getSlotsAccessedByItemTransport(ItemTransportFlow flow) {
-                if (flow.equals(ItemTransportFlow.INSERT)) return new int[]{9};
-                else return new int[]{17};
+                if (flow.equals(ItemTransportFlow.INSERT)) return new int[] {9};
+                else return new int[] {17};
             }
 
             public boolean canOpen(Block b, Player p) {
@@ -114,7 +114,7 @@ public class DeepDepthMiner extends SimpleSlimefunItem<BlockTicker> {
         };
 
         thorium = SlimefunPlugin.getRegistry().getGEOResources()
-                .get(new NamespacedKey(SlimefunPlugin.instance, "thoruim")).orElse(null);
+            .get(new NamespacedKey(SlimefunPlugin.instance, "thoruim")).orElse(null);
     }
 
     public int getEnergyConsumption() {
@@ -128,7 +128,7 @@ public class DeepDepthMiner extends SimpleSlimefunItem<BlockTicker> {
 
     protected void tick(final Block block) {
         if (BlockStorage.getLocationInfo(block.getLocation(), "enabled") == null
-                || BlockStorage.getLocationInfo(block.getLocation(), "enabled").equals("false"))
+            || BlockStorage.getLocationInfo(block.getLocation(), "enabled").equals("false"))
             return;
 
         boolean stop = false;
@@ -144,7 +144,7 @@ public class DeepDepthMiner extends SimpleSlimefunItem<BlockTicker> {
 
         if (stop) {
             BlockStorage.getInventory(block).replaceExistingItem(4,
-                    new CustomItem(new ItemStack(Material.REDSTONE_BLOCK), "&4No Bedrock Found"));
+                new CustomItem(new ItemStack(Material.REDSTONE_BLOCK), "&4No Bedrock Found"));
             return;
         }
 
@@ -152,22 +152,22 @@ public class DeepDepthMiner extends SimpleSlimefunItem<BlockTicker> {
         ChargableBlock.addCharge(block, -getEnergyConsumption());
 
         if (!(BlockStorage.getInventory(block).getItemInSlot(9) != null
-                && SlimefunManager.isItemSimilar(BlockStorage.getInventory(block).getItemInSlot(9), Items.LASER_CHARGE,
-                false))) {
+            && SlimefunManager.isItemSimilar(BlockStorage.getInventory(block).getItemInSlot(9), Items.LASER_CHARGE,
+            false))) {
             BlockStorage.getInventory(block).replaceExistingItem(4,
-                    new CustomItem(new ItemStack(Material.REDSTONE_BLOCK), "&4No Laser Charge Found"));
+                new CustomItem(new ItemStack(Material.REDSTONE_BLOCK), "&4No Laser Charge Found"));
             return;
         }
 
         ItemStack laserCharge = BlockStorage.getInventory(block).getItemInSlot(9);
         ItemMeta meta = laserCharge.getItemMeta();
         int durability =
-                Integer.parseInt(ChatColor.stripColor(Objects.requireNonNull(laserCharge.getItemMeta()).getLore().get(3).replace("Durability: ", "").split("/")[0]));
+            Integer.parseInt(ChatColor.stripColor(Objects.requireNonNull(laserCharge.getItemMeta()).getLore().get(3).replace("Durability: ", "").split("/")[0]));
         List<String> lore = laserCharge.getItemMeta().getLore();
 
         if (durability > 1) {
             lore.set(3, ChatColor.translateAlternateColorCodes('&',
-                    "&7Durability: " + (durability - 1) + "/1024"));
+                "&7Durability: " + (durability - 1) + "/1024"));
             meta.setLore(lore);
             laserCharge.setItemMeta(meta);
             BlockStorage.getInventory(block).replaceExistingItem(9, laserCharge);
@@ -176,36 +176,36 @@ public class DeepDepthMiner extends SimpleSlimefunItem<BlockTicker> {
         }
 
         BlockStorage.getInventory(block).replaceExistingItem(4, new CustomItem(new ItemStack(Material.EMERALD_BLOCK),
-                "&aLaser Operational"));
+            "&aLaser Operational"));
 
         if (laserPos == 3) {
             BlockStorage.getInventory(block).replaceExistingItem(laserBar[laserPos - 1],
-                    new CustomItem(Material.LIGHT_GRAY_STAINED_GLASS_PANE, " "));
+                new CustomItem(Material.LIGHT_GRAY_STAINED_GLASS_PANE, " "));
             BlockStorage.getInventory(block).replaceExistingItem(laserBar[laserPos],
-                    new CustomItem(new ItemStack(Material.REDSTONE), " "));
+                new CustomItem(new ItemStack(Material.REDSTONE), " "));
 
             laserPos = 0;
         } else {
             if (laserPos == 0) {
                 BlockStorage.getInventory(block).replaceExistingItem(laserBar[3],
-                        new CustomItem(Material.LIGHT_GRAY_STAINED_GLASS_PANE, " "));
+                    new CustomItem(Material.LIGHT_GRAY_STAINED_GLASS_PANE, " "));
                 BlockStorage.getInventory(block).replaceExistingItem(laserBar[laserPos],
-                        new CustomItem(new ItemStack(Material.REDSTONE), " "));
+                    new CustomItem(new ItemStack(Material.REDSTONE), " "));
 
                 laserPos++;
                 return;
             }
             BlockStorage.getInventory(block).replaceExistingItem(laserBar[laserPos],
-                    new CustomItem(Material.REDSTONE, " "));
+                new CustomItem(Material.REDSTONE, " "));
             BlockStorage.getInventory(block).replaceExistingItem(laserBar[laserPos - 1],
-                    new CustomItem(Material.LIGHT_GRAY_STAINED_GLASS_PANE, " "));
+                new CustomItem(Material.LIGHT_GRAY_STAINED_GLASS_PANE, " "));
 
             laserPos++;
         }
 
         for (int i = block.getLocation().getBlockY(); i > 1; i--) {
             block.getWorld().spawnParticle(Particle.REDSTONE, new Location(block.getWorld(), block.getX() + 0.5, i,
-                    block.getZ() + 0.5), 1, new Particle.DustOptions(Color.RED, 2));
+                block.getZ() + 0.5), 1, new Particle.DustOptions(Color.RED, 2));
         }
 
         if (processTime == 0) {
@@ -214,12 +214,12 @@ public class DeepDepthMiner extends SimpleSlimefunItem<BlockTicker> {
 
             if (random.nextInt(100) <= 5) {
                 final OptionalInt optSupplies = SlimefunPlugin.getGPSNetwork().getResourceManager()
-                        .getSupplies(thorium, block.getWorld(), block.getX() >> 4, block.getZ() >> 4);
+                    .getSupplies(thorium, block.getWorld(), block.getX() >> 4, block.getZ() >> 4);
 
                 if (optSupplies.isPresent() && optSupplies.getAsInt() > 0) {
                     SlimefunPlugin.getGPSNetwork().getResourceManager()
-                            .setSupplies(thorium, block.getWorld(), block.getX() >> 4, block.getZ() >> 4,
-                                    optSupplies.getAsInt());
+                        .setSupplies(thorium, block.getWorld(), block.getX() >> 4, block.getZ() >> 4,
+                            optSupplies.getAsInt());
                     outputItem = Items.THORIUM;
                 }
             } else {
@@ -227,8 +227,8 @@ public class DeepDepthMiner extends SimpleSlimefunItem<BlockTicker> {
                 outputItem = new ItemStack(ores.get(random.nextInt(ores.size())));
             }
 
-            if (outputItem != null && fits(block, new ItemStack[]{outputItem})) {
-                pushItems(block, new ItemStack[]{outputItem});
+            if (outputItem != null && fits(block, new ItemStack[] {outputItem})) {
+                pushItems(block, new ItemStack[] {outputItem});
             } else {
                 final ItemStack dropItem = outputItem;
                 schedulerHandler.runTaskLater(() -> {

@@ -19,15 +19,16 @@ public class Recycler extends XpansionContainer {
 
     public Recycler(Category category) {
         super(category, Items.RECYCLER,
-                RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{SlimefunItems.ALUMINUM_INGOT,
-                        SlimefunItems.POWER_CRYSTAL, SlimefunItems.ALUMINUM_INGOT, SlimefunItems.CAN,
-                        SlimefunItems.ELECTRIC_MOTOR, SlimefunItems.CAN, SlimefunItems.LEAD_INGOT, SlimefunItems.MEDIUM_CAPACITOR
-                        , SlimefunItems.LEAD_INGOT});
+            RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[] {SlimefunItems.ALUMINUM_INGOT,
+                SlimefunItems.POWER_CRYSTAL, SlimefunItems.ALUMINUM_INGOT, SlimefunItems.CAN,
+                SlimefunItems.ELECTRIC_MOTOR, SlimefunItems.CAN, SlimefunItems.LEAD_INGOT,
+                SlimefunItems.MEDIUM_CAPACITOR
+                , SlimefunItems.LEAD_INGOT});
     }
 
     @Override
     public void registerDefaultRecipes() {
-        registerRecipe(8, new ItemStack[]{}, new ItemStack[]{Items.SCRAP_BOX});
+        registerRecipe(8, new ItemStack[] {}, new ItemStack[] {Items.SCRAP_BOX});
     }
 
     @Override
@@ -52,8 +53,9 @@ public class Recycler extends XpansionContainer {
             if (timeleft > 0) {
                 updateEnergyConsumption(block);
             } else {
-                BlockStorage.getInventory(block).replaceExistingItem(22, new CustomItem(Material.BLACK_STAINED_GLASS_PANE
-                        , " "));
+                BlockStorage.getInventory(block).replaceExistingItem(22,
+                    new CustomItem(Material.BLACK_STAINED_GLASS_PANE
+                    , " "));
                 pushItems(block, processing.get(block).getOutput());
 
                 progress.remove(block);
@@ -62,10 +64,10 @@ public class Recycler extends XpansionContainer {
         } else {
             for (int slot : getInputSlots()) {
                 if (BlockStorage.getInventory(block).getItemInSlot(slot) != null) {
-                    MachineRecipe r = new MachineRecipe(4, new ItemStack[0], new ItemStack[]{Items.SCRAP_BOX});
+                    MachineRecipe r = new MachineRecipe(4, new ItemStack[0], new ItemStack[] {Items.SCRAP_BOX});
                     if (!fits(block, r.getOutput())) return;
                     BlockStorage.getInventory(block).replaceExistingItem(slot,
-                            InvUtils.decreaseItem(BlockStorage.getInventory(block).getItemInSlot(slot), 1));
+                        InvUtils.decreaseItem(BlockStorage.getInventory(block).getItemInSlot(slot), 1));
                     processing.put(block, r);
                     progress.put(block, r.getTicks());
                     break;

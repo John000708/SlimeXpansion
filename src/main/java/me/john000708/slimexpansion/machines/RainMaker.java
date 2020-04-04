@@ -25,10 +25,10 @@ public class RainMaker extends XpansionContainer {
 
     public RainMaker(Category category) {
         super(category, Items.RAIN_MAKER,
-                RecipeType.ENHANCED_CRAFTING_TABLE,
-                new ItemStack[]{Items.IODINE_CHARGE, SlimefunItems.BLISTERING_INGOT_3, Items.DISSIPATION_CHARGE,
-                        SlimefunItems.SILVER_INGOT, SlimefunItems.MEDIUM_CAPACITOR, SlimefunItems.SILVER_INGOT,
-                        SlimefunItems.LEAD_INGOT, SlimefunItems.POWER_CRYSTAL, SlimefunItems.LEAD_INGOT});
+            RecipeType.ENHANCED_CRAFTING_TABLE,
+            new ItemStack[] {Items.IODINE_CHARGE, SlimefunItems.BLISTERING_INGOT_3, Items.DISSIPATION_CHARGE,
+                SlimefunItems.SILVER_INGOT, SlimefunItems.MEDIUM_CAPACITOR, SlimefunItems.SILVER_INGOT,
+                SlimefunItems.LEAD_INGOT, SlimefunItems.POWER_CRYSTAL, SlimefunItems.LEAD_INGOT});
     }
 
     @Override
@@ -57,8 +57,8 @@ public class RainMaker extends XpansionContainer {
     }
 
     public void registerDefaultRecipes() {
-        registerRecipe(30, new ItemStack[]{Items.IODINE_CHARGE}, new ItemStack[]{Items.EMPTY_CAPSULE});
-        registerRecipe(30, new ItemStack[]{Items.DISSIPATION_CHARGE}, new ItemStack[]{Items.EMPTY_CAPSULE});
+        registerRecipe(30, new ItemStack[] {Items.IODINE_CHARGE}, new ItemStack[] {Items.EMPTY_CAPSULE});
+        registerRecipe(30, new ItemStack[] {Items.DISSIPATION_CHARGE}, new ItemStack[] {Items.EMPTY_CAPSULE});
     }
 
     @Override
@@ -89,7 +89,8 @@ public class RainMaker extends XpansionContainer {
                 if (SlimefunManager.isItemSimilar(input, Items.IODINE_CHARGE, false)) block.getWorld().setStorm(true);
                 else if (SlimefunManager.isItemSimilar(input, Items.DISSIPATION_CHARGE, false))
                     block.getWorld().setStorm(false);
-                BlockStorage.getInventory(block).replaceExistingItem(22, new CustomItem(Material.BLACK_STAINED_GLASS_PANE, " "));
+                BlockStorage.getInventory(block).replaceExistingItem(22,
+                    new CustomItem(Material.BLACK_STAINED_GLASS_PANE, " "));
                 pushItems(block, processing.get(block).getOutput());
 
                 progress.remove(block);
@@ -103,16 +104,15 @@ public class RainMaker extends XpansionContainer {
                 if (!fits(block, recipe.getOutput())) return;
                 ItemStack input = recipe.getInput()[0];
                 if (SlimefunManager.isItemSimilar(input, Items.IODINE_CHARGE, false)
-                        && block.getWorld().hasStorm()
-                        || SlimefunManager.isItemSimilar(input, Items.DISSIPATION_CHARGE, false)
-                        && !block.getWorld().hasStorm()) {
+                    && block.getWorld().hasStorm()
+                    || SlimefunManager.isItemSimilar(input, Items.DISSIPATION_CHARGE, false)
+                    && !block.getWorld().hasStorm()) {
                     return;
                 }
                 checkFoundRecipes(found, block, recipe);
             }
         }
     }
-
 
 
     @Override

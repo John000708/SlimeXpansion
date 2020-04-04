@@ -21,11 +21,12 @@ import org.bukkit.inventory.ItemStack;
  * Created by John on 02.09.2016.
  */
 public class EnergyTransmitter extends SlimefunItem {
+
     public EnergyTransmitter(Category category) {
         super(category, Items.ENERGY_TRANSMITTER,
-                RecipeType.ENHANCED_CRAFTING_TABLE,
-                new ItemStack[]{null, SlimefunItems.GOLD_24K, null, SlimefunItems.GOLD_24K, Items.LINKER,
-                        SlimefunItems.GOLD_24K, null, SlimefunItems.GOLD_24K, null});
+            RecipeType.ENHANCED_CRAFTING_TABLE,
+            new ItemStack[] {null, SlimefunItems.GOLD_24K, null, SlimefunItems.GOLD_24K, Items.LINKER,
+                SlimefunItems.GOLD_24K, null, SlimefunItems.GOLD_24K, null});
 
         new BlockMenuPreset(Items.ENERGY_TRANSMITTER.getItemID(), "&cEnergy Transmitter") {
 
@@ -66,8 +67,8 @@ public class EnergyTransmitter extends SlimefunItem {
             @Override
             public boolean canOpen(Block b, Player p) {
                 return p.hasPermission("slimefun.inventory.bypass")
-                        || SlimefunPlugin.getProtectionManager().hasPermission(p, b.getLocation(),
-                        ProtectableAction.ACCESS_INVENTORIES);
+                    || SlimefunPlugin.getProtectionManager().hasPermission(p, b.getLocation(),
+                    ProtectableAction.ACCESS_INVENTORIES);
             }
         };
     }

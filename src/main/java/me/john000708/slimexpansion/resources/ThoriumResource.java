@@ -2,7 +2,6 @@ package me.john000708.slimexpansion.resources;
 
 import io.github.thebusybiscuit.slimefun4.api.geo.GEOResource;
 import me.john000708.slimexpansion.Items;
-import me.john000708.slimexpansion.SlimeXpansion;
 import me.mrCookieSlime.Slimefun.SlimefunPlugin;
 import org.bukkit.NamespacedKey;
 import org.bukkit.World;

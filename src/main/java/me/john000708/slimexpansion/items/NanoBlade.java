@@ -11,10 +11,11 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 
 public class NanoBlade extends ChargableItem {
+
     public NanoBlade(Category category) {
         super(category, Items.NANO_BLADE,
-                RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{null, Items.MAG_THOR, null, null, Items.MAG_THOR,
-                        null, null, SlimefunItems.ADVANCED_CIRCUIT_BOARD, null});
+            RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[] {null, Items.MAG_THOR, null, null, Items.MAG_THOR,
+                null, null, SlimefunItems.ADVANCED_CIRCUIT_BOARD, null});
 
         addItemHandler((ItemUseHandler) event -> {
             if (SlimefunManager.isItemSimilar(event.getItem(), Items.NANO_BLADE, false)) {

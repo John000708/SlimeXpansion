@@ -1,5 +1,6 @@
 package me.john000708.slimexpansion;
 
+import io.github.thebusybiscuit.cscorelib2.item.CustomItem;
 import io.github.thebusybiscuit.slimefun4.api.SlimefunAddon;
 import me.john000708.slimexpansion.items.Linker;
 import me.john000708.slimexpansion.items.NanoBlade;
@@ -20,7 +21,6 @@ import me.john000708.slimexpansion.machines.UUTransmutator;
 import me.john000708.slimexpansion.machines.WirelessCharger;
 import me.john000708.slimexpansion.resources.ThoriumResource;
 import me.john000708.slimexpansion.utils.SchedulerHandler;
-import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.Item.CustomItem;
 import me.mrCookieSlime.Slimefun.Lists.RecipeType;
 import me.mrCookieSlime.Slimefun.Lists.SlimefunItems;
 import me.mrCookieSlime.Slimefun.Objects.Category;
@@ -44,6 +44,9 @@ import java.util.logging.Logger;
  * Created by John on 14.04.2016.
  */
 public class SlimeXpansion extends JavaPlugin implements SlimefunAddon {
+
+    private static SlimeXpansion instance;
+
     private Config config;
     private int chunkLoaderDuration;
 
@@ -51,14 +54,12 @@ public class SlimeXpansion extends JavaPlugin implements SlimefunAddon {
 
     private SchedulerHandler schedulerHandler;
 
-    private static Logger logger;
-
     @Override
     public void onEnable() {
+        instance = this;
+
         category = new Category(new NamespacedKey(this, "slimexpansion"),
                 new CustomItem(Material.BEACON, "&5SlimeXpansion"));
-
-        setLogger(getLogger());
 
         schedulerHandler = new SchedulerHandler(this);
 
@@ -67,7 +68,9 @@ public class SlimeXpansion extends JavaPlugin implements SlimefunAddon {
         // Setting up bStats
         new Metrics(this, 4112);
 
-        setupUpdater();
+        if (config.getBoolean("options.auto-update") && getDescription().getVersion().startsWith("DEV - ")) {
+            new GitHubBuildsUpdater(this, getFile(), "J3fftw1/SlimeXpansion/master").start();
+        }
 
         new ListenerSetup(this);
 
@@ -78,24 +81,9 @@ public class SlimeXpansion extends JavaPlugin implements SlimefunAddon {
         getLogger().info("SlimeXpansion has been enabled!");
     }
 
-    private static void setLogger(Logger logger) {
-        SlimeXpansion.logger = logger;
-    }
-
-    public static Logger getXpansionLogger() {
-        return logger;
-    }
-
-    private void setupUpdater() {
-        // Setting up the Auto-Updater
-        Updater updater = null;
-
-        if (getDescription().getVersion().startsWith("DEV - ")) {
-            // If we are using a development build, we want to switch to our custom
-            updater = new GitHubBuildsUpdater(this, getFile(), "J3fftw1/SlimeXpansion/master");
-        }
-
-        if (updater != null && config.getBoolean("options.auto-update")) updater.start();
+    @Override
+    public void onDisable() {
+        instance = null;
     }
 
     public int getChunkLoaderDuration() {
@@ -162,10 +150,12 @@ public class SlimeXpansion extends JavaPlugin implements SlimefunAddon {
                         new ItemStack(Material.REDSTONE), SlimefunItems.REINFORCED_ALLOY_INGOT, null,
                         SlimefunItems.REINFORCED_ALLOY_INGOT, null}).register(this);
 
-        new SlimefunItem(category, Items.THORIUM, CustomRecipeType.DEEP_MINER,
-                new ItemStack[]{null, null, null, null, new CustomItem(Material.PAPER, "&fHint!", "&a&oMake sure to " +
-                        "first GEO-Scan the chunk in which you are", "&a&omining to discover Thorium!"), null, null, null,
-                        null}).register(this);
+        new SlimefunItem(category, Items.THORIUM, RecipeType.GEO_MINER,
+                new ItemStack[]{null, null, null,
+                    null, new CustomItem(Material.PAPER, "&fHint!",
+                    "&a&oMake sure to first GEO-Scan the chunk in which you are", "&a&omining to discover Thorium!"),
+                    null, null, null, null})
+            .register(this);
 
         new SlimefunItem(category, Items.MAG_THOR, RecipeType.SMELTERY,
                 new ItemStack[]{SlimefunItems.REINFORCED_ALLOY_INGOT, Items.THORIUM, SlimefunItems.MAGNESIUM_INGOT,
@@ -228,5 +218,9 @@ public class SlimeXpansion extends JavaPlugin implements SlimefunAddon {
     @Override
     public String getBugTrackerURL() {
         return "https://github.com/J3fftw1/SlimeXpansion/issues/";
+    }
+
+    public static SlimeXpansion getInstance() {
+        return instance;
     }
 }

@@ -26,7 +26,8 @@ public class ScrapBox extends SimpleSlimefunItem<ItemUseHandler> {
     private final List<ItemStack> scrapBoxLoot = new ArrayList<>();
 
     public ScrapBox(Category category, Config config) {
-        super(category, Items.SCRAP_BOX, CustomRecipeType.RECYCLER, new ItemStack[]{null, null, null, null, null, null, null, null, null});
+        super(category, Items.SCRAP_BOX, CustomRecipeType.RECYCLER,
+            new ItemStack[] {null, null, null, null, null, null, null, null, null});
 
         openScrapbox = config.getBoolean("options.lootable-scrapbox");
         parseScrapboxDrops(config);
@@ -36,12 +37,12 @@ public class ScrapBox extends SimpleSlimefunItem<ItemUseHandler> {
     public ItemUseHandler getItemHandler() {
         return event -> {
             if (!event.getPlayer().isSneaking() &&
-                    openScrapbox && random.nextInt(100) <= 25) {
+                openScrapbox && random.nextInt(100) <= 25) {
                 event.getPlayer().playSound(event.getPlayer().getLocation(), Sound.ENTITY_HORSE_SADDLE, 0.5F, 1F);
                 if (event.getPlayer().getGameMode() != GameMode.CREATIVE)
                     ItemUtils.consumeItem(event.getPlayer().getInventory().getItemInMainHand(), false);
                 event.getPlayer().getWorld().dropItem(event.getPlayer().getLocation().add(0, 1, 0),
-                        scrapBoxLoot.get(random.nextInt(scrapBoxLoot.size())));
+                    scrapBoxLoot.get(random.nextInt(scrapBoxLoot.size())));
                 event.cancel();
             }
         };
@@ -51,27 +52,18 @@ public class ScrapBox extends SimpleSlimefunItem<ItemUseHandler> {
         if (!openScrapbox) return;
 
         for (String lootName : config.getStringList("scrapbox-items")) {
-            boolean success;
             Material material = Material.getMaterial(lootName);
             if (material != null) {
                 scrapBoxLoot.add(new ItemStack(material));
-                success = true;
-            } else {
-                success = false;
+                continue;
             }
-
-            if (success) continue;
 
             if (SlimefunItem.getItem(lootName) != null) {
                 scrapBoxLoot.add(SlimefunItem.getItem(lootName));
-                success = true;
-            } else {
-                success = false;
+                continue;
             }
 
-            if (!success) {
-                SlimeXpansion.getXpansionLogger().log(Level.INFO, "There is no such item with name {0}", lootName);
-            }
+            SlimeXpansion.getInstance().getLogger().log(Level.WARNING, "There is no such item with name {0}", lootName);
         }
     }
 }

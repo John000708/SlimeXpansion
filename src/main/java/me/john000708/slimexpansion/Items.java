@@ -14,7 +14,7 @@ import org.bukkit.inventory.meta.ItemMeta;
  * Created by John on 14.04.2016.
  */
 
-public class Items {
+public final class Items {
 
     //Items
     public static final SlimefunItemStack UU_MATTER = new SlimefunItemStack("UU_MATTER", Material.PINK_DYE, "&dUU " +
@@ -111,6 +111,8 @@ public class Items {
         nanoBladeMeta.setUnbreakable(true);
         NANO_BLADE.setItemMeta(nanoBladeMeta);
     }
+
+    private Items() {}
 }
 
 

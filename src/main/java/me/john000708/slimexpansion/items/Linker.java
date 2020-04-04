@@ -20,9 +20,9 @@ public class Linker extends SimpleSlimefunItem<ItemUseHandler> {
 
     public Linker(Category category) {
         super(category, Items.LINKER,
-                RecipeType.ENHANCED_CRAFTING_TABLE,
-                new ItemStack[]{null, SlimefunItems.GOLD_24K, null, SlimefunItems.GOLD_24K,
-                        SlimefunItems.ENERGY_REGULATOR, SlimefunItems.GOLD_24K, null, SlimefunItems.GOLD_24K, null});
+            RecipeType.ENHANCED_CRAFTING_TABLE,
+            new ItemStack[] {null, SlimefunItems.GOLD_24K, null, SlimefunItems.GOLD_24K,
+                SlimefunItems.ENERGY_REGULATOR, SlimefunItems.GOLD_24K, null, SlimefunItems.GOLD_24K, null});
     }
 
     @Override
@@ -49,7 +49,7 @@ public class Linker extends SimpleSlimefunItem<ItemUseHandler> {
         ItemMeta itemMeta = event.getItem().getItemMeta();
         if (!itemMeta.getLore().isEmpty() || !itemMeta.getLore().get(3).equals("")) {
             BlockStorage.addBlockInfo(clickedBlock, "transmitterLoc",
-                    itemMeta.getLore().get(4));
+                itemMeta.getLore().get(4));
             event.getPlayer().sendMessage(ChatColor.GREEN + "Transmitter Location set!");
         } else {
             event.getPlayer().sendMessage(ChatColor.RED + "No Bound Transmitter found!");
@@ -59,8 +59,8 @@ public class Linker extends SimpleSlimefunItem<ItemUseHandler> {
     private void onTransmitterClick(PlayerRightClickEvent event, Block clickedBlock) {
         ItemMeta itemMeta = event.getItem().getItemMeta();
         itemMeta.setLore(Arrays.asList("", itemMeta.getLore().get(1), itemMeta.getLore().get(2), "",
-                clickedBlock.getWorld().getName() + ";" + clickedBlock.getX() + ";" + clickedBlock.getY() +
-                        ";" + clickedBlock.getZ()));
+            clickedBlock.getWorld().getName() + ";" + clickedBlock.getX() + ";" + clickedBlock.getY() +
+                ";" + clickedBlock.getZ()));
         event.getItem().setItemMeta(itemMeta);
         event.getPlayer().sendMessage(ChatColor.GREEN + "Transmitter Location bound!");
     }

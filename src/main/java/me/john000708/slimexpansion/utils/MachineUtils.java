@@ -17,7 +17,8 @@ public class MachineUtils {
         int size = BlockStorage.getInventory(b).toInventory().getSize();
         Inventory inv = Bukkit.createInventory(null, size);
         for (int i = 0; i < size; i++) {
-            inv.setItem(i, new CustomItem(new ItemStack(Material.COMMAND_BLOCK), "&4ALL YOUR PLACEHOLDERS ARE BELONG TO US"));
+            inv.setItem(i, new CustomItem(new ItemStack(Material.COMMAND_BLOCK),
+                "&4ALL YOUR PLACEHOLDERS ARE BELONG TO US"));
         }
         for (int slot : outputSlots) {
             inv.setItem(slot, BlockStorage.getInventory(b).getItemInSlot(slot));

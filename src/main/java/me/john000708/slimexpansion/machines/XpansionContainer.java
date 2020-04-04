@@ -17,6 +17,7 @@ import javax.annotation.Nullable;
 import java.util.Map;
 
 public abstract class XpansionContainer extends AContainer {
+
     public XpansionContainer(Category category, SlimefunItemStack item, RecipeType recipeType, ItemStack[] recipe) {
         super(category, item, recipeType, recipe);
     }
@@ -24,7 +25,7 @@ public abstract class XpansionContainer extends AContainer {
     public void updateEnergyConsumption(Block b) {
         int timeleft = progress.get(b);
         ChestMenuUtils.updateProgressbar(BlockStorage.getInventory(b), 22, timeleft,
-                getProcessing(b).getTicks(), getProgressBar());
+            getProcessing(b).getTicks(), getProgressBar());
 
         if (ChargableBlock.isChargable(b)) {
             if (ChargableBlock.getCharge(b) < getEnergyConsumption()) return;
@@ -39,7 +40,7 @@ public abstract class XpansionContainer extends AContainer {
             for (ItemStack input : recipe.getInput()) {
                 for (int slot : getInputSlots())
                     if (SlimefunManager.isItemSimilar(BlockStorage.getInventory(block).getItemInSlot(slot), input,
-                            true)) {
+                        true)) {
                         found.put(slot, input.getAmount());
                         break;
                     }
@@ -54,8 +55,8 @@ public abstract class XpansionContainer extends AContainer {
     public void checkFoundRecipes(Map<Integer, Integer> found, Block block, MachineRecipe recipe) {
         for (Map.Entry<Integer, Integer> entry : found.entrySet()) {
             BlockStorage.getInventory(block).replaceExistingItem(entry.getKey(),
-                    InvUtils.decreaseItem(BlockStorage.getInventory(block).getItemInSlot(entry.getKey()),
-                            entry.getValue()));
+                InvUtils.decreaseItem(BlockStorage.getInventory(block).getItemInSlot(entry.getKey()),
+                    entry.getValue()));
         }
         processing.put(block, recipe);
         progress.put(block, recipe.getTicks());

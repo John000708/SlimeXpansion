@@ -20,17 +20,17 @@ import org.bukkit.inventory.ItemStack;
 public class RedstoneTransmitter extends SimpleSlimefunItem<BlockTicker> {
 
     private final SchedulerHandler schedulerHandler;
-    
+
     private static final String TRANSMITTERLOCATION = "transmitterLoc";
 
     public RedstoneTransmitter(Category category, SchedulerHandler schedulerHandler) {
         super(category, Items.REDSTONE_TRANSMITTER,
-                RecipeType.ENHANCED_CRAFTING_TABLE,
-                new ItemStack[]{SlimefunItems.DAMASCUS_STEEL_INGOT, SlimefunItems.ADVANCED_CIRCUIT_BOARD,
-                        SlimefunItems.DAMASCUS_STEEL_INGOT, SlimefunItems.DAMASCUS_STEEL_INGOT,
-                        new ItemStack(Material.REDSTONE_BLOCK), SlimefunItems.DAMASCUS_STEEL_INGOT,
-                        SlimefunItems.CORINTHIAN_BRONZE_INGOT, new ItemStack(Material.GLASS),
-                        SlimefunItems.CORINTHIAN_BRONZE_INGOT});
+            RecipeType.ENHANCED_CRAFTING_TABLE,
+            new ItemStack[] {SlimefunItems.DAMASCUS_STEEL_INGOT, SlimefunItems.ADVANCED_CIRCUIT_BOARD,
+                SlimefunItems.DAMASCUS_STEEL_INGOT, SlimefunItems.DAMASCUS_STEEL_INGOT,
+                new ItemStack(Material.REDSTONE_BLOCK), SlimefunItems.DAMASCUS_STEEL_INGOT,
+                SlimefunItems.CORINTHIAN_BRONZE_INGOT, new ItemStack(Material.GLASS),
+                SlimefunItems.CORINTHIAN_BRONZE_INGOT});
 
         this.schedulerHandler = schedulerHandler;
     }
@@ -47,7 +47,7 @@ public class RedstoneTransmitter extends SimpleSlimefunItem<BlockTicker> {
             public void tick(Block block, SlimefunItem slimefunItem, Config config) {
                 if (BlockStorage.getLocationInfo(block.getLocation(), TRANSMITTERLOCATION) != null) {
                     String[] serializedLoc =
-                            BlockStorage.getLocationInfo(block.getLocation(), TRANSMITTERLOCATION).split(";");
+                        BlockStorage.getLocationInfo(block.getLocation(), TRANSMITTERLOCATION).split(";");
                     World world = Bukkit.getWorld(serializedLoc[0]);
                     int x = Integer.parseInt(serializedLoc[1]);
                     int y = Integer.parseInt(serializedLoc[2]);

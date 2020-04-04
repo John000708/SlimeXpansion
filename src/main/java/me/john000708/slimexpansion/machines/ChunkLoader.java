@@ -31,10 +31,10 @@ public class ChunkLoader extends SimpleSlimefunItem<XpansionBlockTicker> {
 
     public ChunkLoader(Category category, int chunkloaderDuration) {
         super(category, Items.CHUNK_LOADER,
-                RecipeType.ENHANCED_CRAFTING_TABLE,
-                new ItemStack[]{SlimefunItems.GOLD_24K, SlimefunItems.BLISTERING_INGOT_3, SlimefunItems.GOLD_24K,
-                        Items.MAG_THOR, Items.THORIUM, Items.MAG_THOR, SlimefunItems.REINFORCED_PLATE,
-                        SlimefunItems.POWER_CRYSTAL, SlimefunItems.REINFORCED_PLATE});
+            RecipeType.ENHANCED_CRAFTING_TABLE,
+            new ItemStack[] {SlimefunItems.GOLD_24K, SlimefunItems.BLISTERING_INGOT_3, SlimefunItems.GOLD_24K,
+                Items.MAG_THOR, Items.THORIUM, Items.MAG_THOR, SlimefunItems.REINFORCED_PLATE,
+                SlimefunItems.POWER_CRYSTAL, SlimefunItems.REINFORCED_PLATE});
 
         this.chunkloaderDuration = chunkloaderDuration;
 
@@ -47,7 +47,7 @@ public class ChunkLoader extends SimpleSlimefunItem<XpansionBlockTicker> {
 
             @Override
             public int[] getSlotsAccessedByItemTransport(ItemTransportFlow flow) {
-                return new int[]{22};
+                return new int[] {22};
             }
 
             @Override
@@ -73,13 +73,13 @@ public class ChunkLoader extends SimpleSlimefunItem<XpansionBlockTicker> {
             processTime--;
 
             BlockStorage.addBlockInfo(block, TIMELEFT,
-                    String.valueOf(Integer.parseInt(BlockStorage.getLocationInfo(block.getLocation(), TIMELEFT)) - 1));
+                String.valueOf(Integer.parseInt(BlockStorage.getLocationInfo(block.getLocation(), TIMELEFT)) - 1));
             menu.replaceExistingItem(4, new CustomItem(new ItemStack(Material.CLOCK),
-                    getTimeLeft(processTime), getProgress(processTime,
-                    chunkloaderDuration)));
+                getTimeLeft(processTime), getProgress(processTime,
+                chunkloaderDuration)));
         } else {
             if (menu.getItemInSlot(13) == null || !SlimefunManager.isItemSimilar(menu.getItemInSlot(13),
-                    Items.THORIUM, true)) {
+                Items.THORIUM, true)) {
                 menu.replaceExistingItem(4, new CustomItem(Material.PURPLE_STAINED_GLASS_PANE, " "));
                 block.getWorld().setChunkForceLoaded(block.getChunk().getX(), block.getChunk().getZ(), false);
                 return;

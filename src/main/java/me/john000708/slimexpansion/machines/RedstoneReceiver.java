@@ -17,12 +17,12 @@ public class RedstoneReceiver extends SimpleSlimefunItem<BlockTicker> {
 
     public RedstoneReceiver(Category category) {
         super(category, Items.REDSTONE_RECEIVER,
-                RecipeType.ENHANCED_CRAFTING_TABLE,
-                new ItemStack[]{SlimefunItems.DAMASCUS_STEEL_INGOT, new ItemStack(Material.GLASS),
-                        SlimefunItems.DAMASCUS_STEEL_INGOT, SlimefunItems.DAMASCUS_STEEL_INGOT,
-                        new ItemStack(Material.REDSTONE_BLOCK), SlimefunItems.DAMASCUS_STEEL_INGOT,
-                        SlimefunItems.CORINTHIAN_BRONZE_INGOT, SlimefunItems.ADVANCED_CIRCUIT_BOARD,
-                        SlimefunItems.CORINTHIAN_BRONZE_INGOT});
+            RecipeType.ENHANCED_CRAFTING_TABLE,
+            new ItemStack[] {SlimefunItems.DAMASCUS_STEEL_INGOT, new ItemStack(Material.GLASS),
+                SlimefunItems.DAMASCUS_STEEL_INGOT, SlimefunItems.DAMASCUS_STEEL_INGOT,
+                new ItemStack(Material.REDSTONE_BLOCK), SlimefunItems.DAMASCUS_STEEL_INGOT,
+                SlimefunItems.CORINTHIAN_BRONZE_INGOT, SlimefunItems.ADVANCED_CIRCUIT_BOARD,
+                SlimefunItems.CORINTHIAN_BRONZE_INGOT});
     }
 
     @Override

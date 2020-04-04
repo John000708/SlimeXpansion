@@ -20,10 +20,10 @@ public class WirelessCharger extends SlimefunItem {
 
     public WirelessCharger(Category category) {
         super(category, Items.WIRELESS_CHARGER,
-                RecipeType.ENHANCED_CRAFTING_TABLE,
-                new ItemStack[]{null, SlimefunItems.POWER_CRYSTAL, null, SlimefunItems.GILDED_IRON,
-                        SlimefunItems.LARGE_CAPACITOR, SlimefunItems.GILDED_IRON, SlimefunItems.HEATING_COIL,
-                        SlimefunItems.ELECTRIC_MOTOR, SlimefunItems.HEATING_COIL});
+            RecipeType.ENHANCED_CRAFTING_TABLE,
+            new ItemStack[] {null, SlimefunItems.POWER_CRYSTAL, null, SlimefunItems.GILDED_IRON,
+                SlimefunItems.LARGE_CAPACITOR, SlimefunItems.GILDED_IRON, SlimefunItems.HEATING_COIL,
+                SlimefunItems.ELECTRIC_MOTOR, SlimefunItems.HEATING_COIL});
     }
 
     @Override

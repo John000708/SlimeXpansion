@@ -1,16 +1,16 @@
 package me.john000708.slimexpansion.machines;
 
+import io.github.thebusybiscuit.cscorelib2.item.CustomItem;
 import io.github.thebusybiscuit.slimefun4.utils.ChestMenuUtils;
+import io.github.thebusybiscuit.slimefun4.utils.SlimefunUtils;
 import me.john000708.slimexpansion.Items;
-import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.InvUtils;
-import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.Item.CustomItem;
 import me.mrCookieSlime.Slimefun.Lists.RecipeType;
 import me.mrCookieSlime.Slimefun.Lists.SlimefunItems;
 import me.mrCookieSlime.Slimefun.Objects.Category;
 import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.abstractItems.MachineRecipe;
-import me.mrCookieSlime.Slimefun.Setup.SlimefunManager;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import me.mrCookieSlime.Slimefun.api.energy.ChargableBlock;
+import me.mrCookieSlime.Slimefun.cscorelib2.inventory.InvUtils;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
@@ -25,16 +25,16 @@ public class UUFabricator extends XpansionContainer {
 
     public UUFabricator(Category category) {
         super(category, Items.UU_FABRICATOR,
-                RecipeType.ENHANCED_CRAFTING_TABLE,
-                new ItemStack[]{SlimefunItems.REINFORCED_PLATE, SlimefunItems.POWER_CRYSTAL,
-                        SlimefunItems.REINFORCED_PLATE, SlimefunItems.BLISTERING_INGOT_3,
-                        SlimefunItems.CARBONADO_EDGED_CAPACITOR, SlimefunItems.BLISTERING_INGOT_3, SlimefunItems.PLUTONIUM,
-                        Items.SCRAP_BOX, SlimefunItems.PLUTONIUM});
+            RecipeType.ENHANCED_CRAFTING_TABLE,
+            new ItemStack[] {SlimefunItems.REINFORCED_PLATE, SlimefunItems.POWER_CRYSTAL,
+                SlimefunItems.REINFORCED_PLATE, SlimefunItems.BLISTERING_INGOT_3,
+                SlimefunItems.CARBONADO_EDGED_CAPACITOR, SlimefunItems.BLISTERING_INGOT_3, SlimefunItems.PLUTONIUM,
+                Items.SCRAP_BOX, SlimefunItems.PLUTONIUM});
     }
 
     @Override
     public void registerDefaultRecipes() {
-        registerRecipe(480, new ItemStack[0], new ItemStack[]{Items.UU_MATTER});
+        registerRecipe(480, new ItemStack[0], new ItemStack[] {Items.UU_MATTER});
     }
 
     @Override
@@ -72,16 +72,16 @@ public class UUFabricator extends XpansionContainer {
             int timeleft = progress.get(b);
             if (timeleft > 0) {
                 ChestMenuUtils.updateProgressbar(BlockStorage.getInventory(b), 22, timeleft,
-                        processing.get(b).getTicks(), getProgressBar());
+                    processing.get(b).getTicks(), getProgressBar());
 
                 if (ChargableBlock.isChargable(b)) {
                     if (ChargableBlock.getCharge(b) < getEnergyConsumption()) return;
                     ChargableBlock.addCharge(b, -getEnergyConsumption());
                     for (int slot : getInputSlots()) {
-                        if (SlimefunManager.isItemSimilar(BlockStorage.getInventory(b).getItemInSlot(slot),
-                                Items.SCRAP_BOX, false)) {
-                            InvUtils.removeItem(BlockStorage.getInventory(b).toInventory(),
-                                    BlockStorage.getInventory(b).getItemInSlot(slot), 1);
+                        if (InvUtils.removeItem(BlockStorage.getInventory(b).toInventory(), 1, false,
+                            is -> SlimefunUtils.isItemSimilar(BlockStorage.getInventory(b).getItemInSlot(slot),
+                                Items.SCRAP_BOX, false))
+                        ) {
                             if (progress.get(b) < 6) progress.put(b, 0);
                             progress.put(b, timeleft - 6);
                             return;
@@ -90,8 +90,8 @@ public class UUFabricator extends XpansionContainer {
                     progress.put(b, timeleft - 1);
                 } else progress.put(b, timeleft - 1);
             } else {
-                BlockStorage.getInventory(b).replaceExistingItem(22, new CustomItem(Material.BLACK_STAINED_GLASS_PANE
-                        , " "));
+                BlockStorage.getInventory(b).replaceExistingItem(22,
+                    new CustomItem(Material.BLACK_STAINED_GLASS_PANE, " "));
                 pushItems(b, processing.get(b).getOutput());
 
                 progress.remove(b);
@@ -103,8 +103,7 @@ public class UUFabricator extends XpansionContainer {
             for (MachineRecipe recipe : recipes) {
                 for (ItemStack input : recipe.getInput()) {
                     for (int slot : getInputSlots()) {
-                        if (SlimefunManager.isItemSimilar(BlockStorage.getInventory(b).getItemInSlot(slot), input,
-                                true)) {
+                        if (SlimefunUtils.isItemSimilar(BlockStorage.getInventory(b).getItemInSlot(slot), input, true)) {
                             found.put(slot, input.getAmount());
                             break;
                         }
