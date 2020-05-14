@@ -1,12 +1,12 @@
 package me.john000708.slimexpansion.machines;
 
 import io.github.thebusybiscuit.slimefun4.utils.ChestMenuUtils;
+import io.github.thebusybiscuit.slimefun4.utils.SlimefunUtils;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.InvUtils;
 import me.mrCookieSlime.Slimefun.Lists.RecipeType;
 import me.mrCookieSlime.Slimefun.Objects.Category;
 import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.abstractItems.AContainer;
 import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.abstractItems.MachineRecipe;
-import me.mrCookieSlime.Slimefun.Setup.SlimefunManager;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import me.mrCookieSlime.Slimefun.api.SlimefunItemStack;
 import me.mrCookieSlime.Slimefun.api.energy.ChargableBlock;
@@ -39,7 +39,7 @@ public abstract class XpansionContainer extends AContainer {
         for (MachineRecipe recipe : recipes) {
             for (ItemStack input : recipe.getInput()) {
                 for (int slot : getInputSlots())
-                    if (SlimefunManager.isItemSimilar(BlockStorage.getInventory(block).getItemInSlot(slot), input,
+                    if (SlimefunUtils.isItemSimilar(BlockStorage.getInventory(block).getItemInSlot(slot), input,
                         true)) {
                         found.put(slot, input.getAmount());
                         break;

@@ -31,18 +31,22 @@ import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SlimefunItem;
 import me.mrCookieSlime.Slimefun.api.Slimefun;
 import me.mrCookieSlime.Slimefun.api.SlimefunItemStack;
 import me.mrCookieSlime.Slimefun.bstats.bukkit.Metrics;
+import me.mrCookieSlime.Slimefun.cscorelib2.chat.ChatColors;
 import me.mrCookieSlime.Slimefun.cscorelib2.config.Config;
 import me.mrCookieSlime.Slimefun.cscorelib2.item.CustomItem;
 import me.mrCookieSlime.Slimefun.cscorelib2.updater.GitHubBuildsUpdater;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
  * Created by John on 14.04.2016.
  */
-public class SlimeXpansion extends JavaPlugin implements SlimefunAddon {
+public class SlimeXpansion extends JavaPlugin implements SlimefunAddon, Listener {
 
     private static SlimeXpansion instance;
 
@@ -72,12 +76,23 @@ public class SlimeXpansion extends JavaPlugin implements SlimefunAddon {
         }
 
         new ListenerSetup(this);
+        getServer().getPluginManager().registerEvents(this, this);
 
         chunkLoaderDuration = config.getInt("options.chunkloader-duration");
 
         registerItems();
         setupResearches();
         getLogger().info("SlimeXpansion has been enabled!");
+
+        getLogger().severe("============================");
+        getLogger().severe("==  SLIMEXPANION STATUS   ==");
+        getLogger().severe("==                        ==");
+        getLogger().severe("SlimeXpansion has been discontinued for LiteXpansion");
+        getLogger().severe("SlimeXpansion WILL not be maintained! Please migrate!!");
+        getLogger().severe("");
+        getLogger().severe("Download here: https://thebusybiscuit.github.io/builds/J3fftw1/LiteXpansion/master/");
+        getLogger().severe("");
+        getLogger().severe("============================");
     }
 
     @Override
@@ -219,6 +234,21 @@ public class SlimeXpansion extends JavaPlugin implements SlimefunAddon {
     @Override
     public String getBugTrackerURL() {
         return "https://github.com/J3fftw1/SlimeXpansion/issues/";
+    }
+
+    @EventHandler
+    public void onAdminJoin(PlayerJoinEvent e) {
+        if (e.getPlayer().isOp() || e.getPlayer().hasPermission("*")
+            || e.getPlayer().hasPermission("slimefun.cheat.items")
+        ) {
+            getServer().getScheduler().runTaskLater(this, () -> {
+                e.getPlayer().sendMessage(ChatColors.color("&5&lSlimeXpansion Status:\n" +
+                    "&cSlimeXpansion has been discontinued!! It will likely not work in the future\n" +
+                    "&bPlease move to &6LiteXpansion\n" +
+                    "&7Download here: https://thebusybiscuit.github.io/builds/J3fftw1/LiteXpansion/master/"
+                ));
+            }, 20); // Delay it a second to get past all the join spam bullshit and let them spawn in
+        }
     }
 
     public static SlimeXpansion getInstance() {

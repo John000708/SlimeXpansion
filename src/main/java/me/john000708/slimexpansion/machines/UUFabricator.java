@@ -92,7 +92,7 @@ public class UUFabricator extends XpansionContainer {
             } else {
                 BlockStorage.getInventory(b).replaceExistingItem(22,
                     new CustomItem(Material.BLACK_STAINED_GLASS_PANE, " "));
-                pushItems(b, processing.get(b).getOutput());
+                //pushItems(b, processing.get(b).getOutput());
 
                 progress.remove(b);
                 processing.remove(b);
@@ -117,7 +117,7 @@ public class UUFabricator extends XpansionContainer {
             }
 
             if (r != null) {
-                if (!fits(b, r.getOutput())) return;
+                if (!InvUtils.fitAll(BlockStorage.getInventory(b).toInventory(), r.getOutput())) return;
                 checkFoundRecipes(found, b, r);
             }
         }

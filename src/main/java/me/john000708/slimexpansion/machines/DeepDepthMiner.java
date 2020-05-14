@@ -1,6 +1,7 @@
 package me.john000708.slimexpansion.machines;
 
 import io.github.thebusybiscuit.slimefun4.api.geo.GEOResource;
+import io.github.thebusybiscuit.slimefun4.utils.SlimefunUtils;
 import me.john000708.slimexpansion.Items;
 import me.john000708.slimexpansion.utils.SchedulerHandler;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.Item.CustomItem;
@@ -9,7 +10,6 @@ import me.mrCookieSlime.Slimefun.Lists.SlimefunItems;
 import me.mrCookieSlime.Slimefun.Objects.Category;
 import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SimpleSlimefunItem;
 import me.mrCookieSlime.Slimefun.Objects.handlers.BlockTicker;
-import me.mrCookieSlime.Slimefun.Setup.SlimefunManager;
 import me.mrCookieSlime.Slimefun.SlimefunPlugin;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import me.mrCookieSlime.Slimefun.api.energy.ChargableBlock;
@@ -152,7 +152,7 @@ public class DeepDepthMiner extends SimpleSlimefunItem<BlockTicker> {
         ChargableBlock.addCharge(block, -getEnergyConsumption());
 
         if (!(BlockStorage.getInventory(block).getItemInSlot(9) != null
-            && SlimefunManager.isItemSimilar(BlockStorage.getInventory(block).getItemInSlot(9), Items.LASER_CHARGE,
+            && SlimefunUtils.isItemSimilar(BlockStorage.getInventory(block).getItemInSlot(9), Items.LASER_CHARGE,
             false))) {
             BlockStorage.getInventory(block).replaceExistingItem(4,
                 new CustomItem(new ItemStack(Material.REDSTONE_BLOCK), "&4No Laser Charge Found"));

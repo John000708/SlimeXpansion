@@ -1,5 +1,6 @@
 package me.john000708.slimexpansion.machines;
 
+import io.github.thebusybiscuit.slimefun4.utils.SlimefunUtils;
 import me.john000708.slimexpansion.Items;
 import me.john000708.slimexpansion.utils.MachineUtils;
 import me.mrCookieSlime.CSCoreLibPlugin.Configuration.Config;
@@ -9,7 +10,6 @@ import me.mrCookieSlime.Slimefun.Lists.SlimefunItems;
 import me.mrCookieSlime.Slimefun.Objects.Category;
 import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SlimefunItem;
 import me.mrCookieSlime.Slimefun.Objects.handlers.BlockTicker;
-import me.mrCookieSlime.Slimefun.Setup.SlimefunManager;
 import me.mrCookieSlime.Slimefun.SlimefunPlugin;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import me.mrCookieSlime.Slimefun.api.energy.ChargableBlock;
@@ -141,7 +141,7 @@ public class UUTransmutator extends SlimefunItem {
                 itemToOutput.removeEnchantment(Enchantment.ARROW_INFINITE);
 
                 if (fits(block, new ItemStack[] {itemToOutput})) {
-                    if (SlimefunManager.isItemSimilar(inv.getItemInSlot(10), Items.UU_MATTER, false)
+                    if (SlimefunUtils.isItemSimilar(inv.getItemInSlot(10), Items.UU_MATTER, false)
                         && inv.getItemInSlot(10).getAmount() >= 1) {
                         inv.replaceExistingItem(10, InvUtils.decreaseItem(inv.getItemInSlot(10), 1));
                         ChargableBlock.addCharge(block, -getEnergyConsumption());

@@ -57,7 +57,7 @@
             <groupId>com.github.TheBusyBiscuit</groupId>
             <artifactId>Slimefun4</artifactId>
             <!--Version is the hash of the latest commit-->
-            <version>5842598f8e</version>
+            <version>a509717853</version>
             <scope>provided</scope>
             <exclusions>
                 <exclusion>

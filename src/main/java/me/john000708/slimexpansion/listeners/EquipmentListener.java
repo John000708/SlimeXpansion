@@ -1,8 +1,8 @@
 package me.john000708.slimexpansion.listeners;
 
 import io.github.thebusybiscuit.slimefun4.api.events.AutoDisenchantEvent;
+import io.github.thebusybiscuit.slimefun4.utils.SlimefunUtils;
 import me.john000708.slimexpansion.Items;
-import me.mrCookieSlime.Slimefun.Setup.SlimefunManager;
 import me.mrCookieSlime.Slimefun.api.energy.ItemEnergy;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -24,7 +24,7 @@ public class EquipmentListener implements Listener {
 
             if (player.getEquipment() != null
                 && player.getEquipment().getChestplate() != null
-                && SlimefunManager.isItemSimilar(player.getEquipment().getChestplate(), Items.ELECTRIC_CHESTPLATE,
+                && SlimefunUtils.isItemSimilar(player.getEquipment().getChestplate(), Items.ELECTRIC_CHESTPLATE,
                 false)) {
                 ItemStack chestPlate = player.getEquipment().getChestplate();
 
@@ -43,7 +43,7 @@ public class EquipmentListener implements Listener {
         if (e.getDamager() instanceof Player) {
             Player player = (Player) e.getDamager();
             ItemStack itemInhand = player.getInventory().getItemInMainHand();
-            if (SlimefunManager.isItemSimilar(itemInhand, Items.NANO_BLADE, false)
+            if (SlimefunUtils.isItemSimilar(itemInhand, Items.NANO_BLADE, false)
                 && itemInhand.containsEnchantment(Enchantment.ARROW_INFINITE)
                 && ItemEnergy.getStoredEnergy(itemInhand) >= 5) {
                 e.setDamage(e.getDamage() * 2.5);
@@ -55,7 +55,7 @@ public class EquipmentListener implements Listener {
     @EventHandler
     public void onNanoBladeDisenchant(AutoDisenchantEvent e) {
         ItemStack item = e.getItem();
-        if (SlimefunManager.isItemSimilar(item, Items.NANO_BLADE, false)
+        if (SlimefunUtils.isItemSimilar(item, Items.NANO_BLADE, false)
             && item.containsEnchantment(Enchantment.ARROW_INFINITE)) {
             e.setCancelled(true);
             item.removeEnchantment(Enchantment.ARROW_INFINITE);

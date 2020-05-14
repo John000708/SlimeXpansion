@@ -1,5 +1,6 @@
 package me.john000708.slimexpansion.machines;
 
+import io.github.thebusybiscuit.slimefun4.utils.SlimefunUtils;
 import me.john000708.slimexpansion.Items;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.InvUtils;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.Item.CustomItem;
@@ -7,7 +8,6 @@ import me.mrCookieSlime.Slimefun.Lists.RecipeType;
 import me.mrCookieSlime.Slimefun.Lists.SlimefunItems;
 import me.mrCookieSlime.Slimefun.Objects.Category;
 import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SimpleSlimefunItem;
-import me.mrCookieSlime.Slimefun.Setup.SlimefunManager;
 import me.mrCookieSlime.Slimefun.SlimefunPlugin;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
@@ -78,7 +78,7 @@ public class ChunkLoader extends SimpleSlimefunItem<XpansionBlockTicker> {
                 getTimeLeft(processTime), getProgress(processTime,
                 chunkloaderDuration)));
         } else {
-            if (menu.getItemInSlot(13) == null || !SlimefunManager.isItemSimilar(menu.getItemInSlot(13),
+            if (menu.getItemInSlot(13) == null || !SlimefunUtils.isItemSimilar(menu.getItemInSlot(13),
                 Items.THORIUM, true)) {
                 menu.replaceExistingItem(4, new CustomItem(Material.PURPLE_STAINED_GLASS_PANE, " "));
                 block.getWorld().setChunkForceLoaded(block.getChunk().getX(), block.getChunk().getZ(), false);

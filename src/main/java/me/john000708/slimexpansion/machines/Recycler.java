@@ -56,7 +56,7 @@ public class Recycler extends XpansionContainer {
                 BlockStorage.getInventory(block).replaceExistingItem(22,
                     new CustomItem(Material.BLACK_STAINED_GLASS_PANE
                         , " "));
-                pushItems(block, processing.get(block).getOutput());
+                //pushItems(block, processing.get(block).getOutput());
 
                 progress.remove(block);
                 processing.remove(block);
@@ -65,7 +65,9 @@ public class Recycler extends XpansionContainer {
             for (int slot : getInputSlots()) {
                 if (BlockStorage.getInventory(block).getItemInSlot(slot) != null) {
                     MachineRecipe r = new MachineRecipe(4, new ItemStack[0], new ItemStack[] {Items.SCRAP_BOX});
-                    if (!fits(block, r.getOutput())) return;
+                    if (!me.mrCookieSlime.Slimefun.cscorelib2.inventory.InvUtils
+                        .fitAll(BlockStorage.getInventory(block).toInventory(), r.getOutput()))
+                        return;
                     BlockStorage.getInventory(block).replaceExistingItem(slot,
                         InvUtils.decreaseItem(BlockStorage.getInventory(block).getItemInSlot(slot), 1));
                     processing.put(block, r);

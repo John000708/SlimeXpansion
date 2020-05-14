@@ -1,5 +1,6 @@
 package me.john000708.slimexpansion.machines;
 
+import io.github.thebusybiscuit.slimefun4.utils.SlimefunUtils;
 import me.john000708.slimexpansion.Items;
 import me.john000708.slimexpansion.utils.MachineUtils;
 import me.john000708.slimexpansion.utils.SchedulerHandler;
@@ -9,7 +10,6 @@ import me.mrCookieSlime.Slimefun.Lists.SlimefunItems;
 import me.mrCookieSlime.Slimefun.Objects.Category;
 import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.SimpleSlimefunItem;
 import me.mrCookieSlime.Slimefun.Objects.handlers.BlockTicker;
-import me.mrCookieSlime.Slimefun.Setup.SlimefunManager;
 import me.mrCookieSlime.Slimefun.SlimefunPlugin;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import me.mrCookieSlime.Slimefun.api.energy.ChargableBlock;
@@ -130,7 +130,7 @@ public class BedrockBreaker extends SimpleSlimefunItem<BlockTicker> {
             return;
         }
 
-        if (!(BlockStorage.getInventory(block).getItemInSlot(10) != null && SlimefunManager.isItemSimilar(BlockStorage.getInventory(block).getItemInSlot(10), Items.BEDROCK_DRILL, false))) {
+        if (!(BlockStorage.getInventory(block).getItemInSlot(10) != null && SlimefunUtils.isItemSimilar(BlockStorage.getInventory(block).getItemInSlot(10), Items.BEDROCK_DRILL, false))) {
             updateStatus(block, new CustomItem(new ItemStack(Material.REDSTONE_BLOCK), "&4No Drill Found"));
             return;
         }

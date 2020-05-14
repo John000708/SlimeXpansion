@@ -58,8 +58,9 @@ public class ScrapBox extends SimpleSlimefunItem<ItemUseHandler> {
                 continue;
             }
 
-            if (SlimefunItem.getItem(lootName) != null) {
-                scrapBoxLoot.add(SlimefunItem.getItem(lootName));
+            final SlimefunItem itemById = SlimefunItem.getByID(lootName);
+            if (itemById != null) {
+                scrapBoxLoot.add(itemById.getItem());
                 continue;
             }
 
